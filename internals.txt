@@ -1,0 +1,5 @@
+http://localhost/node/node.js
+
+path=C%3A%5CUsers%5CMarco%5CDocuments%5CProjekte%5Cheader-link-emperor -> cd $path; git log --oneline $path
+history_commit=adsfa732a -> cd $path; git ls-tree -r $history_commit
+file_commit=g4fd67s3sadsfjkke36382299sjdsk282wks92 -> cd $path; git show $file_commit
