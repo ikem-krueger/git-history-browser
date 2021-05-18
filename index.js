@@ -47,7 +47,7 @@ function populateCommitHistory() {
 		orderByLastCommit ? history.append(option) : history.prepend(option);
 	});
 	
-	history.querySelectorAll("option")[5].selected = true;
+	history.querySelectorAll("option")[5].selected = true; // FIXME: hardcoded value
 
 	populateFilesystemTree();
 }
@@ -66,7 +66,7 @@ function populateFilesystemTree() {
 		tree.append(option);
 	});
 	
-	tree.querySelectorAll("option")[1].selected = true;
+	tree.querySelectorAll("option")[1].selected = true; // FIXME: hardcoded value
 
 	populateFileContent();
 }
