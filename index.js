@@ -1,4 +1,4 @@
-// git log --oneline
+// git -C <path> log --oneline
 function fetchLog(path) {
 	return [
 		{ "hash": "c5ac52b", "message": "Fix dash on beginning/end of link" }, 
@@ -14,7 +14,7 @@ function fetchLog(path) {
 	]
 }
 
-// git ls-tree -r <commit>
+// git -C <path> ls-tree -r <commit>
 function fetchTree(commit) {
 	return [
         { "hash": "8799ad7eade90b481d06fb1703fd6c464210e367", "file": "Links.txt" }, 
@@ -25,7 +25,7 @@ function fetchTree(commit) {
 	]
 }
 
-// git show <commit>
+// git -C <path> show <commit>
 function fetchFile(commit) {
 	return ".headerlink {\n    display:none;\n    margin:0 0 0 .2em;\n    text-decoration:none;\n    color:#999;\n}\n\nh1:hover *,\nh2:hover *,\nh3:hover *,\nh4:hover *,\nh5:hover *,\nh6:hover * {\n    display:inline;\n}\n";
 }
