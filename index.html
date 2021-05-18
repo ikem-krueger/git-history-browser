@@ -6,6 +6,8 @@
         <title>Git Log Tree Viewer</title>
 		
 		<link rel="stylesheet" href="index.css">
+		
+		<script src="index.js" defer></script>
     </head>
     <body>
         <h1>Git Log Tree Viewer</h1>
@@ -16,17 +18,7 @@
             </fieldset>
             <fieldset>
                 <legend>Commit History</legend>
-                <select id="message" name="history_commit" size="20">
-                    <option value="6761e6d">Initial commit</option>
-                    <option value="9edf43c">Change substitution symbol to be more in line with most websites</option>
-                    <option value="b51bfa4">Fix link</option>
-                    <option value="96aa850">Add logic for adding header links</option>
-                    <option value="8b3edf0">Add css style for the header links</option>
-                    <option value="cef03b3" selected>Refactor</option>
-                    <option value="201bcde">Update logic</option>
-                    <option value="8122f3f">Add comment</option>
-                    <option value="7a2b38e">Add missing newline</option>
-                    <option value="c5ac52b">Fix dash on beginning/end of link</option>
+                <select id="history" name="history_commit" size="20">
                 </select>
                 <input type="text" placeholder="Filter">
                 <input type="range" min="1" max="10" value="6">
@@ -34,12 +26,7 @@
             <fieldset>
                 <legend>Filesystem Tree</legend>
                 <select id="tree" name="file_commit" size="20">
-                    <option value="8799ad7eade90b481d06fb1703fd6c464210e367">Links.txt</option>
-                    <option value="97219aebe1d4be4c7df577b9f15922610468fa92" selected>header-link-emperor.css</option>
-                    <option value="76815ee992673236b838629a77acbcdb428562c1">header-link-emperor.js</option>
-                    <option value="90687de26d71e91b7c82565772a7df470ae277a6">icons/header-link-emperor-48.png</option>
-                    <option value="a1129b78e86930bda45c7ca18806ffd1bca606ca">manifest.json</option>
-                </select>
+				</select>
                 <input type="text" placeholder="Filter">
                 <span class="checkbox">
                     <input type="checkbox" id="changed_files_only"><label for="changed_files_only">Show only changed files</label>
@@ -48,21 +35,6 @@
             <fieldset>
                 <legend>File Content</legend>
                 <textarea id="file" rows="24">
-.headerlink {
-    display:none;
-    margin:0 0 0 .2em;
-    text-decoration:none;
-    color:#999;
-}
-
-h1:hover *,
-h2:hover *,
-h3:hover *,
-h4:hover *,
-h5:hover *,
-h6:hover * {
-    display:inline;
-}
                 </textarea>
                 <button>Checkout</button>
                 <span class="checkbox">
