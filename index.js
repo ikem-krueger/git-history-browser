@@ -1,7 +1,7 @@
-// git -C <path> log --oneline
 function fetchLog(path) {
 	console.debug(`fetchLog("${path}");`);
 	
+	// git -C <path> log --oneline
 	return [
 		{ "hash": "c5ac52b", "message": "Fix dash on beginning/end of link" }, 
 		{ "hash": "7a2b38e", "message": "Add missing newline" }, 
@@ -16,10 +16,10 @@ function fetchLog(path) {
 	]
 }
 
-// git -C <path> ls-tree -r <commit>
-function fetchTree(commit) {
-	console.debug(`fetchTree("${commit}");`);
+function fetchTree(path, commit) {
+	console.debug(`fetchTree("${path}", "${commit}");`);
 	
+	// git -C <path> ls-tree -r <commit>
 	return [
         { "hash": "8799ad7eade90b481d06fb1703fd6c464210e367", "file": "Links.txt" }, 
         { "hash": "97219aebe1d4be4c7df577b9f15922610468fa92", "file": "header-link-emperor.css" }, 
@@ -29,17 +29,18 @@ function fetchTree(commit) {
 	]
 }
 
-// git -C <path> show <commit>
-function fetchFile(commit) {
-	console.debug(`fetchFile("${commit}");`);
+function fetchFile(path, commit) {
+	console.debug(`fetchFile("${path}", "${commit}");`);
 	
+	// git -C <path> show <commit>
 	return ".headerlink {\n    display:none;\n    margin:0 0 0 .2em;\n    text-decoration:none;\n    color:#999;\n}\n\nh1:hover *,\nh2:hover *,\nh3:hover *,\nh4:hover *,\nh5:hover *,\nh6:hover * {\n    display:inline;\n}\n";
 }
 
 function populateCommitHistory() {
 	let history = document.querySelector("#history");
 
-	let log = fetchLog(document.querySelector("#path").value);
+	let path = document.querySelector("#path").value;
+	let log = fetchLog(path);
 
 	let orderByLastCommit = false;
 
@@ -67,7 +68,10 @@ function populateFilesystemTree() {
 	let history = document.querySelector("#history");
 	let tree = document.querySelector("#tree");
 
-	let files = fetchTree(history.value);
+	let path = document.querySelector("#path").value;
+	let commit = history.value;
+
+	let files = fetchTree(path, commit);
 
 	files.forEach(item => {
 		let option = document.createElement("option");
@@ -92,15 +96,20 @@ function dropFileContent(){
 function populateFileContent() {
 	let tree = document.querySelector("#tree");
 	let file = document.querySelector("#file");
+	
+	let path = document.querySelector("#path").value;
+	let commit = tree.value;
 
-	file.value = fetchFile(tree.value);
+	file.value = fetchFile(path, commit);
 }
 
-function init() {
+function main() {
 	let history = document.querySelector("#history");
 
 	history.addEventListener("change", (event) => { slider.value = (history.selectedIndex + 1); });
 	history.addEventListener("change", (event) => { dropFilesystemTree(); populateFilesystemTree(); });
+
+	populateCommitHistory();
 
 	let slider = document.querySelector("#slider");
 	
@@ -114,12 +123,6 @@ function init() {
 	let tree = document.querySelector("#tree");
 	
 	tree.addEventListener("change", (event) => { dropFileContent(); populateFileContent(); });
-}
-
-function main() {
-	init();
-
-	populateCommitHistory();
 }
 
 main();
