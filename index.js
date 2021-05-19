@@ -1,5 +1,7 @@
 // git -C <path> log --oneline
 function fetchLog(path) {
+	console.debug(`fetchLog("${path}");`);
+	
 	return [
 		{ "hash": "c5ac52b", "message": "Fix dash on beginning/end of link" }, 
 		{ "hash": "7a2b38e", "message": "Add missing newline" }, 
@@ -16,6 +18,8 @@ function fetchLog(path) {
 
 // git -C <path> ls-tree -r <commit>
 function fetchTree(commit) {
+	console.debug(`fetchTree("${commit}");`);
+	
 	return [
         { "hash": "8799ad7eade90b481d06fb1703fd6c464210e367", "file": "Links.txt" }, 
         { "hash": "97219aebe1d4be4c7df577b9f15922610468fa92", "file": "header-link-emperor.css" }, 
@@ -27,14 +31,15 @@ function fetchTree(commit) {
 
 // git -C <path> show <commit>
 function fetchFile(commit) {
+	console.debug(`fetchFile("${commit}");`);
+	
 	return ".headerlink {\n    display:none;\n    margin:0 0 0 .2em;\n    text-decoration:none;\n    color:#999;\n}\n\nh1:hover *,\nh2:hover *,\nh3:hover *,\nh4:hover *,\nh5:hover *,\nh6:hover * {\n    display:inline;\n}\n";
 }
 
 function populateCommitHistory() {
-	let path = document.querySelector("#path").value;
 	let history = document.querySelector("#history");
 
-	let log = fetchLog(path);
+	let log = fetchLog(document.querySelector("#path").value);
 
 	let orderByLastCommit = false;
 
@@ -47,15 +52,22 @@ function populateCommitHistory() {
 		orderByLastCommit ? history.append(option) : history.prepend(option);
 	});
 	
-	history.querySelectorAll("option")[5].selected = true; // FIXME: hardcoded value
+	history.selectedIndex = 0; // FIXME: hardcoded value
 
 	populateFilesystemTree();
 }
 
-function populateFilesystemTree() {
+function dropFilesystemTree() {
 	let tree = document.querySelector("#tree");
 
-	let files = fetchTree("cef03b3");
+	tree.innerHTML = "";
+}
+
+function populateFilesystemTree() {
+	let history = document.querySelector("#history");
+	let tree = document.querySelector("#tree");
+
+	let files = fetchTree(history.value);
 
 	files.forEach(item => {
 		let option = document.createElement("option");
@@ -65,18 +77,49 @@ function populateFilesystemTree() {
 		
 		tree.append(option);
 	});
-	
-	tree.querySelectorAll("option")[1].selected = true; // FIXME: hardcoded value
+
+	tree.selectedIndex = 0; // FIXME: hardcoded value
 
 	populateFileContent();
 }
 
-function populateFileContent() {
+function dropFileContent(){
 	let file = document.querySelector("#file");
-
-	let content = fetchFile("97219aebe1d4be4c7df577b9f15922610468fa92");
 	
-	file.value = content;
+	file.innerHTML = "";
 }
 
-populateCommitHistory();
+function populateFileContent() {
+	let tree = document.querySelector("#tree");
+	let file = document.querySelector("#file");
+
+	file.value = fetchFile(tree.value);
+}
+
+function init() {
+	let history = document.querySelector("#history");
+
+	history.addEventListener("change", (event) => { slider.value = (history.selectedIndex + 1); });
+	history.addEventListener("change", (event) => { dropFilesystemTree(); populateFilesystemTree(); });
+
+	let slider = document.querySelector("#slider");
+	
+	slider.min = 1;
+	slider.value = history.selectedIndex + 1;
+	slider.max = history.length;
+
+	slider.addEventListener("change", (event) => { history.selectedIndex = (slider.value - 1); });
+	slider.addEventListener("change", (event) => { dropFilesystemTree(); populateFilesystemTree(); });
+	
+	let tree = document.querySelector("#tree");
+	
+	tree.addEventListener("change", (event) => { dropFileContent(); populateFileContent(); });
+}
+
+function main() {
+	init();
+
+	populateCommitHistory();
+}
+
+main();
