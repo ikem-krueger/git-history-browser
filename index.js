@@ -36,6 +36,12 @@ function fetchFile(path, commit) {
 	return ".headerlink {\n    display:none;\n    margin:0 0 0 .2em;\n    text-decoration:none;\n    color:#999;\n}\n\nh1:hover *,\nh2:hover *,\nh3:hover *,\nh4:hover *,\nh5:hover *,\nh6:hover * {\n    display:inline;\n}\n";
 }
 
+function dropCommitHistory() {
+	let history = document.querySelector("#history");
+	
+	history.innerHTML = "";
+}
+
 function populateCommitHistory() {
 	let history = document.querySelector("#history");
 
