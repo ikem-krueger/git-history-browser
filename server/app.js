@@ -2,6 +2,7 @@ function log(fn, req, res) {
 	console.log(`${fn} => request: ${req.method} '${req.url}' => response:\n${JSON.stringify(res, null, 2)}`);
 }
 
+const execFile = require('child_process').execFile;
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -15,23 +16,25 @@ app.get('/', (req, res) => {
 });
 
 app.get('/history', (req, res) => {
-	// git -C <path> log --oneline
-	let messages = [
-		{ "hash": "c5ac52b", "message": "Fix dash on beginning/end of link" }, 
-		{ "hash": "7a2b38e", "message": "Add missing newline" }, 
-		{ "hash": "8122f3f", "message": "Add comment" }, 
-		{ "hash": "201bcde", "message": "Update logic" }, 
-		{ "hash": "cef03b3", "message": "Refactor" }, 
-		{ "hash": "8b3edf0", "message": "Add css style for the header links" }, 
-		{ "hash": "96aa850", "message": "Add logic for adding header links" }, 
-		{ "hash": "b51bfa4", "message": "Fix link" }, 
-		{ "hash": "9edf43c", "message": "Change substitution symbol to be more in line with most websites" }, 
-		{ "hash": "6761e6d", "message": "Initial commit" }
-	]
-	
-	log("populateCommitHistory()", req, messages);
-	
-    res.json(messages);
+	execFile('git', ['-C', path, 'log', '--oneline'], (error, stdout, stderr) => {
+		let messages = [];
+
+		const regex = /([a-z0-9]{7}) (.*)/g;
+
+		let lines = stdout.split("\n");
+
+		lines.pop(); // FIXME: last element is empty
+
+		lines.forEach((line) => {
+			let result = line.replace(regex, '{ "hash": "$1", "message": "$2" }');
+			
+			messages.push(JSON.parse(result));
+		});
+
+		log("populateCommitHistory()", req, messages);
+
+		res.json(messages);
+	});
 });
 
 app.get('/tree', (req, res) => {
@@ -61,3 +64,5 @@ app.get('/file', (req, res) => {
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
 });
+
+var path = "C:\\Users\\Marco\\Documents\\Projekte\\git-log-tree-viewer";

@@ -23,7 +23,7 @@ async function populateCommitHistory() {
 
 	let path = document.querySelector("#path").value;
 
-	let orderByLastCommit = false;
+	let orderByLastCommit = true;
 	
 	let messages = await httpRequest(host + '/history', format="json");
 
