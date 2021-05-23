@@ -39,6 +39,14 @@ input[type='range'] {
     margin: 4px 0px;
 }
 
+select {
+	height: 380px;
+}
+
+textarea {
+	height: 372px;
+}
+
 select, textarea {
     width: 100%;
 }
