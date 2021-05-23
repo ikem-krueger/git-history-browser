@@ -1,7 +1,3 @@
-function log(fn, req, res) {
-    console.log(`${fn} => request: ${req.method} '${req.url}'\n`);
-}
-
 const execFile = require('child_process').execFile;
 const express = require('express');
 const cors = require('cors');
@@ -18,8 +14,6 @@ app.get('/', (req, res) => {
 app.get('/history', (req, res) => {
     execFile('git', ['-C', path, 'log', '--oneline'], (error, stdout, stderr) => {
         let messages = stdout.replace(/([a-z0-9]{7}) (.*)/g, '{ "hash": "$1", "message": "$2" }, ').replace(/\n/g, ' ').replace(/^/, "[ ").replace(/},  $/, "} ]");
-    
-        log("populateCommitHistory()", req, messages);
 
         res.type('json');
 
@@ -28,10 +22,10 @@ app.get('/history', (req, res) => {
 });
 
 app.get('/tree', (req, res) => {
-    execFile('git', ['-C', path, 'ls-tree', '-r', '468a330'], (error, stdout, stderr) => {
+	let commit = "468a330";
+	
+    execFile('git', ['-C', path, 'ls-tree', '-r', commit], (error, stdout, stderr) => {
         let files = stdout.replace(/([0-9]{6}) (blob) ([a-z0-9]{40})\t(.*)/g, '{ "hash": "$3", "file": "$4"}, ').replace(/\n/g, ' ').replace(/^/, "[ ").replace(/},  $/, "} ]");
-    
-        log("populateFilesystemTree()", req, files);
         
         res.type('json');
         
@@ -40,12 +34,13 @@ app.get('/tree', (req, res) => {
 });
 
 app.get('/file', (req, res) => {
-    // git -C <path> show <commit>
-    let content = ".headerlink {\n    display:none;\n    margin:0 0 0 .2em;\n    text-decoration:none;\n    color:#999;\n}\n\nh1:hover *,\nh2:hover *,\nh3:hover *,\nh4:hover *,\nh5:hover *,\nh6:hover * {\n    display:inline;\n}\n";
-    
-    log("populateFileContent()", req, content);
+	let commit = "1f22b9c26a3d8e65b0d0393dbe20c556a68a6416";
+	
+	execFile('git', ['-C', path, 'show', commit], (error, stdout, stderr) => {
+		let content = stdout;
 
-    res.send(content);
+		res.send(content);
+	});
 });
 
 app.listen(port, () => {

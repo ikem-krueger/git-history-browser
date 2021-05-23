@@ -1,8 +1,8 @@
-const httpRequest = async (url, format) => {
+const httpRequest = async (url, type) => {
     try {
         const response = await fetch(url);
 
-        if(format == "json") {
+        if(type == "json") {
             return await response.json();
         } else {
             return await response.text();
@@ -25,7 +25,7 @@ async function populateCommitHistory() {
 
     let orderByLastCommit = true;
     
-    let messages = await httpRequest(host + '/history', format="json");
+    let messages = await httpRequest(host + '/history', type="json");
 
     messages.forEach(item => {
         let option = document.createElement("option");
@@ -54,7 +54,7 @@ async function populateFilesystemTree() {
     let path = document.querySelector("#path").value;
     let commit = history.value;
     
-    let files = await httpRequest(host + '/tree', format="json");
+    let files = await httpRequest(host + '/tree', type="json");
 
     files.forEach(item => {
         let option = document.createElement("option");
@@ -83,7 +83,7 @@ async function populateFileContent() {
     let path = document.querySelector("#path").value;
     let commit = tree.value;
 
-    let content = await httpRequest(host + '/file', format="text");
+    let content = await httpRequest(host + '/file', type="text");
 
     file.value = content;
 }
