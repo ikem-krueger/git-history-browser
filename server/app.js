@@ -4,12 +4,12 @@ const app = express();
 const port = 3000;
 
 app.use(cors());
+app.use(express.static('public'));
 
-/*
 app.get('/', (req, res) => {
 	// TODO: deliver the client part
+	res.send("http://localhost:3000/index.html");
 });
-*/
 
 app.get('/history', (req, res) => {
 	// git -C <path> log --oneline
