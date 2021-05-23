@@ -3,6 +3,10 @@ const cors = require('cors');
 const app = express();
 const port = 3000;
 
+function log(fn, req, res) {
+	console.log(`${fn} => request: ${req.method} '${req.url}' => response:\n${JSON.stringify(res, null, 2)}`);
+}
+
 app.use(cors());
 app.use(express.static('client'));
 
@@ -25,7 +29,7 @@ app.get('/history', (req, res) => {
 		{ "hash": "6761e6d", "message": "Initial commit" }
 	]
 	
-    console.log(`populateCommitHistory() => ${req.method} '${req.url}' =>\n${JSON.stringify(messages, null, 2)}`);
+	log("populateCommitHistory()", req, messages);
 	
     res.json(messages);
 });
@@ -39,8 +43,8 @@ app.get('/tree', (req, res) => {
 		{ "hash": "90687de26d71e91b7c82565772a7df470ae277a6", "file": "icons/header-link-emperor-48.png" }, 
 		{ "hash": "a1129b78e86930bda45c7ca18806ffd1bca606ca", "file": "manifest.json" }
 	]
-
-    console.log(`populateFilesystemTree() => ${req.method} '${req.url}' =>\n${JSON.stringify(files, null, 2)}`);
+	
+	log("populateCommitHistory()", req, files);
 
     res.json(files);
 });
@@ -48,8 +52,8 @@ app.get('/tree', (req, res) => {
 app.get('/file', (req, res) => {
     // git -C <path> show <commit>
 	let content = ".headerlink {\n    display:none;\n    margin:0 0 0 .2em;\n    text-decoration:none;\n    color:#999;\n}\n\nh1:hover *,\nh2:hover *,\nh3:hover *,\nh4:hover *,\nh5:hover *,\nh6:hover * {\n    display:inline;\n}\n";
-
-    console.log(`populateFileContent() => ${req.method} '${req.url}' =>\n${content}`);
+	
+	log("populateCommitHistory()", req, content); // FIXME
 
     res.send(content);
 });
