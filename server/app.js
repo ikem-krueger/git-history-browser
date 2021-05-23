@@ -1,17 +1,17 @@
+function log(fn, req, res) {
+	console.log(`${fn} => request: ${req.method} '${req.url}' => response:\n${JSON.stringify(res, null, 2)}`);
+}
+
 const express = require('express');
 const cors = require('cors');
 const app = express();
 const port = 3000;
 
-function log(fn, req, res) {
-	console.log(`${fn} => request: ${req.method} '${req.url}' => response:\n${JSON.stringify(res, null, 2)}`);
-}
-
 app.use(cors());
 app.use(express.static('client'));
 
 app.get('/', (req, res) => {
-	res.send("http://localhost:3000/index.html");
+	res.send(`http://localhost:${port}/index.html`);
 });
 
 app.get('/history', (req, res) => {

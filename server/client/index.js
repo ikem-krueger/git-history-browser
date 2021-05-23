@@ -110,6 +110,7 @@ function main() {
 	tree.addEventListener("change", (event) => { dropFileContent(); populateFileContent(); });
 }
 
-var host = "http://localhost:3000";
+var port = "3000";
+var host = `http://localhost:${port}`;
 
 main();
