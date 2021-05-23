@@ -18,27 +18,27 @@ function dropCommitHistory() {
 	history.innerHTML = "";
 }
 
-function populateCommitHistory() {
-	httpRequest(host + '/history', format="json").then((messages) => {
-		let history = document.querySelector("#history");
+async function populateCommitHistory() {
+	let history = document.querySelector("#history");
 
-		let path = document.querySelector("#path").value;
+	let path = document.querySelector("#path").value;
 
-		let orderByLastCommit = false;
+	let orderByLastCommit = false;
+	
+	let messages = await httpRequest(host + '/history', format="json");
 
-		messages.forEach(item => {
-			let option = document.createElement("option");
-			
-			option.value = item.hash;
-			option.innerText = item.message;
-			
-			orderByLastCommit ? history.append(option) : history.prepend(option);
-		});
+	messages.forEach(item => {
+		let option = document.createElement("option");
 		
-		history.selectedIndex = 0; // FIXME: hardcoded value
-
-		populateFilesystemTree();
+		option.value = item.hash;
+		option.innerText = item.message;
+		
+		orderByLastCommit ? history.append(option) : history.prepend(option);
 	});
+	
+	history.selectedIndex = 0; // FIXME: hardcoded value
+
+	populateFilesystemTree();
 }
 
 function dropFilesystemTree() {
@@ -47,27 +47,27 @@ function dropFilesystemTree() {
 	tree.innerHTML = "";
 }
 
-function populateFilesystemTree() {
-	httpRequest(host + '/tree', format="json").then((files) => {
-		let history = document.querySelector("#history");
-		let tree = document.querySelector("#tree");
+async function populateFilesystemTree() {
+	let history = document.querySelector("#history");
+	let tree = document.querySelector("#tree");
 
-		let path = document.querySelector("#path").value;
-		let commit = history.value;
+	let path = document.querySelector("#path").value;
+	let commit = history.value;
+	
+	let files = await httpRequest(host + '/tree', format="json");
 
-		files.forEach(item => {
-			let option = document.createElement("option");
-			
-			option.value = item.hash;
-			option.innerText = item.file;
-			
-			tree.append(option);
-		});
-
-		tree.selectedIndex = 0; // FIXME: hardcoded value
-
-		populateFileContent();
+	files.forEach(item => {
+		let option = document.createElement("option");
+		
+		option.value = item.hash;
+		option.innerText = item.file;
+		
+		tree.append(option);
 	});
+
+	tree.selectedIndex = 0; // FIXME: hardcoded value
+
+	populateFileContent();
 }
 
 function dropFileContent(){
@@ -76,16 +76,16 @@ function dropFileContent(){
 	file.innerHTML = "";
 }
 
-function populateFileContent() {
-	httpRequest(host + '/file', format="text").then((content) => {
-		let tree = document.querySelector("#tree");
-		let file = document.querySelector("#file");
-		
-		let path = document.querySelector("#path").value;
-		let commit = tree.value;
+async function populateFileContent() {
+	let tree = document.querySelector("#tree");
+	let file = document.querySelector("#file");
+	
+	let path = document.querySelector("#path").value;
+	let commit = tree.value;
 
-		file.value = content;
-	});
+	let content = await httpRequest(host + '/file', format="text");
+
+	file.value = content;
 }
 
 function main() {
