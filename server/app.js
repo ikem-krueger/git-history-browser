@@ -4,10 +4,9 @@ const app = express();
 const port = 3000;
 
 app.use(cors());
-app.use(express.static('public'));
+app.use(express.static('client'));
 
 app.get('/', (req, res) => {
-	// TODO: deliver the client part
 	res.send("http://localhost:3000/index.html");
 });
 
