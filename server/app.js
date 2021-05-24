@@ -13,8 +13,8 @@ app.post('/', (req, res) => {
 });
 
 app.post('/history', (req, res) => {
-	let path = req.body.path;
-	
+    let path = req.body.path;
+    
     execFile('git', ['-C', path, 'log', '--oneline'], (error, stdout, stderr) => {
         let messages = stdout.replace(/([a-z0-9]{7}) (.*)/g, '{ "hash": "$1", "message": "$2" }, ').replace(/\n/g, ' ').replace(/^/, "[ ").replace(/,  $/, " ]");
 
@@ -25,9 +25,9 @@ app.post('/history', (req, res) => {
 });
 
 app.post('/tree', (req, res) => {
-	let path = req.body.path;
-	let commit = req.body.commit;
-	
+    let path = req.body.path;
+    let commit = req.body.commit;
+    
     execFile('git', ['-C', path, 'ls-tree', '-r', commit], (error, stdout, stderr) => {
         let files = stdout.replace(/([0-9]{6}) (blob) ([a-z0-9]{40})\t(.*)/g, '{ "hash": "$3", "file": "$4"}, ').replace(/\n/g, ' ').replace(/^/, "[ ").replace(/,  $/, " ]");
 
@@ -38,14 +38,14 @@ app.post('/tree', (req, res) => {
 });
 
 app.post('/file', (req, res) => {
-	let path = req.body.path;
-	let commit = req.body.commit;
-	
-	execFile('git', ['-C', path, 'show', commit], (error, stdout, stderr) => {
-		let content = stdout;
+    let path = req.body.path;
+    let commit = req.body.commit;
+    
+    execFile('git', ['-C', path, 'show', commit], (error, stdout, stderr) => {
+        let content = stdout;
 
-		res.send(content);
-	});
+        res.send(content);
+    });
 });
 
 app.listen(port, () => {
