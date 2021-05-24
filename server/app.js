@@ -1,17 +1,20 @@
-const execFile = require('child_process').execFile;
-const express = require('express');
 const cors = require('cors');
+const express = require('express');
 const app = express();
 const port = 3000;
+const execFile = require('child_process').execFile;
 
 app.use(cors());
+app.use(express.json());
 app.use(express.static('client'));
 
-app.get('/', (req, res) => {
+app.post('/', (req, res) => {
     res.send(`http://localhost:${port}/index.html`);
 });
 
-app.get('/history', (req, res) => {
+app.post('/history', (req, res) => {
+	let path = req.body.path;
+	
     execFile('git', ['-C', path, 'log', '--oneline'], (error, stdout, stderr) => {
         let messages = stdout.replace(/([a-z0-9]{7}) (.*)/g, '{ "hash": "$1", "message": "$2" }, ').replace(/\n/g, ' ').replace(/^/, "[ ").replace(/,  $/, " ]");
 
@@ -21,8 +24,9 @@ app.get('/history', (req, res) => {
     });
 });
 
-app.get('/tree', (req, res) => {
-	let commit = "468a330";
+app.post('/tree', (req, res) => {
+	let path = req.body.path;
+	let commit = req.body.commit;
 	
     execFile('git', ['-C', path, 'ls-tree', '-r', commit], (error, stdout, stderr) => {
         let files = stdout.replace(/([0-9]{6}) (blob) ([a-z0-9]{40})\t(.*)/g, '{ "hash": "$3", "file": "$4"}, ').replace(/\n/g, ' ').replace(/^/, "[ ").replace(/,  $/, " ]");
@@ -33,8 +37,9 @@ app.get('/tree', (req, res) => {
     });
 });
 
-app.get('/file', (req, res) => {
-	let commit = "1f22b9c26a3d8e65b0d0393dbe20c556a68a6416";
+app.post('/file', (req, res) => {
+	let path = req.body.path;
+	let commit = req.body.commit;
 	
 	execFile('git', ['-C', path, 'show', commit], (error, stdout, stderr) => {
 		let content = stdout;
@@ -46,5 +51,3 @@ app.get('/file', (req, res) => {
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
 });
-
-var path = "C:\\Users\\Marco\\Documents\\Projekte\\git-log-tree-viewer";

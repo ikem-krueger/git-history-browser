@@ -1,6 +1,6 @@
-const httpRequest = async (url, type) => {
+const httpRequest = async (url, data, type) => {
     try {
-        const response = await fetch(url);
+        const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
 
         if(type == "json") {
             return await response.json();
@@ -25,7 +25,7 @@ async function populateCommitHistory() {
 
     let orderByLastCommit = true;
     
-    let messages = await httpRequest(host + '/history', type="json");
+    let messages = await httpRequest(host + '/history', { path: path }, type="json");
 
     messages.forEach(item => {
         let option = document.createElement("option");
@@ -54,7 +54,7 @@ async function populateFilesystemTree() {
     let path = document.querySelector("#path").value;
     let commit = history.value;
     
-    let files = await httpRequest(host + '/tree', type="json");
+    let files = await httpRequest(host + '/tree', { path: path, commit: commit }, type="json");
 
     files.forEach(item => {
         let option = document.createElement("option");
@@ -83,7 +83,7 @@ async function populateFileContent() {
     let path = document.querySelector("#path").value;
     let commit = tree.value;
 
-    let content = await httpRequest(host + '/file', type="text");
+    let content = await httpRequest(host + '/file', { path: path, commit: commit }, type="text");
 
     file.value = content;
 }
