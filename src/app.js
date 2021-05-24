@@ -6,7 +6,7 @@ const execFile = require('child_process').execFile;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static('client'));
+app.use(express.static('public'));
 
 app.post('/', (req, res) => {
     res.send(`http://localhost:${port}/index.html`);
