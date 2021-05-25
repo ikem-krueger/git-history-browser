@@ -95,9 +95,9 @@ async function populateFileContent() {
 }
 
 function main() {
-	let path = document.querySelector("#path");
-	
-	path.value = "C:\\Users\\Marco\\Documents\\Projekte\\git-log-tree-viewer";
+    let path = document.querySelector("#path");
+    
+    path.value = "C:\\Users\\Marco\\Documents\\Projekte\\git-log-tree-viewer";
 
     let history = document.querySelector("#history");
 
