@@ -56,7 +56,7 @@ app.post('/tree', (req, res) => {
         for(let i = 0; i < length; i++) {
             let line = lines[i];
 
-            let json = line.replace(/([0-9]{6}) (blob) ([a-z0-9]{40})\t(.*)/, '{ "hash": "$3", "file": "$4"}');
+            let json = line.replace(/([0-9]{6}) (blob) ([a-z0-9]{40})\t(.*)/, '{ "hash": "$3", "file": "$4" }');
             
             try {
                 files.push(JSON.parse(json));
