@@ -19,10 +19,14 @@ app.post('/history', (req, res) => {
         let lines = stdout.split("\n");
     
         lines.pop(); // last line is empty, so remove it...
+
+        let length = lines.length;
     
         let messages = [];
         
-        lines.forEach((line) => {
+        for(let i = 0; i < length; i++) {
+            let line = lines[i];
+
             let json = line.replace(/"/g, '\\"').replace(/\t/g, "    ").replace(/([a-z0-9]{6,}) (.*)/, '{ "hash": "$1", "message": "$2" }');
             
             try {
@@ -30,7 +34,7 @@ app.post('/history', (req, res) => {
             } catch(err) {
                 console.error(json);
             }
-        });
+        }
 
         res.json(messages);
     });
@@ -45,9 +49,13 @@ app.post('/tree', (req, res) => {
         
         lines.pop(); // last line is empty, so remove it...
         
+        let length = lines.length;
+
         let files = [];
         
-        lines.forEach((line) => {
+        for(let i = 0; i < length; i++) {
+            let line = lines[i];
+
             let json = line.replace(/([0-9]{6}) (blob) ([a-z0-9]{40})\t(.*)/, '{ "hash": "$3", "file": "$4"}');
             
             try {
@@ -55,7 +63,7 @@ app.post('/tree', (req, res) => {
             } catch(err) {
                 console.error(json);
             }
-        });
+        }
         
         res.json(files);
     });
