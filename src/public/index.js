@@ -44,6 +44,7 @@ async function populateCommitHistory() {
     slider.value = history.selectedIndex + 1;
     slider.max = history.length; // FIXME
 
+    dropFilesystemTree();
     populateFilesystemTree();
 }
 
@@ -73,6 +74,7 @@ async function populateFilesystemTree() {
 
     tree.selectedIndex = 0; // FIXME: hardcoded value
 
+    dropFileContent();
     populateFileContent();
 }
 
