@@ -98,6 +98,8 @@ function main() {
     let path = document.querySelector("#path");
     
     path.value = "C:\\Users\\Marco\\Documents\\Projekte\\git-log-tree-viewer";
+    
+    path.addEventListener("keydown", (event) => { if(event.key == "Enter") { dropCommitHistory(); populateCommitHistory(); event.preventDefault(); }});
 
     let history = document.querySelector("#history");
 
