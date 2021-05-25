@@ -36,7 +36,13 @@ async function populateCommitHistory() {
         orderByLastCommit ? history.append(option) : history.prepend(option);
     });
     
-    history.selectedIndex = 0; // FIXME: hardcoded value
+    history.selectedIndex = 0;
+    
+    let slider = document.querySelector("#slider");
+    
+    slider.min = 1;
+    slider.value = history.selectedIndex + 1;
+    slider.max = history.length; // FIXME
 
     populateFilesystemTree();
 }
