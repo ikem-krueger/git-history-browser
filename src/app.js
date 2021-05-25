@@ -16,11 +16,23 @@ app.post('/history', (req, res) => {
     let path = req.body.path;
     
     execFile('git', ['-C', path, 'log', '--oneline'], (error, stdout, stderr) => {
-        let messages = stdout.replace(/([a-z0-9]{7}) (.*)/g, '{ "hash": "$1", "message": "$2" }, ').replace(/\n/g, ' ').replace(/^/, "[ ").replace(/,  $/, " ]");
+        let lines = stdout.split("\n");
+    
+        lines.pop(); // last line is empty, so remove it...
+    
+        let messages = [];
+        
+        lines.forEach((line) => {
+            let json = line.replace(/"/g, '\\"').replace(/\t/g, "    ").replace(/([a-z0-9]{6,}) (.*)/, '{ "hash": "$1", "message": "$2" }');
+            
+            try {
+                messages.push(JSON.parse(json));
+            } catch(err) {
+                console.error(json);
+            }
+        });
 
-        res.type('json');
-
-        res.send(messages);
+        res.json(messages);
     });
 });
 
@@ -29,11 +41,23 @@ app.post('/tree', (req, res) => {
     let commit = req.body.commit;
     
     execFile('git', ['-C', path, 'ls-tree', '-r', commit], (error, stdout, stderr) => {
-        let files = stdout.replace(/([0-9]{6}) (blob) ([a-z0-9]{40})\t(.*)/g, '{ "hash": "$3", "file": "$4"}, ').replace(/\n/g, ' ').replace(/^/, "[ ").replace(/,  $/, " ]");
-
-        res.type('json');
+        let lines = stdout.split("\n");
         
-        res.send(files);
+        lines.pop(); // last line is empty, so remove it...
+        
+        let files = [];
+        
+        lines.forEach((line) => {
+            let json = line.replace(/([0-9]{6}) (blob) ([a-z0-9]{40})\t(.*)/, '{ "hash": "$3", "file": "$4"}');
+            
+            try {
+                files.push(JSON.parse(json));
+            } catch(err) {
+                console.error(json);
+            }
+        });
+        
+        res.json(files);
     });
 });
 
