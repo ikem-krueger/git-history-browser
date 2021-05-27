@@ -27,14 +27,18 @@ async function populateCommitHistory() {
     
     let messages = await httpRequest(host + '/history', { path: path }, type="json");
 
-    messages.forEach(item => {
+    let length = messages.length;
+
+    for(let i = 0; i < length; i++) {
+        let item = messages[i];
+
         let option = document.createElement("option");
         
         option.value = item.hash;
         option.innerText = item.message;
         
         orderByLastCommit ? history.append(option) : history.prepend(option);
-    });
+    }
     
     history.selectedIndex = 0;
     
@@ -63,14 +67,18 @@ async function populateFilesystemTree() {
     
     let files = await httpRequest(host + '/tree', { path: path, commit: commit }, type="json");
 
-    files.forEach(item => {
+    let length = files.length;
+    
+    for(let i = 0; i < length; i++) {
+        let item = files[i];
+        
         let option = document.createElement("option");
         
         option.value = item.hash;
         option.innerText = item.file;
         
         tree.append(option);
-    });
+    }
 
     tree.selectedIndex = 0; // FIXME: hardcoded value
 
