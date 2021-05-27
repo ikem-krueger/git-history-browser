@@ -40,29 +40,16 @@ input[type='range'] {
 }
 
 select {
-	height: 380px;
+    height: 380px;
 }
 
-textarea {
-	height: 372px;
-}
-
-select, textarea {
+select {
     width: 100%;
 }
 
-select, textarea, label {
+select, label, div {
     font-family: Tahoma;
     font-size: 0.8em;
-}
-
-select option.hide {
-    display: none;
-}
-
-.checkbox {
-    float: right;
-    padding: 4px 0px;
 }
 
 button {
@@ -70,7 +57,24 @@ button {
     padding: 4px 6px;
 }
 
-textarea {
+.checkbox {
+    float: right;
+    padding: 4px 0px;
+}
+
+.hide {
+    display: none;
+}
+
+#details {
+    margin-top: 10px;
+    color: grey;
+}
+
+#file {
     white-space: pre;
-    resize: none;
+    height: 364px;
+    width: 460px;
+    border: 1px solid #828790;
+    margin-bottom: 2px;
 }

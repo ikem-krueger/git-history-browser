@@ -22,8 +22,6 @@ async function populateCommitHistory() {
     let history = document.querySelector("#history");
 
     let path = document.querySelector("#path").value;
-
-    let orderByLastCommit = false;
     
     let messages = await httpRequest(host + '/history', { path: path }, type="json");
 
@@ -100,8 +98,12 @@ async function populateFileContent() {
     let commit = tree.value;
 
     let content = await httpRequest(host + '/file', { path: path, commit: commit }, type="text");
-
-    file.value = content;
+	
+	file.innerText = content;
+	
+	file.classList = [ "hljs" ];
+	
+	hljs.highlightElement(file); // then highlight each
 }
 
 function main() {
@@ -151,7 +153,7 @@ function main() {
 
     let filterFiles = document.querySelector("#filter-files");
     
-    filterFiles.addEventListener("keydown", (event) => { if(event.key == "Enter") event.preventDefault(); });
+    filterFiles.addEventListener("keydown", (event) => { if(event.key == "Enter") { event.preventDefault(); } });
 
     filterFiles.addEventListener("keyup", (event) => {
         let search = event.target.value.toLowerCase();
@@ -172,5 +174,7 @@ var port = "3000";
 var host = `http://localhost:${port}`;
 
 var repo = "C:\\Users\\ethinking\\source\\repos\\git-log-tree-viewer";
+
+var orderByLastCommit = true;
 
 main();

@@ -10,24 +10,33 @@
         <link rel="stylesheet" href="index.css">
 
         <script src="index.js" defer></script>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/github-gist.min.css">
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
     </head>
     <body>
         <h1>Git Log Tree Viewer</h1>
         <form>
             <fieldset>
                 <legend>Path</legend>
-                <input id="path" name="path" type="text">
+                <input id="path"type="text">
             </fieldset>
             <fieldset>
                 <legend>Commit</legend>
-                <select id="history" name="history_commit" size="20">
+                <select id="history" size="20">
                 </select>
                 <input id="filter-commits" type="text" placeholder="Filter">
                 <input id="slider" type="range">
+                <div id="details">
+                    Hash: <span id="hash">5b7ae75675ba6578f66843a2c1aae344de288568</span><br>
+                    Author: <span id="author">Ikem &lt;ikem.krueger@gmail.com&gt;</span><br>
+                    Date: <span id="date">Thu May 27 13:27:07 2021 +0200</span><br>
+                </div>
             </fieldset>
             <fieldset>
                 <legend>File</legend>
-                <select id="tree" name="file_commit" size="20">
+                <select id="tree" size="20">
                 </select>
                 <input id="filter-files" type="text" placeholder="Filter">
                 <span class="checkbox">
@@ -36,8 +45,8 @@
             </fieldset>
             <fieldset>
                 <legend>Content</legend>
-                <textarea id="file" rows="24">
-                </textarea>
+                <div id="file" class="code">
+                </div>
                 <button>Checkout</button>
                 <span class="checkbox">
                     <input type="checkbox" id="show_diff"><label for="show_diff">Show differences to previous commit</label>
