@@ -6,4 +6,5 @@
  - blame infos zur datei
  - auto refresh bei änderungen
  - fokussiere ausgewählten commit beim arbeiten mit dem slider
- 
+ - url in pfad -> git clone
+ - branches
