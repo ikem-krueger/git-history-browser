@@ -119,8 +119,8 @@ function main() {
     populateCommitHistory();
 
     let filterCommits = document.querySelector("#filter-commits");
-	
-	filterCommits.addEventListener("keydown", (event) => { if(event.key == "Enter") event.preventDefault(); });
+    
+    filterCommits.addEventListener("keydown", (event) => { if(event.key == "Enter") event.preventDefault(); });
 
     filterCommits.addEventListener("keyup", (event) => {
         let search = event.target.value.toLowerCase();
@@ -130,10 +130,10 @@ function main() {
         for(let i of all) {
             let item = i.innerHTML.toLowerCase();
             
-			item.indexOf(search) == -1 ? i.classList.add("hide") : i.classList.remove("hide");
+            item.indexOf(search) == -1 ? i.classList.add("hide") : i.classList.remove("hide");
         }
-		
-		event.preventDefault();
+        
+        event.preventDefault();
     });
 
     let slider = document.querySelector("#slider");
@@ -150,8 +150,8 @@ function main() {
     tree.addEventListener("change", (event) => { dropFileContent(); populateFileContent(); });
 
     let filterFiles = document.querySelector("#filter-files");
-	
-	filterFiles.addEventListener("keydown", (event) => { if(event.key == "Enter") event.preventDefault(); });
+    
+    filterFiles.addEventListener("keydown", (event) => { if(event.key == "Enter") event.preventDefault(); });
 
     filterFiles.addEventListener("keyup", (event) => {
         let search = event.target.value.toLowerCase();
@@ -161,10 +161,10 @@ function main() {
         for(let i of all) {
             let item = i.innerHTML.toLowerCase();
             
-			item.indexOf(search) == -1 ? i.classList.add("hide") : i.classList.remove("hide");
+            item.indexOf(search) == -1 ? i.classList.add("hide") : i.classList.remove("hide");
         }
-		
-		event.preventDefault();
+        
+        event.preventDefault();
     });
 }
 
