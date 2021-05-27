@@ -99,7 +99,7 @@ async function populateFileContent() {
 function main() {
     let path = document.querySelector("#path");
     
-    path.value = "C:\\Users\\Marco\\Documents\\Projekte\\git-log-tree-viewer";
+    path.value = repo;
     
     path.addEventListener("keydown", (event) => { if(event.key == "Enter") { dropCommitHistory(); populateCommitHistory(); event.preventDefault(); }});
 
@@ -109,6 +109,24 @@ function main() {
     history.addEventListener("change", (event) => { dropFilesystemTree(); populateFilesystemTree(); });
 
     populateCommitHistory();
+
+    let filterCommits = document.querySelector("#filter-commits");
+	
+	filterCommits.addEventListener("keydown", (event) => { if(event.key == "Enter") event.preventDefault(); });
+
+    filterCommits.addEventListener("keyup", (event) => {
+        let search = event.target.value.toLowerCase();
+
+        let all = document.querySelectorAll("#history option")
+
+        for(let i of all) {
+            let item = i.innerHTML.toLowerCase();
+            
+			item.indexOf(search) == -1 ? i.classList.add("hide") : i.classList.remove("hide");
+        }
+		
+		event.preventDefault();
+    });
 
     let slider = document.querySelector("#slider");
     
@@ -122,9 +140,29 @@ function main() {
     let tree = document.querySelector("#tree");
     
     tree.addEventListener("change", (event) => { dropFileContent(); populateFileContent(); });
+
+    let filterFiles = document.querySelector("#filter-files");
+	
+	filterFiles.addEventListener("keydown", (event) => { if(event.key == "Enter") event.preventDefault(); });
+
+    filterFiles.addEventListener("keyup", (event) => {
+        let search = event.target.value.toLowerCase();
+
+        let all = document.querySelectorAll("#tree option")
+
+        for(let i of all) {
+            let item = i.innerHTML.toLowerCase();
+            
+			item.indexOf(search) == -1 ? i.classList.add("hide") : i.classList.remove("hide");
+        }
+		
+		event.preventDefault();
+    });
 }
 
 var port = "3000";
 var host = `http://localhost:${port}`;
+
+var repo = "C:\\Users\\ethinking\\source\\repos\\git-log-tree-viewer";
 
 main();

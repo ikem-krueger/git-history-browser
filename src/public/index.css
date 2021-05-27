@@ -56,6 +56,10 @@ select, textarea, label {
     font-size: 0.8em;
 }
 
+select option.hide {
+    display: none;
+}
+
 .checkbox {
     float: right;
     padding: 4px 0px;
