@@ -1,3 +1,7 @@
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
 const httpRequest = async (url, data, type) => {
     try {
         const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
@@ -33,6 +37,9 @@ async function populateCommitHistory() {
         let option = document.createElement("option");
         
         option.value = item.hash;
+        option.dataset.hash = item.hash;
+		option.dataset.author = item.author;
+		option.dataset.date = item.date;
         option.innerText = item.message;
         
         orderByLastCommit ? history.append(option) : history.prepend(option);
@@ -93,17 +100,20 @@ function dropFileContent(){
 async function populateFileContent() {
     let tree = document.querySelector("#tree");
     let file = document.querySelector("#file");
-    
+    let type = document.querySelector("#type");
+	
     let path = document.querySelector("#path").value;
     let commit = tree.value;
 
-    let content = await httpRequest(host + '/file', { path: path, commit: commit }, type="text");
-	
-	file.innerText = content;
-	
-	file.classList = [ "hljs" ];
-	
-	hljs.highlightElement(file); // then highlight each
+    let content = await httpRequest(host + '/file', { path: path, commit: commit }, "text");
+    
+    file.innerText = content;
+    
+    file.classList = [ "hljs" ];
+    
+    hljs.highlightElement(file); // then highlight each
+
+	type.innerText = file.classList[file.classList.length -1].capitalize();
 }
 
 function main() {
@@ -117,6 +127,18 @@ function main() {
 
     history.addEventListener("change", (event) => { slider.value = (history.selectedIndex + 1); });
     history.addEventListener("change", (event) => { dropFilesystemTree(); populateFilesystemTree(); });
+
+	history.addEventListener("change", (event) => { 
+		let selectedItem = history[history.selectedIndex];
+		
+		let commitHash = document.querySelector("#commit-hash");
+		let commitAuthor = document.querySelector("#commit-author");
+		let commitDate = document.querySelector("#commit-date");
+		
+		commitHash.innerText = selectedItem.dataset.hash;
+		commitAuthor.innerText = selectedItem.dataset.author;
+		commitDate.innerText = selectedItem.dataset.date;
+	});
 
     populateCommitHistory();
 
@@ -151,6 +173,13 @@ function main() {
     
     tree.addEventListener("change", (event) => { dropFileContent(); populateFileContent(); });
 
+	tree.addEventListener("change", (event) => { 
+		let fileHash = document.querySelector("#file-hash");
+		
+		fileHash.innerText = tree[tree.selectedIndex].value;
+	});
+
+    // TODO: remove redundand code...
     let filterFiles = document.querySelector("#filter-files");
     
     filterFiles.addEventListener("keydown", (event) => { if(event.key == "Enter") { event.preventDefault(); } });
@@ -170,8 +199,8 @@ function main() {
     });
 }
 
-var port = "3000";
-var host = `http://localhost:${port}`;
+const port = "3000";
+const host = `http://localhost:${port}`;
 
 var repo = "C:\\Users\\ethinking\\source\\repos\\git-log-tree-viewer";
 
