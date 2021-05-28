@@ -16,23 +16,23 @@ app.post('/', (req, res) => {
 
 app.post('/history', (req, res) => {
     let path = req.body.path;
-    
+
     execFile('git', ['-C', path, 'log', '--pretty=format:%H%x09%an <%ae>%x09%ad%x09%s'], (error, stdout, stderr) => {
         let lines = stdout.split("\n");
 
         let length = lines.length;
-    
+
         let messages = [];
-        
+
         for(let i = 0; i < length; i++) {
             let line = lines[i];
-			
+
             let json = line.replace(/"/g, '\\"').replace(/\t/g, "    ").replace(/(.*) {4}(.*) {4}(.*) {4}(.*)/, '{ "hash": "$1", "author": "$2", "date": "$3", "message": "$4" }');
-			
+
             try {
                 messages.push(JSON.parse(json));
             } catch(err) {
-				console.error(line);
+                console.error(line);
 
                 console.error(json);
             }
@@ -45,30 +45,30 @@ app.post('/history', (req, res) => {
 app.post('/tree', (req, res) => {
     let path = req.body.path;
     let commit = req.body.commit;
-    
+
     execFile('git', ['-C', path, 'ls-tree', '-r', commit], (error, stdout, stderr) => {
         let lines = stdout.split("\n");
-        
+
         lines.pop(); // last line is empty, so remove last element...
-        
+
         let length = lines.length;
 
         let files = [];
-        
+
         for(let i = 0; i < length; i++) {
             let line = lines[i];
 
             let json = line.replace(/([0-9]{6}) (blob) ([a-z0-9]{40})\t(.*)/, '{ "hash": "$3", "file": "$4" }');
-            
+
             try {
                 files.push(JSON.parse(json));
             } catch(err) {
-				console.error(line);
+                console.error(line);
 
                 console.error(json);
             }
         }
-        
+
         res.json(files);
     });
 });
@@ -76,7 +76,7 @@ app.post('/tree', (req, res) => {
 app.post('/file', (req, res) => {
     let path = req.body.path;
     let commit = req.body.commit;
-    
+
     execFile('git', ['-C', path, 'show', commit], (error, stdout, stderr) => {
         let content = stdout;
 

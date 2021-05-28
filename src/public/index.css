@@ -73,8 +73,9 @@ button {
 
 #file {
     white-space: pre;
-    height: 364px;
+    height: 378px;
     width: 460px;
+    overflow: auto;
     border: 1px solid #828790;
     margin-bottom: 2px;
 }
