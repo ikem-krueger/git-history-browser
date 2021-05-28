@@ -46,7 +46,7 @@ app.post('/tree', (req, res) => {
     let path = req.body.path;
     let commit = req.body.commit;
 
-    execFile('git', ['-C', path, 'ls-tree', '-r', commit], (error, stdout, stderr) => {
+    execFile('git', ['-C', path, 'ls-tree', '-r', '-l', commit], (error, stdout, stderr) => {
         let lines = stdout.split("\n");
 
         lines.pop(); // last line is empty, so remove last element...
@@ -58,7 +58,7 @@ app.post('/tree', (req, res) => {
         for(let i = 0; i < length; i++) {
             let line = lines[i];
 
-            let json = line.replace(/([0-9]{6}) (blob) ([a-z0-9]{40})\t(.*)/, '{ "hash": "$3", "file": "$4" }');
+            let json = line.replace(/([0-7]{6}) (.*) ([a-z0-9]{40}) *([0-9]{1,})\t(.*)/, '{ "mode": "$1", "type": "$2", "hash": "$3", "size": "$4", "file": "$5" }');
 
             try {
                 files.push(JSON.parse(json));
@@ -76,7 +76,7 @@ app.post('/tree', (req, res) => {
 app.post('/file', (req, res) => {
     let path = req.body.path;
     let commit = req.body.commit;
-
+    
     execFile('git', ['-C', path, 'show', commit], (error, stdout, stderr) => {
         let content = stdout;
 
