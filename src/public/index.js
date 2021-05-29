@@ -1,3 +1,11 @@
+let timerId;
+
+let debounceFunction = (func, delay) => {
+    clearTimeout(timerId);
+
+    timerId = setTimeout(func, delay);
+}
+
 const httpRequest = async (url, data, type) => {
     try {
         const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
@@ -138,7 +146,7 @@ function main() {
     let history = document.querySelector("#history");
 
     history.addEventListener("change", (event) => {
-        populateFilesystemTree();
+        debounceFunction(populateFilesystemTree, 200);
     });
 
     let filterCommits = document.querySelector("#filter-commits");
@@ -154,13 +162,13 @@ function main() {
     slider.addEventListener("change", (event) => {
         history.selectedIndex = (slider.value - 1);
 
-        populateFilesystemTree();
+        debounceFunction(populateFilesystemTree, 200);
     });
 
     let tree = document.querySelector("#tree");
 
     tree.addEventListener("change", (event) => {
-        populateFileContent();
+        debounceFunction(populateFileContent, 200);
     });
 
     let filterFiles = document.querySelector("#filter-files");
