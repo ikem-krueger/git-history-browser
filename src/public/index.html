@@ -12,7 +12,7 @@
         <script src="index.js" defer></script>
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/github-gist.min.css">
-        
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
     </head>
     <body>
@@ -43,7 +43,9 @@
                     <input type="checkbox" id="changed_files_only"><label for="changed_files_only">Show only changed files</label>
                 </span>
                 <div class="details">
-                    <span id="file-hash"></span>
+                    <span id="file-hash"></span><br>
+                    <span id="file-mode"></span><br>
+                    <span id="file-size"></span>
                 </div>
             </fieldset>
             <fieldset>
@@ -55,7 +57,7 @@
                     <input type="checkbox" id="show_diff"><label for="show_diff">Show differences to previous commit</label>
                 </span>
                 <div class="details">
-                    <span id="file-type"></span>
+                    <span id="content-type"></span>
                 </div>
             </fieldset>
         </form>

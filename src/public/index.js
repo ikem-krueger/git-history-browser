@@ -17,12 +17,12 @@ const httpRequest = async (url, data, type) => {
 }
 
 function dropCommitHistory() {
-    let history = document.querySelector("#history");
-
-    history.innerHTML = "";
+    document.querySelectorAll('#history option').forEach(option => option.remove())
 }
 
 async function populateCommitHistory() {
+    dropCommitHistory();
+    
     let history = document.querySelector("#history");
 
     let path = document.querySelector("#path").value;
@@ -53,17 +53,16 @@ async function populateCommitHistory() {
     slider.value = history.selectedIndex + 1;
     slider.max = history.length; // FIXME
 
-    dropFilesystemTree();
     populateFilesystemTree();
 }
 
 function dropFilesystemTree() {
-    let tree = document.querySelector("#tree");
-
-    tree.innerHTML = "";
+    document.querySelectorAll('#tree option').forEach(option => option.remove())
 }
 
 async function populateFilesystemTree() {
+    dropFilesystemTree();
+    
     let history = document.querySelector("#history");
     let tree = document.querySelector("#tree");
 
@@ -80,6 +79,9 @@ async function populateFilesystemTree() {
         let option = document.createElement("option");
 
         option.value = item.hash;
+        option.dataset.mode = item.mode;
+        option.dataset.type = item.type;
+        option.dataset.size = item.size;
         option.innerText = item.file;
 
         tree.append(option);
@@ -87,20 +89,13 @@ async function populateFilesystemTree() {
 
     tree.selectedIndex = 0; // FIXME: hardcoded value
 
-    dropFileContent();
     populateFileContent();
-}
-
-function dropFileContent(){
-    let file = document.querySelector("#file");
-
-    file.innerHTML = "";
 }
 
 async function populateFileContent() {
     let tree = document.querySelector("#tree");
     let file = document.querySelector("#file");
-    let fileType = document.querySelector("#file-type");
+    let contentType = document.querySelector("#content-type");
 
     let path = document.querySelector("#path").value;
     let commit = tree.value;
@@ -114,7 +109,7 @@ async function populateFileContent() {
 
         hljs.highlightElement(file); // then highlight each
 
-        fileType.innerText = "Type: " + file.classList[file.classList.length - 1].capitalize();
+        contentType.innerText = "Type: " + file.classList[file.classList.length - 1].capitalize();
     }
 }
 
@@ -127,12 +122,12 @@ function main() {
 
     path.value = repo;
 
-    path.addEventListener("keydown", (event) => { if(event.key == "Enter") { dropCommitHistory(); populateCommitHistory(); }});
+    path.addEventListener("keydown", (event) => { if(event.key == "Enter") { populateCommitHistory(); }});
 
     let history = document.querySelector("#history");
 
     history.addEventListener("change", (event) => { slider.value = (history.selectedIndex + 1); });
-    history.addEventListener("change", (event) => { dropFilesystemTree(); populateFilesystemTree(); });
+    history.addEventListener("change", (event) => { populateFilesystemTree(); });
 
     history.addEventListener("change", (event) => { 
         let selectedItem = history[history.selectedIndex];
@@ -169,17 +164,23 @@ function main() {
     slider.max = history.length; // FIXME
 
     slider.addEventListener("change", (event) => { history.selectedIndex = (slider.value - 1); });
-    slider.addEventListener("change", (event) => { dropFilesystemTree(); populateFilesystemTree(); });
+    slider.addEventListener("change", (event) => { populateFilesystemTree(); });
 
     let tree = document.querySelector("#tree");
 
-    tree.addEventListener("change", (event) => { dropFileContent(); populateFileContent(); });
+    tree.addEventListener("change", (event) => { populateFileContent(); });
 
     tree.addEventListener("change", (event) => { 
+        let selectedItem = tree[tree.selectedIndex];
+
         let fileHash = document.querySelector("#file-hash");
+        let fileMode = document.querySelector("#file-mode");
+        let fileSize = document.querySelector("#file-size");
 
         fileHash.innerText = "Hash: " + tree[tree.selectedIndex].value;
-    });
+        fileMode.innerText = "Mode: " + selectedItem.dataset.mode;
+        fileSize.innerText = "Size: " + selectedItem.dataset.size + " Byte";
+   });
 
     // TODO: remove redundant code...
     let filterFiles = document.querySelector("#filter-files");
