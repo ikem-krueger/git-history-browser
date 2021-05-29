@@ -33,26 +33,24 @@ function filterOptions(selector, search) {
 async function populateCommitHistory() {
     let history = document.querySelector("#history");
 
-    history.length = 0;
-
     let path = document.querySelector("#path").value;
 
     let messages = await httpRequest(host + '/history', { path: path }, type="json");
 
     let length = messages.length;
 
+    history.length = length;
+
     for(let i = 0; i < length; i++) {
         let item = messages[i];
 
-        let option = document.createElement("option");
+        let option = history[i];
 
         option.value = item.hash;
         option.dataset.hash = item.hash;
         option.dataset.author = item.author;
         option.dataset.date = item.date;
         option.innerText = item.message;
-
-        orderByLastCommit ? history.append(option) : history.prepend(option);
     }
 
     history.selectedIndex = 0;
@@ -70,8 +68,6 @@ async function populateFilesystemTree() {
     let history = document.querySelector("#history");
     let tree = document.querySelector("#tree");
 
-    tree.length = 0;
-
     let path = document.querySelector("#path").value;
     let commit = history.value;
 
@@ -79,18 +75,18 @@ async function populateFilesystemTree() {
 
     let length = files.length;
 
+    tree.length = length;
+
     for(let i = 0; i < length; i++) {
         let item = files[i];
 
-        let option = document.createElement("option");
+        let option = tree[i];
 
         option.value = item.hash;
         option.dataset.mode = item.mode;
         option.dataset.type = item.type;
         option.dataset.size = item.size;
         option.innerText = item.file;
-
-        tree.append(option);
     }
 
     tree.selectedIndex = 0; // FIXME: hardcoded value
@@ -185,8 +181,6 @@ function main() {
 
 const port = "3000";
 const host = `http://localhost:${port}`;
-
-var orderByLastCommit = true;
 
 var repo = "C:\\Users\\Marco\\Documents\\Projekte\\git-log-tree-viewer";
 
