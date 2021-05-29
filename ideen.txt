@@ -1,10 +1,6 @@
- - filter für die commit history
- - play/pause knopf um die commit history automatisch zu durchlaufen
- - vorschau für bilder
- - syntax highlightening
- - "richtiger" dateisystembaum
- - blame infos zur datei
  - auto refresh bei änderungen
- - fokussiere ausgewählten commit beim arbeiten mit dem slider
  - url in pfad -> git clone
- - branches
+ - fokussiere ausgewählten commit beim arbeiten mit dem slider
+ - syntax highlightening
+ - vorschau für bilder
+ - play/pause knopf um die commit history automatisch zu durchlaufen
