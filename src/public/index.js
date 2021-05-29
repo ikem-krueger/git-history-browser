@@ -177,6 +177,6 @@ function main() {
 const port = "3000";
 const host = `http://localhost:${port}`;
 
-var repo = "C:\\Users\\Marco\\Documents\\Projekte\\git-history-viewer";
+let repo = "C:\\Users\\Marco\\Documents\\Projekte\\git-history-viewer";
 
 main();
