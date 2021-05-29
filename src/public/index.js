@@ -85,9 +85,9 @@ async function populateFilesystemTree() {
 
     tree.selectedIndex = 0; // FIXME: hardcoded value
 
-	let slider = document.querySelector("#slider");
+    let slider = document.querySelector("#slider");
 
-	slider.value = (history.selectedIndex + 1);
+    slider.value = (history.selectedIndex + 1);
 
     let selectedItem = history[history.selectedIndex];
 
