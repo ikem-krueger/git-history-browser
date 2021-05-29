@@ -16,13 +16,25 @@ const httpRequest = async (url, data, type) => {
     }
 }
 
+function dropOptions(selector) {
+    let options = document.querySelectorAll(selector);
+
+    let length = options.length;
+
+    for(let i = 0; i < length; i++) {
+        let option = options[i];
+
+        option.remove();
+    }
+}
+
 function dropCommitHistory() {
-    document.querySelectorAll('#history option').forEach(option => option.remove())
+    dropOptions("#history option");
 }
 
 async function populateCommitHistory() {
     dropCommitHistory();
-    
+
     let history = document.querySelector("#history");
 
     let path = document.querySelector("#path").value;
@@ -57,12 +69,12 @@ async function populateCommitHistory() {
 }
 
 function dropFilesystemTree() {
-    document.querySelectorAll('#tree option').forEach(option => option.remove())
+    dropOptions("#tree option");
 }
 
 async function populateFilesystemTree() {
     dropFilesystemTree();
-    
+
     let history = document.querySelector("#history");
     let tree = document.querySelector("#tree");
 
