@@ -42,15 +42,14 @@ async function populateCommitHistory() {
     history.length = length;
 
     for(let i = 0; i < length; i++) {
+        let option = history[i];
         let item = messages[i];
 
-        let option = history[i];
-
+        option.innerText = item.message;
         option.value = item.hash;
         option.dataset.hash = item.hash;
         option.dataset.author = item.author;
         option.dataset.date = item.date;
-        option.innerText = item.message;
     }
 
     history.selectedIndex = 0;
@@ -78,15 +77,14 @@ async function populateFilesystemTree() {
     tree.length = length;
 
     for(let i = 0; i < length; i++) {
+        let option = tree[i];
         let item = files[i];
 
-        let option = tree[i];
-
+        option.innerText = item.file;
         option.value = item.hash;
         option.dataset.mode = item.mode;
         option.dataset.type = item.type;
         option.dataset.size = item.size;
-        option.innerText = item.file;
     }
 
     tree.selectedIndex = 0; // FIXME: hardcoded value
