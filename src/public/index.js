@@ -91,6 +91,16 @@ async function populateFilesystemTree() {
 
     tree.selectedIndex = 0; // FIXME: hardcoded value
 
+    let selectedItem = history[history.selectedIndex];
+
+    let commitHash = document.querySelector("#commit-hash");
+    let commitAuthor = document.querySelector("#commit-author");
+    let commitDate = document.querySelector("#commit-date");
+
+    commitHash.innerText = "Hash: " + selectedItem.dataset.hash;
+    commitAuthor.innerText = "Author: " + selectedItem.dataset.author;
+    commitDate.innerText = "Date: " + selectedItem.dataset.date;
+
     populateFileContent();
 }
 
@@ -105,6 +115,16 @@ async function populateFileContent() {
     let content = await httpRequest(host + '/file', { path: path, commit: commit }, type="text");
 
     file.innerText = content;
+
+    let selectedItem = tree[tree.selectedIndex];
+
+    let fileHash = document.querySelector("#file-hash");
+    let fileMode = document.querySelector("#file-mode");
+    let fileSize = document.querySelector("#file-size");
+
+    fileHash.innerText = "Hash: " + tree[tree.selectedIndex].value;
+    fileMode.innerText = "Mode: " + selectedItem.dataset.mode;
+    fileSize.innerText = "Size: " + selectedItem.dataset.size + " Byte";
 }
 
 function main() {
@@ -124,16 +144,6 @@ function main() {
         slider.value = (history.selectedIndex + 1);
 
         populateFilesystemTree();
-
-        let selectedItem = history[history.selectedIndex];
-
-        let commitHash = document.querySelector("#commit-hash");
-        let commitAuthor = document.querySelector("#commit-author");
-        let commitDate = document.querySelector("#commit-date");
-
-        commitHash.innerText = "Hash: " + selectedItem.dataset.hash;
-        commitAuthor.innerText = "Author: " + selectedItem.dataset.author;
-        commitDate.innerText = "Date: " + selectedItem.dataset.date;
     });
 
     let filterCommits = document.querySelector("#filter-commits");
@@ -156,16 +166,6 @@ function main() {
 
     tree.addEventListener("change", (event) => {
         populateFileContent();
-
-        let selectedItem = tree[tree.selectedIndex];
-
-        let fileHash = document.querySelector("#file-hash");
-        let fileMode = document.querySelector("#file-mode");
-        let fileSize = document.querySelector("#file-size");
-
-        fileHash.innerText = "Hash: " + tree[tree.selectedIndex].value;
-        fileMode.innerText = "Mode: " + selectedItem.dataset.mode;
-        fileSize.innerText = "Size: " + selectedItem.dataset.size + " Byte";
     });
 
     let filterFiles = document.querySelector("#filter-files");
