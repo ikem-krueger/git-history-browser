@@ -1,5 +1,5 @@
  - [x] github: rebranding to "Git History Viewer"
- - [ ] public/index.js: branches?
+ - [-] public/index.js: branches?
  - [ ] public/index.js: apply filter on change
  - [ ] public/index.js: debounce keys/events
  - [ ] public/index.js: implement "checkout" button

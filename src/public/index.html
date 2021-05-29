@@ -15,8 +15,14 @@
         <h1>Git History Viewer</h1>
         <form>
             <fieldset>
-                <legend>Path</legend>
-                <input id="path"type="text">
+                <legend>Repository</legend>
+                <input id="path" type="text" placeholder="Path" style="height: 22px; width: 300px; margin: 0px;">
+				<select id="branch" style="height: 26px; width: 150px;">
+					<option>master</option>
+					<option>testing</option>
+					<option>webhooks</option>
+					<option>stable</option>
+				</select>
             </fieldset>
             <fieldset>
                 <legend>Commit</legend>
