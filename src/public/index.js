@@ -119,11 +119,15 @@ async function populateFileContent() {
 }
 
 function main() {
+    let form = document.querySelector("form");
+
+    form.addEventListener("submit", (event) => { event.preventDefault(); });
+
     let path = document.querySelector("#path");
 
     path.value = repo;
 
-    path.addEventListener("keydown", (event) => { if(event.key == "Enter") { dropCommitHistory(); populateCommitHistory(); event.preventDefault(); }});
+    path.addEventListener("keydown", (event) => { if(event.key == "Enter") { dropCommitHistory(); populateCommitHistory(); }});
 
     let history = document.querySelector("#history");
 
@@ -146,8 +150,6 @@ function main() {
 
     let filterCommits = document.querySelector("#filter-commits");
 
-    filterCommits.addEventListener("keydown", (event) => { if(event.key == "Enter") event.preventDefault(); });
-
     filterCommits.addEventListener("keyup", (event) => {
         let search = event.target.value.toLowerCase();
 
@@ -158,8 +160,6 @@ function main() {
 
             item.indexOf(search) == -1 ? i.classList.add("hide") : i.classList.remove("hide");
         }
-
-        event.preventDefault();
     });
 
     let slider = document.querySelector("#slider");
@@ -184,8 +184,6 @@ function main() {
     // TODO: remove redundant code...
     let filterFiles = document.querySelector("#filter-files");
 
-    filterFiles.addEventListener("keydown", (event) => { if(event.key == "Enter") { event.preventDefault(); } });
-
     filterFiles.addEventListener("keyup", (event) => {
         let search = event.target.value.toLowerCase();
 
@@ -196,8 +194,6 @@ function main() {
 
             item.indexOf(search) == -1 ? i.classList.add("hide") : i.classList.remove("hide");
         }
-
-        event.preventDefault();
     });
 }
 
