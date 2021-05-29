@@ -35,7 +35,7 @@ async function populateCommitHistory() {
 
     let path = document.querySelector("#path").value;
 
-    let messages = await httpRequest(host + '/history', { path: path }, type="json");
+    let messages = await httpRequest(host + '/commits', { path: path }, type="json");
 
     let length = messages.length;
 
@@ -70,7 +70,7 @@ async function populateFilesystemTree() {
     let path = document.querySelector("#path").value;
     let commit = history.value;
 
-    let files = await httpRequest(host + '/tree', { path: path, commit: commit }, type="json");
+    let files = await httpRequest(host + '/files', { path: path, commit: commit }, type="json");
 
     let length = files.length;
 
@@ -110,7 +110,7 @@ async function populateFileContent() {
     let path = document.querySelector("#path").value;
     let commit = tree.value;
 
-    let content = await httpRequest(host + '/file', { path: path, commit: commit }, type="text");
+    let content = await httpRequest(host + '/content', { path: path, commit: commit }, type="text");
 
     file.innerText = content;
 

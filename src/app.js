@@ -14,7 +14,7 @@ app.post('/', (req, res) => {
     res.send(host + '/index.html');
 });
 
-app.post('/history', (req, res) => {
+app.post('/commits', (req, res) => {
     let path = req.body.path;
 
     execFile('git', ['-C', path, 'log', '--pretty=format:%H%x09%an <%ae>%x09%ad%x09%s'], (error, stdout, stderr) => {
@@ -42,7 +42,7 @@ app.post('/history', (req, res) => {
     });
 });
 
-app.post('/tree', (req, res) => {
+app.post('/files', (req, res) => {
     let path = req.body.path;
     let commit = req.body.commit;
 
@@ -73,7 +73,7 @@ app.post('/tree', (req, res) => {
     });
 });
 
-app.post('/file', (req, res) => {
+app.post('/content', (req, res) => {
     let path = req.body.path;
     let commit = req.body.commit;
     
