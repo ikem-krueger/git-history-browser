@@ -30,26 +30,10 @@ function filterOptions(selector, search) {
     }
 }
 
-function dropOptions(selector) {
-    let options = document.querySelectorAll(selector);
-
-    let length = options.length;
-
-    for(let i = 0; i < length; i++) {
-        let option = options[i];
-
-        option.remove();
-    }
-}
-
-function dropCommitHistory() {
-    dropOptions("#history option");
-}
-
 async function populateCommitHistory() {
-    dropCommitHistory();
-
     let history = document.querySelector("#history");
+
+    history.length = 0;
 
     let path = document.querySelector("#path").value;
 
@@ -82,15 +66,11 @@ async function populateCommitHistory() {
     populateFilesystemTree();
 }
 
-function dropFilesystemTree() {
-    dropOptions("#tree option");
-}
-
 async function populateFilesystemTree() {
-    dropFilesystemTree();
-
     let history = document.querySelector("#history");
     let tree = document.querySelector("#tree");
+
+    tree.length = 0;
 
     let path = document.querySelector("#path").value;
     let commit = history.value;
