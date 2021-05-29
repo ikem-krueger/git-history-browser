@@ -17,14 +17,14 @@
             <fieldset>
                 <legend>Repository</legend>
                 <input id="path" type="text" placeholder="Path" style="height: 22px; width: 300px; margin: 0px;">
-				<select id="branch" style="height: 26px; width: 150px;">
-					<option>master</option>
-					<option>testing</option>
-				</select>
+                <select id="branch" style="height: 26px; width: 150px;">
+                    <option>master</option>
+                    <option>testing</option>
+                </select>
             </fieldset>
             <fieldset>
                 <legend>Commit</legend>
-                <select id="history" size="20">
+                <select id="commits" size="20">
                 </select>
                 <input id="filter-commits" type="text" placeholder="Filter">
                 <input id="slider" type="range">
@@ -56,9 +56,6 @@
                 <span class="checkbox">
                     <input type="checkbox" id="show_diff"><label for="show_diff">Show differences to previous commit</label>
                 </span>
-                <div class="details">
-                    <span id="content-type"></span>
-                </div>
             </fieldset>
         </form>
     </body>

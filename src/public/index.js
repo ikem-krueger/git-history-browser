@@ -1,3 +1,6 @@
+const port = "3000";
+const host = `http://localhost:${port}`;
+
 let timerId;
 
 let debounceFunction = (func, delay) => {
@@ -35,7 +38,7 @@ function filterOptions(selector, search) {
 }
 
 async function populateCommitHistory() {
-    let history = document.querySelector("#history");
+    let commits = document.querySelector("#commits");
 
     let path = document.querySelector("#path").value;
 
@@ -43,10 +46,10 @@ async function populateCommitHistory() {
 
     let length = messages.length;
 
-    history.length = length;
+    commits.length = length;
 
     for(let i = 0; i < length; i++) {
-        let option = history[i];
+        let option = commits[i];
         let item = messages[i];
 
         option.innerText = item.message;
@@ -56,23 +59,25 @@ async function populateCommitHistory() {
         option.dataset.date = item.date;
     }
 
-    history.selectedIndex = 0;
+    commits.selectedIndex = 0;
+    
+    commits.focus();
 
     let slider = document.querySelector("#slider");
 
     slider.min = 1;
-    slider.value = history.selectedIndex + 1;
-    slider.max = history.length;
+    slider.value = commits.selectedIndex + 1;
+    slider.max = commits.length;
 
     populateFilesystemTree();
 }
 
 async function populateFilesystemTree() {
-    let history = document.querySelector("#history");
+    let commits = document.querySelector("#commits");
     let tree = document.querySelector("#tree");
 
     let path = document.querySelector("#path").value;
-    let commit = history.value;
+    let commit = commits.value;
 
     let files = await httpRequest(host + '/files', { path: path, commit: commit }, type="json");
 
@@ -95,9 +100,9 @@ async function populateFilesystemTree() {
 
     let slider = document.querySelector("#slider");
 
-    slider.value = (history.selectedIndex + 1);
+    slider.value = (commits.selectedIndex + 1);
 
-    let selectedItem = history[history.selectedIndex];
+    let selectedItem = commits[commits.selectedIndex];
 
     let commitHash = document.querySelector("#commit-hash");
     let commitAuthor = document.querySelector("#commit-author");
@@ -135,56 +140,65 @@ async function populateFileContent() {
 function main() {
     let form = document.querySelector("form");
 
-    form.addEventListener("submit", (event) => { event.preventDefault(); });
+    form.addEventListener("submit", (event) => { 
+        event.preventDefault();
+    });
 
     let path = document.querySelector("#path");
 
-    path.value = repo;
+    path.addEventListener("keydown", (event) => {
+        if(event.key == "Enter") {
+            populateCommitHistory();
+        }
+    });
 
-    path.addEventListener("keydown", (event) => { if(event.key == "Enter") { populateCommitHistory(); }});
+    path.focus();
 
-    let history = document.querySelector("#history");
+    let commits = document.querySelector("#commits");
 
-    history.addEventListener("change", (event) => {
-        debounceFunction(populateFilesystemTree, 200);
+    commits.addEventListener("change", (event) => {
+        debounceFunction(populateFilesystemTree, 250);
     });
 
     let filterCommits = document.querySelector("#filter-commits");
 
     filterCommits.addEventListener("keyup", (event) => {
-        let search = event.target.value.toLowerCase();
+        debounceFunction(() => {
+            let search = event.target.value.toLowerCase();
 
-        filterOptions("#history option", search);
+            filterOptions("#commits option", search);
+        }, 250);
     });
 
     let slider = document.querySelector("#slider");
 
     slider.addEventListener("change", (event) => {
-        history.selectedIndex = (slider.value - 1);
+        debounceFunction(() => {
+            commits.selectedIndex = (slider.value - 1);
 
-        debounceFunction(populateFilesystemTree, 200);
+            populateFilesystemTree();
+        }, 250);
     });
 
     let tree = document.querySelector("#tree");
 
     tree.addEventListener("change", (event) => {
-        debounceFunction(populateFileContent, 200);
+        debounceFunction(populateFileContent, 250);
     });
 
     let filterFiles = document.querySelector("#filter-files");
 
     filterFiles.addEventListener("keyup", (event) => {
-        let search = event.target.value.toLowerCase();
+        debounceFunction(() => {
+            let search = event.target.value.toLowerCase();
 
-        filterOptions("#tree option", search);
+            filterOptions("#tree option", search);
+        }, 250);
     });
 
-    populateCommitHistory();
+    if(path.value) {
+        populateCommitHistory();
+    }
 }
-
-const port = "3000";
-const host = `http://localhost:${port}`;
-
-let repo = "C:\\Users\\Marco\\Documents\\Projekte\\git-history-viewer";
 
 main();
