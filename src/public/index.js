@@ -109,14 +109,6 @@ async function populateFileContent() {
     let content = await httpRequest(host + '/file', { path: path, commit: commit }, type="text");
 
     file.innerText = content;
-
-    if(syntaxHighlighting) {
-        file.classList = [ "hljs" ];
-
-        hljs.highlightElement(file); // then highlight each
-
-        contentType.innerText = "Type: " + file.classList[file.classList.length - 1].capitalize();
-    }
 }
 
 function main() {
@@ -195,7 +187,6 @@ const port = "3000";
 const host = `http://localhost:${port}`;
 
 var orderByLastCommit = true;
-var syntaxHighlighting = false;
 
 var repo = "C:\\Users\\Marco\\Documents\\Projekte\\git-log-tree-viewer";
 
