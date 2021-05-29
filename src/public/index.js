@@ -1,7 +1,3 @@
-String.prototype.capitalize = function() {
-    return this.charAt(0).toUpperCase() + this.slice(1);
-}
-
 const httpRequest = async (url, data, type) => {
     try {
         const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
@@ -58,7 +54,7 @@ async function populateCommitHistory() {
 
     slider.min = 1;
     slider.value = history.selectedIndex + 1;
-    slider.max = history.length; // FIXME
+    slider.max = history.length;
 
     populateFilesystemTree();
 }
@@ -89,6 +85,10 @@ async function populateFilesystemTree() {
 
     tree.selectedIndex = 0; // FIXME: hardcoded value
 
+	let slider = document.querySelector("#slider");
+
+	slider.value = (history.selectedIndex + 1);
+
     let selectedItem = history[history.selectedIndex];
 
     let commitHash = document.querySelector("#commit-hash");
@@ -105,7 +105,6 @@ async function populateFilesystemTree() {
 async function populateFileContent() {
     let tree = document.querySelector("#tree");
     let file = document.querySelector("#file");
-    let contentType = document.querySelector("#content-type");
 
     let path = document.querySelector("#path").value;
     let commit = tree.value;
@@ -139,8 +138,6 @@ function main() {
     let history = document.querySelector("#history");
 
     history.addEventListener("change", (event) => {
-        slider.value = (history.selectedIndex + 1);
-
         populateFilesystemTree();
     });
 
