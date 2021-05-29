@@ -16,6 +16,20 @@ const httpRequest = async (url, data, type) => {
     }
 }
 
+function filterOptions(selector, search) {
+    let all = document.querySelectorAll(selector);
+
+    let length = all.length;
+
+    for(let i = 0; i < length; i++) {
+        let item = all[i];
+        
+        let text = item.innerHTML.toLowerCase();
+
+        text.indexOf(search) == -1 ? item.classList.add("hide") : item.classList.remove("hide");
+    }
+}
+
 function dropOptions(selector) {
     let options = document.querySelectorAll(selector);
 
@@ -138,10 +152,11 @@ function main() {
 
     let history = document.querySelector("#history");
 
-    history.addEventListener("change", (event) => { slider.value = (history.selectedIndex + 1); });
-    history.addEventListener("change", (event) => { populateFilesystemTree(); });
+    history.addEventListener("change", (event) => {
+        slider.value = (history.selectedIndex + 1);
 
-    history.addEventListener("change", (event) => { 
+        populateFilesystemTree();
+
         let selectedItem = history[history.selectedIndex];
 
         let commitHash = document.querySelector("#commit-hash");
@@ -153,36 +168,27 @@ function main() {
         commitDate.innerText = "Date: " + selectedItem.dataset.date;
     });
 
-    populateCommitHistory();
-
     let filterCommits = document.querySelector("#filter-commits");
 
     filterCommits.addEventListener("keyup", (event) => {
         let search = event.target.value.toLowerCase();
 
-        let all = document.querySelectorAll("#history option")
-
-        for(let i of all) {
-            let item = i.innerHTML.toLowerCase();
-
-            item.indexOf(search) == -1 ? i.classList.add("hide") : i.classList.remove("hide");
-        }
+        filterOptions("#history option", search);
     });
 
     let slider = document.querySelector("#slider");
 
-    slider.min = 1;
-    slider.value = history.selectedIndex + 1;
-    slider.max = history.length; // FIXME
+    slider.addEventListener("change", (event) => {
+        history.selectedIndex = (slider.value - 1);
 
-    slider.addEventListener("change", (event) => { history.selectedIndex = (slider.value - 1); });
-    slider.addEventListener("change", (event) => { populateFilesystemTree(); });
+        populateFilesystemTree();
+    });
 
     let tree = document.querySelector("#tree");
 
-    tree.addEventListener("change", (event) => { populateFileContent(); });
+    tree.addEventListener("change", (event) => {
+        populateFileContent();
 
-    tree.addEventListener("change", (event) => { 
         let selectedItem = tree[tree.selectedIndex];
 
         let fileHash = document.querySelector("#file-hash");
@@ -192,22 +198,17 @@ function main() {
         fileHash.innerText = "Hash: " + tree[tree.selectedIndex].value;
         fileMode.innerText = "Mode: " + selectedItem.dataset.mode;
         fileSize.innerText = "Size: " + selectedItem.dataset.size + " Byte";
-   });
+    });
 
-    // TODO: remove redundant code...
     let filterFiles = document.querySelector("#filter-files");
 
     filterFiles.addEventListener("keyup", (event) => {
         let search = event.target.value.toLowerCase();
 
-        let all = document.querySelectorAll("#tree option")
-
-        for(let i of all) {
-            let item = i.innerHTML.toLowerCase();
-
-            item.indexOf(search) == -1 ? i.classList.add("hide") : i.classList.remove("hide");
-        }
+        filterOptions("#tree option", search);
     });
+
+    populateCommitHistory();
 }
 
 const port = "3000";
