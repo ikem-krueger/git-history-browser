@@ -28,123 +28,122 @@ const httpRequest = async (url, data, type) => {
 }
 
 function filterOptions(event) {
-    const all = event.target.parentElement.querySelectorAll("select option");
+    const options = event.target.parentElement.querySelectorAll("option");
 
-    const length = all.length;
+    const length = options.length;
 
     for(let i = 0; i < length; i++) {
-        const item = all[i];
+        const option = options[i];
 
-        const text = item.innerHTML.toLowerCase();
+        const text = option.innerText.toLowerCase();
 
-        const search = event.target.value.toLowerCase();
+        const searchTerm = event.target.value.toLowerCase();
 
-        text.indexOf(search) == -1 ? item.classList.add("hide") : item.classList.remove("hide");
+        text.indexOf(searchTerm) == -1 ? option.classList.add("hide") : option.classList.remove("hide");
     }
 }
 
 async function populateCommitHistory() {
-    const commits = document.querySelector("#commits");
+    const selectCommits = document.querySelector("#commits");
 
     const path = document.querySelector("#path").value;
 
-    const messages = await httpRequest(host + '/commits', { path: path }, type="json");
+    const commits = await httpRequest(host + '/commits', { path: path }, type="json");
 
-    const length = messages.length;
+    const length = commits.length;
 
-    commits.length = length; // create empty option elements
+    selectCommits.length = length; // creates empty option elements
 
-    for(let i = 0; i < length; i++) { // fill them with data
-        const option = commits[i];
-        const item = messages[i];
+    for(let i = 0; i < length; i++) { // fills them with data
+        const option = selectCommits[i];
+        const commit = commits[i];
 
-        option.innerText = item.message;
-        option.value = item.hash;
-        option.dataset.hash = item.hash;
-        option.dataset.author = item.author;
-        option.dataset.date = item.date;
+        option.innerText = commit.message;
+        option.value = commit.hash;
+        option.dataset.author = commit.author;
+        option.dataset.date = commit.date;
     }
 
-    commits.selectedIndex = 0;
+    selectCommits.selectedIndex = 0;
 
-    commits.focus();
+    selectCommits.focus();
 
-    const slider = document.querySelector("#slider");
+    const inputSlider = document.querySelector("#slider");
 
-    slider.min = 1;
-    slider.value = commits.selectedIndex + 1;
-    slider.max = commits.length;
+    inputSlider.min = 1;
+    inputSlider.value = selectCommits.selectedIndex + 1;
+    inputSlider.max = selectCommits.length;
 
     populateFilesystemTree();
 }
 
 async function populateFilesystemTree() {
-    const commits = document.querySelector("#commits");
-    const files = document.querySelector("#files");
+    const selectCommits = document.querySelector("#commits");
+    const selectFiles = document.querySelector("#files");
 
     const path = document.querySelector("#path").value;
-    const commit = commits.value;
+    const commit = selectCommits.value;
 
-    const tree = await httpRequest(host + '/files', { path: path, commit: commit }, type="json");
+    const files = await httpRequest(host + '/files', { path: path, commit: commit }, type="json");
 
-    const length = tree.length;
+    const length = files.length;
 
-    files.length = length; // create empty option elements
+    selectFiles.length = length; // creates empty option elements
 
-    for(let i = 0; i < length; i++) { // fill them with data
-        const option = files[i];
-        const item = tree[i];
+    for(let i = 0; i < length; i++) { // fills them with data
+        const option = selectFiles[i];
+        const file = files[i];
 
-        option.innerText = item.file;
-        option.value = item.hash;
-        option.dataset.mode = item.mode;
-        option.dataset.type = item.type;
-        option.dataset.size = item.size;
+        option.innerText = file.file;
+        option.value = file.hash;
+        option.dataset.mode = file.mode;
+        option.dataset.type = file.type;
+        option.dataset.size = file.size;
     }
 
-    files.selectedIndex = 0; // FIXME: hardcoded value
+    selectFiles.selectedIndex = 0; // FIXME: hardcoded value
 
-    const slider = document.querySelector("#slider");
+    const inputSlider = document.querySelector("#slider");
 
-    slider.value = (commits.selectedIndex + 1);
+    inputSlider.value = (selectCommits.selectedIndex + 1);
 
-    const selectedItem = commits[commits.selectedIndex];
+    const option = selectCommits[selectCommits.selectedIndex];
 
-    const commitNumber = document.querySelector("#commit-number");
-    const commitHash = document.querySelector("#commit-hash");
-    const commitAuthor = document.querySelector("#commit-author");
-    const commitDate = document.querySelector("#commit-date");
+    const spanCommitNumber = document.querySelector("#commit-number");
+    const spanCommitHash = document.querySelector("#commit-hash");
+    const spanCommitAuthor = document.querySelector("#commit-author");
+    const spanCommitDate = document.querySelector("#commit-date");
 
-    commitNumber.innerText = `Commit: #${(commits.length - commits.selectedIndex)}/${commits.length}`;
-    commitHash.innerText = `Hash: ${selectedItem.dataset.hash}`;
-    commitAuthor.innerText = `Author: ${selectedItem.dataset.author}`;
-    commitDate.innerText = `Date: ${selectedItem.dataset.date}`;
+    spanCommitNumber.innerText = `Commit: #${(selectCommits.length - selectCommits.selectedIndex)}/${selectCommits.length}`;
+    spanCommitHash.innerText = `Hash: ${option.value}`;
+    spanCommitAuthor.innerText = `Author: ${option.dataset.author}`;
+    spanCommitDate.innerText = `Date: ${option.dataset.date}`;
 
     populateFileContent();
 }
 
 async function populateFileContent() {
-    const files = document.querySelector("#files");
-    const content = document.querySelector("#content");
+    const selectFiles = document.querySelector("#files");
+    const divContent = document.querySelector("#content");
 
     const path = document.querySelector("#path").value;
-    const commit = files.value;
+    const commit = selectFiles.value;
 
-    const file = await httpRequest(host + '/content', { path: path, commit: commit }, type="text");
+    const content = await httpRequest(host + '/content', { path: path, commit: commit }, type="text");
 
-    content.innerText = file;
+    divContent.innerText = content;
 
-    const selectedItem = files[files.selectedIndex];
+    const option = selectFiles[selectFiles.selectedIndex];
 
-    const fileNumber = document.querySelector("#file-number");
-    const fileHash = document.querySelector("#file-hash");
-    const fileMode = document.querySelector("#file-mode");
-    const fileSize = document.querySelector("#file-size");
+    const spanFileNumber = document.querySelector("#file-number");
+    const spanFileHash = document.querySelector("#file-hash");
+    const spanFileMode = document.querySelector("#file-mode");
+    const spanFileSize = document.querySelector("#file-size");
 
-    fileNumber.innerText = `File: #${(files.selectedIndex + 1)}/${files.length}`;
-    fileHash.innerText = `Hash: ${files[files.selectedIndex].value}`;
-    fileMode.innerText = `Mode: ${selectedItem.dataset.mode}`;
-    fileSize.innerText = `Size: ${selectedItem.dataset.size} Byte`;
+    spanFileNumber.innerText = `File: #${(selectFiles.selectedIndex + 1)}/${selectFiles.length}`;
+    spanFileHash.innerText = `Hash: ${option.value}`;
+    spanFileMode.innerText = `Mode: ${option.dataset.mode}`;
+    spanFileSize.innerText = `Size: ${option.dataset.size} Byte`;
 }
 
 function main() {
@@ -159,45 +158,45 @@ function main() {
         event.preventDefault();
     });
 
-    const path = document.querySelector("#path");
+    const inputPath = document.querySelector("#path");
 
-    path.addEventListener("keydown", (event) => {
+    inputPath.addEventListener("keydown", (event) => {
         if(event.key == "Enter") {
             populateCommitHistory();
         }
     });
 
-    path.focus();
+    inputPath.focus();
 
-    const commits = document.querySelector("#commits");
+    const selectCommits = document.querySelector("#commits");
 
-    commits.addEventListener("change", (event) => {
+    selectCommits.addEventListener("change", (event) => {
         populateFilesystemTree();
     });
 
-    const filterCommits = document.querySelector("#filter-commits");
+    const inputFilterCommits = document.querySelector("#filter-commits");
 
-    filterCommits.addEventListener("keyup", (event) => {
+    inputFilterCommits.addEventListener("keyup", (event) => {
         filterOptions(event);
     });
 
-    const slider = document.querySelector("#slider");
+    const inputSlider = document.querySelector("#slider");
 
-    slider.addEventListener("change", (event) => {
-        commits.selectedIndex = (slider.value - 1);
+    inputSlider.addEventListener("change", (event) => {
+        selectCommits.selectedIndex = (inputSlider.value - 1);
 
         populateFilesystemTree();
     });
 
-    const files = document.querySelector("#files");
+    const selectFiles = document.querySelector("#files");
 
-    files.addEventListener("change", (event) => {
+    selectFiles.addEventListener("change", (event) => {
         populateFileContent();
     });
 
-    const filterFiles = document.querySelector("#filter-files");
+    const inputFilterFiles = document.querySelector("#filter-files");
 
-    filterFiles.addEventListener("keyup", (event) => {
+    inputFilterFiles.addEventListener("keyup", (event) => {
         filterOptions(event);
     });
 }
