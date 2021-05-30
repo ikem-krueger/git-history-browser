@@ -52,9 +52,9 @@ async function populateCommitHistory() {
 
     let length = messages.length;
 
-    commits.length = length;
+    commits.length = length; // create empty option elements
 
-    for(let i = 0; i < length; i++) {
+    for(let i = 0; i < length; i++) { // fill them with data
         let option = commits[i];
         let item = messages[i];
 
@@ -89,9 +89,9 @@ async function populateFilesystemTree() {
 
     let length = tree.length;
 
-    files.length = length;
+    files.length = length; // create empty option elements
 
-    for(let i = 0; i < length; i++) {
+    for(let i = 0; i < length; i++) { // fill them with data
         let option = files[i];
         let item = tree[i];
 
