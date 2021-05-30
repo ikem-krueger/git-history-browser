@@ -3,11 +3,13 @@ const host = `http://localhost:${port}`;
 
 let timerId;
 
+let ms = 200;
+
 let debounce = (func) => {
     return (...args) => {
         clearTimeout(timerId);
 
-        timerId = setTimeout(func, 200, ...args);
+        timerId = setTimeout(func, ms, ...args);
     }
 }
 
