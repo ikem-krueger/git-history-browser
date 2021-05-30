@@ -109,10 +109,10 @@ async function populateFilesystemTree() {
     let commitAuthor = document.querySelector("#commit-author");
     let commitDate = document.querySelector("#commit-date");
 
-    commitNumber.innerText = "Commit: #" + (commits.length - commits.selectedIndex) + "/" + commits.length;
-    commitHash.innerText = "Hash: " + selectedItem.dataset.hash;
-    commitAuthor.innerText = "Author: " + selectedItem.dataset.author;
-    commitDate.innerText = "Date: " + selectedItem.dataset.date;
+    commitNumber.innerText = `Commit: #${(commits.length - commits.selectedIndex)}/${commits.length}`;
+    commitHash.innerText = `Hash: ${selectedItem.dataset.hash}`;
+    commitAuthor.innerText = `Author: ${selectedItem.dataset.author}`;
+    commitDate.innerText = `Date: ${selectedItem.dataset.date}`;
 
     populateFileContent();
 }
@@ -135,10 +135,10 @@ async function populateFileContent() {
     let fileMode = document.querySelector("#file-mode");
     let fileSize = document.querySelector("#file-size");
 
-    fileNumber.innerText = "File: #" + (files.selectedIndex + 1) + "/" + files.length;
-    fileHash.innerText = "Hash: " + files[files.selectedIndex].value;
-    fileMode.innerText = "Mode: " + selectedItem.dataset.mode;
-    fileSize.innerText = "Size: " + selectedItem.dataset.size + " Byte";
+    fileNumber.innerText = `File: #${(files.selectedIndex + 1)}/${files.length}`;
+    fileHash.innerText = `Hash: ${files[files.selectedIndex].value}`;
+    fileMode.innerText = `Mode: ${selectedItem.dataset.mode}`;
+    fileSize.innerText = `Size: ${selectedItem.dataset.size} Byte`;
 }
 
 function main() {
