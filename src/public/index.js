@@ -3,10 +3,12 @@ const host = `http://localhost:${port}`;
 
 let timerId;
 
-let debounceFunction = (func, delay) => {
-    clearTimeout(timerId);
+let debounce = (func) => {
+    return (...args) => {
+        clearTimeout(timerId);
 
-    timerId = setTimeout(func, delay);
+        timerId = setTimeout(func, 200, ...args);
+    }
 }
 
 const httpRequest = async (url, data, type) => {
@@ -142,6 +144,11 @@ async function populateFileContent() {
 }
 
 function main() {
+    populateCommitHistory = debounce(populateCommitHistory);
+    populateFilesystemTree = debounce(populateFilesystemTree);
+    populateFileContent = debounce(populateFileContent);
+    filterOptions = debounce(filterOptions);
+
     let form = document.querySelector("form");
 
     form.addEventListener("submit", (event) => { 
@@ -161,43 +168,37 @@ function main() {
     let commits = document.querySelector("#commits");
 
     commits.addEventListener("change", (event) => {
-        debounceFunction(populateFilesystemTree, 200);
+        populateFilesystemTree();
     });
 
     let filterCommits = document.querySelector("#filter-commits");
 
     filterCommits.addEventListener("keyup", (event) => {
-        debounceFunction(() => {
-            let search = event.target.value.toLowerCase();
+        let search = event.target.value.toLowerCase();
 
-            filterOptions("#commits option", search);
-        }, 200);
+        filterOptions("#commits option", search);
     });
 
     let slider = document.querySelector("#slider");
 
     slider.addEventListener("change", (event) => {
-        debounceFunction(() => {
-            commits.selectedIndex = (slider.value - 1);
+        commits.selectedIndex = (slider.value - 1);
 
-            populateFilesystemTree();
-        }, 200);
+        populateFilesystemTree();
     });
 
     let files = document.querySelector("#files");
 
     files.addEventListener("change", (event) => {
-        debounceFunction(populateFileContent, 200);
+        populateFileContent();
     });
 
     let filterFiles = document.querySelector("#filter-files");
 
     filterFiles.addEventListener("keyup", (event) => {
-        debounceFunction(() => {
-            let search = event.target.value.toLowerCase();
+        let search = event.target.value.toLowerCase();
 
-            filterOptions("#files option", search);
-        }, 200);
+        filterOptions("#files option", search);
     });
 
     if(path.value) {
