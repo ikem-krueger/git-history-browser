@@ -200,10 +200,6 @@ function main() {
 
         filterOptions("#files option", search);
     });
-
-    if(path.value) {
-        populateCommitHistory();
-    }
 }
 
 main();
