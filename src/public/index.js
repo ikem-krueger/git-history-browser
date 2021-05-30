@@ -135,7 +135,7 @@ async function populateFileContent() {
     let fileMode = document.querySelector("#file-mode");
     let fileSize = document.querySelector("#file-size");
 
-    fileNumber.innerText = "File: #" + (files.length - files.selectedIndex) + "/" + files.length;
+    fileNumber.innerText = "File: #" + (files.selectedIndex + 1) + "/" + files.length;
     fileHash.innerText = "Hash: " + files[files.selectedIndex].value;
     fileMode.innerText = "Mode: " + selectedItem.dataset.mode;
     fileSize.innerText = "Size: " + selectedItem.dataset.size + " Byte";
