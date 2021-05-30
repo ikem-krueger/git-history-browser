@@ -74,20 +74,20 @@ async function populateCommitHistory() {
 
 async function populateFilesystemTree() {
     let commits = document.querySelector("#commits");
-    let tree = document.querySelector("#tree");
+    let files = document.querySelector("#files");
 
     let path = document.querySelector("#path").value;
     let commit = commits.value;
 
-    let files = await httpRequest(host + '/files', { path: path, commit: commit }, type="json");
+    let tree = await httpRequest(host + '/files', { path: path, commit: commit }, type="json");
 
-    let length = files.length;
+    let length = tree.length;
 
-    tree.length = length;
+    files.length = length;
 
     for(let i = 0; i < length; i++) {
-        let option = tree[i];
-        let item = files[i];
+        let option = files[i];
+        let item = tree[i];
 
         option.innerText = item.file;
         option.value = item.hash;
@@ -96,7 +96,7 @@ async function populateFilesystemTree() {
         option.dataset.size = item.size;
     }
 
-    tree.selectedIndex = 0; // FIXME: hardcoded value
+    files.selectedIndex = 0; // FIXME: hardcoded value
 
     let slider = document.querySelector("#slider");
 
@@ -104,10 +104,12 @@ async function populateFilesystemTree() {
 
     let selectedItem = commits[commits.selectedIndex];
 
+    let commitNumber = document.querySelector("#commit-number");
     let commitHash = document.querySelector("#commit-hash");
     let commitAuthor = document.querySelector("#commit-author");
     let commitDate = document.querySelector("#commit-date");
 
+    commitNumber.innerText = "Commit: #" + (commits.length - commits.selectedIndex) + "/" + commits.length;
     commitHash.innerText = "Hash: " + selectedItem.dataset.hash;
     commitAuthor.innerText = "Author: " + selectedItem.dataset.author;
     commitDate.innerText = "Date: " + selectedItem.dataset.date;
@@ -116,23 +118,25 @@ async function populateFilesystemTree() {
 }
 
 async function populateFileContent() {
-    let tree = document.querySelector("#tree");
-    let file = document.querySelector("#file");
+    let files = document.querySelector("#files");
+    let content = document.querySelector("#content");
 
     let path = document.querySelector("#path").value;
-    let commit = tree.value;
+    let commit = files.value;
 
-    let content = await httpRequest(host + '/content', { path: path, commit: commit }, type="text");
+    let file = await httpRequest(host + '/content', { path: path, commit: commit }, type="text");
 
-    file.innerText = content;
+    content.innerText = file;
 
-    let selectedItem = tree[tree.selectedIndex];
+    let selectedItem = files[files.selectedIndex];
 
+    let fileNumber = document.querySelector("#file-number");
     let fileHash = document.querySelector("#file-hash");
     let fileMode = document.querySelector("#file-mode");
     let fileSize = document.querySelector("#file-size");
 
-    fileHash.innerText = "Hash: " + tree[tree.selectedIndex].value;
+    fileNumber.innerText = "File: #" + (files.length - files.selectedIndex) + "/" + files.length;
+    fileHash.innerText = "Hash: " + files[files.selectedIndex].value;
     fileMode.innerText = "Mode: " + selectedItem.dataset.mode;
     fileSize.innerText = "Size: " + selectedItem.dataset.size + " Byte";
 }
@@ -180,9 +184,9 @@ function main() {
         }, 250);
     });
 
-    let tree = document.querySelector("#tree");
+    let files = document.querySelector("#files");
 
-    tree.addEventListener("change", (event) => {
+    files.addEventListener("change", (event) => {
         debounceFunction(populateFileContent, 250);
     });
 
@@ -192,7 +196,7 @@ function main() {
         debounceFunction(() => {
             let search = event.target.value.toLowerCase();
 
-            filterOptions("#tree option", search);
+            filterOptions("#files option", search);
         }, 250);
     });
 

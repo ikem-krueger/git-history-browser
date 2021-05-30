@@ -29,6 +29,7 @@
                 <input id="filter-commits" type="text" placeholder="Filter">
                 <input id="slider" type="range">
                 <div class="details">
+                    <span id="commit-number"></span><br>
                     <span id="commit-hash"></span><br>
                     <span id="commit-author"></span><br>
                     <span id="commit-date"></span>
@@ -36,13 +37,14 @@
             </fieldset>
             <fieldset>
                 <legend>File</legend>
-                <select id="tree" size="20">
+                <select id="files" size="20">
                 </select>
                 <input id="filter-files" type="text" placeholder="Filter">
                 <span class="checkbox">
                     <input type="checkbox" id="changed_files_only"><label for="changed_files_only">Show only changed files</label>
                 </span>
                 <div class="details">
+                    <span id="file-number"></span><br>
                     <span id="file-hash"></span><br>
                     <span id="file-mode"></span><br>
                     <span id="file-size"></span>
@@ -50,7 +52,7 @@
             </fieldset>
             <fieldset>
                 <legend>Content</legend>
-                <div id="file" class="code">
+                <div id="content" class="code">
                 </div>
                 <button>Checkout</button>
                 <span class="checkbox">
