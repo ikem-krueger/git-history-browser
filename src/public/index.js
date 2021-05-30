@@ -25,15 +25,17 @@ const httpRequest = async (url, data, type) => {
     }
 }
 
-function filterOptions(selector, search) {
-    let all = document.querySelectorAll(selector);
+function filterOptions(event) {
+    let all = event.target.parentElement.querySelectorAll("select option");
 
     let length = all.length;
 
     for(let i = 0; i < length; i++) {
         let item = all[i];
-        
+
         let text = item.innerHTML.toLowerCase();
+
+        let search = event.target.value.toLowerCase();
 
         text.indexOf(search) == -1 ? item.classList.add("hide") : item.classList.remove("hide");
     }
@@ -174,9 +176,7 @@ function main() {
     let filterCommits = document.querySelector("#filter-commits");
 
     filterCommits.addEventListener("keyup", (event) => {
-        let search = event.target.value.toLowerCase();
-
-        filterOptions("#commits option", search);
+        filterOptions(event);
     });
 
     let slider = document.querySelector("#slider");
@@ -196,9 +196,7 @@ function main() {
     let filterFiles = document.querySelector("#filter-files");
 
     filterFiles.addEventListener("keyup", (event) => {
-        let search = event.target.value.toLowerCase();
-
-        filterOptions("#files option", search);
+        filterOptions(event);
     });
 }
 
