@@ -60,7 +60,7 @@ async function populateCommitHistory() {
     }
 
     commits.selectedIndex = 0;
-    
+
     commits.focus();
 
     let slider = document.querySelector("#slider");
@@ -161,7 +161,7 @@ function main() {
     let commits = document.querySelector("#commits");
 
     commits.addEventListener("change", (event) => {
-        debounceFunction(populateFilesystemTree, 250);
+        debounceFunction(populateFilesystemTree, 200);
     });
 
     let filterCommits = document.querySelector("#filter-commits");
@@ -171,7 +171,7 @@ function main() {
             let search = event.target.value.toLowerCase();
 
             filterOptions("#commits option", search);
-        }, 250);
+        }, 200);
     });
 
     let slider = document.querySelector("#slider");
@@ -181,13 +181,13 @@ function main() {
             commits.selectedIndex = (slider.value - 1);
 
             populateFilesystemTree();
-        }, 250);
+        }, 200);
     });
 
     let files = document.querySelector("#files");
 
     files.addEventListener("change", (event) => {
-        debounceFunction(populateFileContent, 250);
+        debounceFunction(populateFileContent, 200);
     });
 
     let filterFiles = document.querySelector("#filter-files");
@@ -197,7 +197,7 @@ function main() {
             let search = event.target.value.toLowerCase();
 
             filterOptions("#files option", search);
-        }, 250);
+        }, 200);
     });
 
     if(path.value) {
