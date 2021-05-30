@@ -68,6 +68,17 @@ button {
     color: grey;
 }
 
+#path {
+    width: 300px;
+    height: 22px;
+    margin: 0px;
+}
+
+#branch {
+    width: 150px;
+    height: 26px;
+}
+
 #content {
     white-space: pre;
     width: 460px;
