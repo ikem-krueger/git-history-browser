@@ -16,8 +16,9 @@ app.post('/', (req, res) => {
 
 app.post('/commits', (req, res) => {
     const path = req.body.path;
+	const number = req.body.number;
 
-    execFile('git', ['-C', path, 'log', '--pretty=format:%H%x09%an <%ae>%x09%ad%x09%s'], (error, stdout, stderr) => {
+    execFile('git', ['-C', path, 'log', '--pretty=format:%H%x09%an <%ae>%x09%ad%x09%s', '-n', number], (error, stdout, stderr) => {
         const lines = stdout.split("\n");
 
         const length = lines.length;

@@ -5,6 +5,8 @@ let timerId;
 
 const ms = 200;
 
+let firstRun = true;
+
 const debounce = (func) => {
     return (...args) => {
         clearTimeout(timerId);
@@ -48,7 +50,11 @@ async function populateCommitHistory() {
 
     const path = document.querySelector("#path").value;
 
-    const commits = await httpRequest(host + '/commits', { path: path }, type="json");
+    if(firstRun){
+        prePopulateFilesystemTree();
+    }
+
+    const commits = await httpRequest(host + '/commits', { path: path, number: '-1' }, type="json");
 
     const length = commits.length;
 
@@ -73,8 +79,28 @@ async function populateCommitHistory() {
     inputSlider.min = 1;
     inputSlider.value = selectCommits.selectedIndex + 1;
     inputSlider.max = selectCommits.length;
+}
+
+async function prePopulateFilesystemTree() {
+    const selectCommits = document.querySelector("#commits");
+
+    const path = document.querySelector("#path").value;
+
+    const commits = await httpRequest(host + '/commits', { path: path, number: '1' }, type="json"); // fetch only one commit
+
+    selectCommits.length = 1; // create empty option element
+
+    const option = selectCommits[0];
+    const commit = commits[0];
+
+    option.innerText = commit.message;
+    option.value = commit.hash;
+
+    selectCommits.selectedIndex = 0;
 
     populateFilesystemTree();
+
+    firstRun = false;
 }
 
 async function populateFilesystemTree() {
