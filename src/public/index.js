@@ -36,28 +36,34 @@ function filterOptions(event) {
         const option = options[i];
 
         let text = option.innerText.toLowerCase();
-
         let searchTerm = event.target.value.toLowerCase();
 
-        if(searchTerm.startsWith("/")) {
-            if(searchTerm.startsWith("/hash ")) {
-                text = option.value;
+        if(!searchTerm.startsWith("/")){
+            text.indexOf(searchTerm) == -1 ? option.classList.add("hide") : option.classList.remove("hide");
+        }
+
+        const match = searchTerm.match(/\/(hash|author|date) (.*)/);
+
+        if(match) {
+            const command = match[1];
+
+            switch(command) {
+                case "hash":
+                    text = option.value;
+
+                    break;
+                case "author":
+                    text = option.dataset.author.toLowerCase();
+
+                    break;
+                case "date":
+                    text = option.dataset.date.toLowerCase();
+
+                    break;
             }
 
-            if(searchTerm.startsWith("/author ")) {
-                text = option.dataset.author.toLowerCase();
-            }
+            searchTerm = match[2];
 
-            if(searchTerm.startsWith("/date ")) {
-                text = option.dataset.date.toLowerCase();
-            }
-
-            searchTerm = searchTerm.replace(/\/(hash|author|date) /, "");
-
-            if(!searchTerm.startsWith("/")) {
-                text.indexOf(searchTerm) == -1 ? option.classList.add("hide") : option.classList.remove("hide");
-            }
-        } else {
             text.indexOf(searchTerm) == -1 ? option.classList.add("hide") : option.classList.remove("hide");
         }
     }
