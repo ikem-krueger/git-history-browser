@@ -28,7 +28,7 @@ const httpRequest = async (url, data, type) => {
 }
 
 function filterOptions(event) {
-    const options = event.target.parentElement.querySelectorAll("option");
+    const options = event.target.parentElement.querySelector("select").options
 
     const length = options.length;
 
