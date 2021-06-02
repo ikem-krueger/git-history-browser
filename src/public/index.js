@@ -35,11 +35,31 @@ function filterOptions(event) {
     for(let i = 0; i < length; i++) {
         const option = options[i];
 
-        const text = option.innerText.toLowerCase();
+        let text = option.innerText.toLowerCase();
 
-        const searchTerm = event.target.value.toLowerCase();
+        let searchTerm = event.target.value.toLowerCase();
 
-        text.indexOf(searchTerm) == -1 ? option.classList.add("hide") : option.classList.remove("hide");
+        if(searchTerm.startsWith("/")) {
+            if(searchTerm.startsWith("/hash ")) {
+                text = option.value;
+            }
+
+            if(searchTerm.startsWith("/author ")) {
+                text = option.dataset.author.toLowerCase();
+            }
+
+            if(searchTerm.startsWith("/date ")) {
+                text = option.dataset.date.toLowerCase();
+            }
+
+            searchTerm = searchTerm.replace(/\/(hash|author|date) /, "");
+
+            if(!searchTerm.startsWith("/")) {
+                text.indexOf(searchTerm) == -1 ? option.classList.add("hide") : option.classList.remove("hide");
+            }
+        } else {
+            text.indexOf(searchTerm) == -1 ? option.classList.add("hide") : option.classList.remove("hide");
+        }
     }
 }
 
