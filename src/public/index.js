@@ -13,6 +13,24 @@ const debounce = (func) => {
     }
 }
 
+function basename(path) {
+    return path.substr(path.lastIndexOf('/') + 1);
+}
+
+const saveData = (function () {
+    var a = document.createElement("a");
+    document.body.appendChild(a);
+    a.style = "display: none";
+    return function (filename, data) {
+        var blob = new Blob([data], {type: "octet/stream"}),
+            url = window.URL.createObjectURL(blob);
+        a.href = url;
+        a.download = filename;
+        a.click();
+        window.URL.revokeObjectURL(url);
+    };
+}());
+
 const httpRequest = async (url, data, type) => {
     try {
         const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
@@ -156,7 +174,7 @@ async function populateFileContent(path, commit) {
 
     const content = await httpRequest(host + '/content', { path: path, commit: commit }, type="text");
 
-    divContent.innerHTML = content;
+    divContent.textContent = content;
 
     updateFileDetails();
 }
@@ -240,6 +258,18 @@ function main() {
 
     inputFilterFiles.addEventListener("keyup", (event) => {
         filterOptions(event);
+    });
+
+    const buttonCheckout = document.querySelector("#checkout");
+
+    buttonCheckout.addEventListener("click", (event) => {
+        const files = document.querySelector("#files");
+        const content = document.querySelector("#content");
+        
+        const filename = basename(files[files.selectedIndex].textContent);
+        const data = content.textContent;
+
+        saveData(filename, data);
     });
 }
 
