@@ -156,7 +156,7 @@ async function populateFileContent(path, commit) {
 
     const content = await httpRequest(host + '/content', { path: path, commit: commit }, type="text");
 
-    divContent.innerText = content;
+    divContent.innerHTML = content;
 
     updateFileDetails();
 }

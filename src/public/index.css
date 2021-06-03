@@ -44,13 +44,13 @@ select {
     height: 380px;
 }
 
-select, label, div {
+select, label, div, textarea {
     font-family: Tahoma;
     font-size: 0.8em;
 }
 
 button {
-    margin: 2px 0px;
+    margin-top: 2px;
     padding: 4px 6px;
 }
 
@@ -80,10 +80,9 @@ button {
 }
 
 #content {
-    white-space: pre;
     width: 460px;
-    height: 378px;
+    height: 374px;
+    white-space: pre;
     overflow: auto;
-    border: 1px solid #828790;
-    margin-bottom: 2px;
+    resize: none;
 }
