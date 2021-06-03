@@ -174,7 +174,7 @@ function updateFileDetails() {
     spanFileNumber.textContent = `File: #${(selectFiles.selectedIndex + 1)}/${selectFiles.length}`;
     spanFileHash.textContent = `Hash: ${option.value}`;
     spanFileMode.textContent = `Mode: ${option.dataset.mode}`;
-    spanFileSize.textContent = `Size: ${option.dataset.size} Byte`;
+    spanFileSize.textContent = `Size: ${option.dataset.size} Bytes`;
 }
 
 function main() {
