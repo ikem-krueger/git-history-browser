@@ -35,7 +35,7 @@ function filterOptions(event) {
     for(let i = 0; i < length; i++) {
         const option = options[i];
 
-        let text = option.innerText.toLowerCase();
+        let text = option.textContent.toLowerCase();
         let searchTerm = event.target.value.toLowerCase();
 
         if(!searchTerm.startsWith("/")){
@@ -82,7 +82,7 @@ async function populateCommitHistory(path) {
         const option = selectCommits[i];
         const commit = commits[i];
 
-        option.innerText = commit.message;
+        option.textContent = commit.message;
         option.value = commit.hash;
         option.dataset.author = commit.author;
         option.dataset.date = commit.date;
@@ -116,7 +116,7 @@ async function populateFilesystemTree(path, commit) {
         const option = selectFiles[i];
         const file = files[i];
 
-        option.innerText = file.file;
+        option.textContent = file.file;
         option.value = file.hash;
         option.dataset.mode = file.mode;
         option.dataset.type = file.type;
@@ -145,10 +145,10 @@ function updateCommitDetails() {
     const spanCommitAuthor = document.querySelector("#commit-author");
     const spanCommitDate = document.querySelector("#commit-date");
 
-    spanCommitNumber.innerText = `Commit: #${(selectCommits.length - selectCommits.selectedIndex)}/${selectCommits.length}`;
-    spanCommitHash.innerText = `Hash: ${option.value}`;
-    spanCommitAuthor.innerText = `Author: ${option.dataset.author}`;
-    spanCommitDate.innerText = `Date: ${option.dataset.date}`;
+    spanCommitNumber.textContent = `Commit: #${(selectCommits.length - selectCommits.selectedIndex)}/${selectCommits.length}`;
+    spanCommitHash.textContent = `Hash: ${option.value}`;
+    spanCommitAuthor.textContent = `Author: ${option.dataset.author}`;
+    spanCommitDate.textContent = `Date: ${option.dataset.date}`;
 }
 
 async function populateFileContent(path, commit) {
@@ -171,10 +171,10 @@ function updateFileDetails() {
     const spanFileMode = document.querySelector("#file-mode");
     const spanFileSize = document.querySelector("#file-size");
 
-    spanFileNumber.innerText = `File: #${(selectFiles.selectedIndex + 1)}/${selectFiles.length}`;
-    spanFileHash.innerText = `Hash: ${option.value}`;
-    spanFileMode.innerText = `Mode: ${option.dataset.mode}`;
-    spanFileSize.innerText = `Size: ${option.dataset.size} Byte`;
+    spanFileNumber.textContent = `File: #${(selectFiles.selectedIndex + 1)}/${selectFiles.length}`;
+    spanFileHash.textContent = `Hash: ${option.value}`;
+    spanFileMode.textContent = `Mode: ${option.dataset.mode}`;
+    spanFileSize.textContent = `Size: ${option.dataset.size} Byte`;
 }
 
 function main() {
