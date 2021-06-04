@@ -60,6 +60,8 @@ function filterOptions(event) {
 
         if(!searchTerm.startsWith("/")){
             text.indexOf(searchTerm) == -1 ? option.classList.add("hide") : option.classList.remove("hide");
+
+            continue;
         }
 
         const match = searchTerm.match(/\/(hash|author|date) (.*)/);
