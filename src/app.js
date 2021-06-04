@@ -53,10 +53,10 @@ app.post('/files', (req, res) => {
             const line = lines[i];
 
             const [ rest, file ] = line.split("\t");
-            
-            const [ mode, type, hash, size ] = rest.split(" ");
-            
-            files.push({ mode: mode, type: type, hash: hash, file: file });
+
+            const [ mode, type, hash, size ] = rest.split(/ +/);
+
+            files.push({ mode: mode, type: type, hash: hash, size: size, file: file });
         }
 
         res.json(files);
