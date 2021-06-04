@@ -17,7 +17,7 @@ app.post('/', (req, res) => {
 app.post('/commits', (req, res) => {
     const path = req.body.path;
 
-    execFile('git', ['-C', path, 'log', '--pretty=format:%H%x09%an <%ae>%x09%ad%x09%s'], (error, stdout, stderr) => {
+    execFile('git', ['-C', path, 'log', '--pretty=format:%H|%an <%ae>|%ad|%s'], (error, stdout, stderr) => {
         const lines = stdout.split("\n");
 
         const length = lines.length;
@@ -27,15 +27,9 @@ app.post('/commits', (req, res) => {
         for(let i = 0; i < length; i++) {
             const line = lines[i];
 
-            const json = line.replace(/"/g, '\\"').replace(/\t/g, "    ").replace(/(.*) {4}(.*) {4}(.*) {4}(.*)/, '{ "hash": "$1", "author": "$2", "date": "$3", "message": "$4" }');
+            const [ hash, author, date, message ] = line.split("|");
 
-            try {
-                messages.push(JSON.parse(json));
-            } catch(err) {
-                console.error(line);
-
-                console.error(json);
-            }
+            messages.push({ hash: hash, author: author, date: date, message: message });
         }
 
         res.json(messages);
@@ -58,15 +52,11 @@ app.post('/files', (req, res) => {
         for(let i = 0; i < length; i++) {
             const line = lines[i];
 
-            const json = line.replace(/([0-7]{6}) (.*) ([a-z0-9]{40}) *([0-9]{1,})\t(.*)/, '{ "mode": "$1", "type": "$2", "hash": "$3", "size": "$4", "file": "$5" }');
-
-            try {
-                files.push(JSON.parse(json));
-            } catch(err) {
-                console.error(line);
-
-                console.error(json);
-            }
+            const [ rest, file ] = line.split("\t");
+            
+            const [ mode, type, hash, size ] = rest.split(" ");
+            
+            files.push({ mode: mode, type: type, hash: hash, file: file });
         }
 
         res.json(files);
