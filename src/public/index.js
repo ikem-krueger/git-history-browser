@@ -18,14 +18,17 @@ function basename(path) {
 }
 
 function saveData(filename, data) {
-    //IE11 support
+    // IE11 support
     if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-        let blob = new Blob([data], {type: "octet/stream"});
+        const blob = new Blob([data], {type: "octet/stream"});
+
         window.navigator.msSaveOrOpenBlob(blob, filename);
-    } else {// other browsers
-        let file = new File([data], filename, {type: "octet/stream"});
-        let exportUrl = URL.createObjectURL(file);
+    } else { // other browsers
+        const file = new File([data], filename, {type: "octet/stream"});
+        const exportUrl = URL.createObjectURL(file);
+
         window.location.assign(exportUrl);
+
         URL.revokeObjectURL(exportUrl);
     }
 }
@@ -264,7 +267,7 @@ function main() {
     buttonCheckout.addEventListener("click", (event) => {
         const files = document.querySelector("#files");
         const content = document.querySelector("#content");
-        
+
         const filename = basename(files[files.selectedIndex].textContent);
         const data = content.textContent;
 
