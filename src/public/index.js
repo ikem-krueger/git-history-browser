@@ -5,7 +5,7 @@ let timerId;
 
 const ms = 200;
 
-const debounce = (func) => {
+function debounce(func) {
     return (...args) => {
         clearTimeout(timerId);
 
@@ -17,21 +17,20 @@ function basename(path) {
     return path.substr(path.lastIndexOf('/') + 1);
 }
 
-const saveData = (function () {
-    var a = document.createElement("a");
-    document.body.appendChild(a);
-    a.style = "display: none";
-    return function (filename, data) {
-        var blob = new Blob([data], {type: "octet/stream"}),
-            url = window.URL.createObjectURL(blob);
-        a.href = url;
-        a.download = filename;
-        a.click();
-        window.URL.revokeObjectURL(url);
-    };
-}());
+function saveData(filename, data) {
+    //IE11 support
+    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+        let blob = new Blob([data], {type: "octet/stream"});
+        window.navigator.msSaveOrOpenBlob(blob, filename);
+    } else {// other browsers
+        let file = new File([data], filename, {type: "octet/stream"});
+        let exportUrl = URL.createObjectURL(file);
+        window.location.assign(exportUrl);
+        URL.revokeObjectURL(exportUrl);
+    }
+}
 
-const httpRequest = async (url, data, type) => {
+async function httpRequest(url, data, type) {
     try {
         const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
 
