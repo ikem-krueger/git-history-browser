@@ -122,7 +122,53 @@ async function populateCommitHistory(path) {
 
     const commit = selectCommits[0].value;
 
+    countAuthorCommits(20);
+
     populateFilesystemTree(path, commit);
+}
+
+function countAuthorCommits(max) {
+    const commits = document.querySelector("#commits");
+
+    const options = commits.options;
+
+    const length = options.length;
+
+    const authorCommits = {};
+
+    for(let i = 0; i < length; i++) {
+        const option = options[i];
+
+        const author = option.dataset.author;
+
+        const count = 1;
+
+        authorCommits[author] ? authorCommits[author] += count : authorCommits[author] = count;
+    }
+
+    // TODO: refactor the code below
+    const v = Object.values(authorCommits).sort((a, b) => b - a).slice(0, max);
+    const k = Object.keys(authorCommits);
+
+    const commitsAuthor = {};
+
+    for(let i = 0; i < k.length; i++) {
+        const count = authorCommits[k[i]];
+        const author = k[i];
+
+        if(v.includes(count)) {
+
+            commitsAuthor[count] = author;
+        }
+    }
+
+    for(let i = 0; i < v.length; i++) {
+        const nr = i + 1;
+        const commits = v[i];
+        const author = commitsAuthor[commits];
+
+        console.log(`#${nr}: ${author} (${commits})`);
+    }
 }
 
 async function populateFilesystemTree(path, commit) {
