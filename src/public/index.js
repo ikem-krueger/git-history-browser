@@ -92,6 +92,28 @@ function filterOptions(event) {
 }
 
 async function populateCommitHistory(path) {
+    const branch = document.querySelector("#branch");
+
+    const searchParams = new URLSearchParams();
+
+    searchParams.set("path", path);
+
+    const branches = await fetch(`/branch?${searchParams}`).then(res => res.json());
+
+    branch.length = branches.length;
+
+    for(let i = 0; i < branches.length; i++) {
+        branch[i].textContent = branches[i].trim();
+
+        const match = branches[i].match(/\* (.*)/);
+
+        if(match) {
+            branch[i].textContent = match[1];
+
+            branch.selectedIndex = i;
+        }
+    }
+
     const selectCommits = document.querySelector("#commits");
 
     const commits = await httpRequest(host + '/commits', { path: path }, type="json");

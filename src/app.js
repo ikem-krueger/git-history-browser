@@ -14,6 +14,18 @@ app.post('/', (req, res) => {
     res.send(host + '/index.html');
 });
 
+app.get('/branch', (req, res) => {
+    const path = req.query.path;
+
+    execFile('git', ['-C', path, 'branch'], (error, stdout, stderr) => {
+        const lines = stdout.split("\n");
+
+        lines.pop();
+
+        res.json(lines);
+    });
+});
+
 app.post('/commits', (req, res) => {
     const path = req.body.path;
 
