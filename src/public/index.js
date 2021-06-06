@@ -36,9 +36,7 @@ function saveData(filename, data) {
 function filterOptions(event) {
     const options = event.target.parentElement.querySelector("select").options
 
-    const length = options.length;
-
-    for(let i = 0; i < length; i++) {
+    for(let i = 0; i < options.length; i++) {
         const option = options[i];
 
         let text = option.textContent.toLowerCase();
@@ -104,11 +102,9 @@ async function populateCommitHistory(path) {
 
     const commits = await fetch('/commits?' + params).then(res => res.json());
 
-    const length = commits.length;
+    selectCommits.length = commits.length; // creates empty option elements
 
-    selectCommits.length = length; // creates empty option elements
-
-    for(let i = 0; i < length; i++) { // fills them with data
+    for(let i = 0; i < commits.length; i++) { // fills them with data
         const option = selectCommits[i];
         const commit = commits[i];
 
@@ -140,11 +136,9 @@ function countAuthorCommits(max) {
 
     const options = commits.options;
 
-    const length = options.length;
-
     const authorCommits = {};
 
-    for(let i = 0; i < length; i++) {
+    for(let i = 0; i < options.length; i++) {
         const option = options[i];
 
         const author = option.dataset.author;
@@ -189,11 +183,9 @@ async function populateFilesystemTree(path, commit) {
 
     const files = await fetch('/files?' + params).then(res => res.json());
 
-    const length = files.length;
+    selectFiles.length = files.length; // creates empty option elements
 
-    selectFiles.length = length; // creates empty option elements
-
-    for(let i = 0; i < length; i++) { // fills them with data
+    for(let i = 0; i < files.length; i++) { // fills them with data
         const option = selectFiles[i];
         const file = files[i];
 
