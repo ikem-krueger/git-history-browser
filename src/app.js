@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
     res.send(host + '/index.html');
 });
 
-app.get('/branch', (req, res) => {
+app.get('/branches', (req, res) => {
     const path = req.query.path;
 
     execFile('git', ['-C', path, 'branch'], (error, stdout, stderr) => {

@@ -82,7 +82,7 @@ async function populateCommitHistory(path) {
 
     params.set("path", path);
 
-    const branches = await fetch('/branch?' + params).then(res => res.json());
+    const branches = await fetch('/branches?' + params).then(res => res.json());
 
     branch.length = branches.length;
 
