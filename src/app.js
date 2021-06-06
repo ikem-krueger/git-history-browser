@@ -50,9 +50,9 @@ app.get('/commits', (req, res) => {
 
 app.get('/files', (req, res) => {
     const path = req.query.path;
-    const commit = req.query.commit;
+    const hash = req.query.hash;
 
-    execFile('git', ['-C', path, 'ls-tree', '-r', '-l', commit], (error, stdout, stderr) => {
+    execFile('git', ['-C', path, 'ls-tree', '-r', '-l', hash], (error, stdout, stderr) => {
         const lines = stdout.split("\n");
 
         lines.pop(); // last line is empty, so remove last element...
@@ -77,9 +77,9 @@ app.get('/files', (req, res) => {
 
 app.get('/content', (req, res) => {
     const path = req.query.path;
-    const commit = req.query.commit;
+    const hash = req.query.hash;
 
-    execFile('git', ['-C', path, 'show', commit], (error, stdout, stderr) => {
+    execFile('git', ['-C', path, 'show', hash], (error, stdout, stderr) => {
         const content = stdout;
 
         res.send(content);

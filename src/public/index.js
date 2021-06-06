@@ -124,11 +124,11 @@ async function populateCommitHistory(path) {
     inputSlider.value = selectCommits.selectedIndex + 1;
     inputSlider.max = selectCommits.length;
 
-    const commit = selectCommits[0].value;
+    const hash = selectCommits[0].value;
 
     console.log(countAuthorCommits(20));
 
-    populateFilesystemTree(path, commit);
+    populateFilesystemTree(path, hash);
 }
 
 function countAuthorCommits(max) {
@@ -177,13 +177,13 @@ function countAuthorCommits(max) {
     return output;
 }
 
-async function populateFilesystemTree(path, commit) {
+async function populateFilesystemTree(path, hash) {
     const selectFiles = document.querySelector("#files");
 
     const params = new URLSearchParams();
     
     params.set("path", path);
-    params.set("commit", commit);
+    params.set("hash", hash);
 
     const files = await fetch('/files?' + params).then(res => res.json());
 
@@ -202,9 +202,9 @@ async function populateFilesystemTree(path, commit) {
 
     selectFiles.selectedIndex = 0; // FIXME: hardcoded value
 
-    commit = selectFiles[0].value;
+    hash = selectFiles[0].value;
 
-    populateFileContent(path, commit);
+    populateFileContent(path, hash);
 
     updateCommitDetails();
 }
@@ -228,13 +228,13 @@ function updateCommitDetails() {
     spanCommitDate.textContent = `Date: ${option.dataset.date}`;
 }
 
-async function populateFileContent(path, commit) {
+async function populateFileContent(path, hash) {
     const divContent = document.querySelector("#content");
 
     const params = new URLSearchParams();
 
     params.set("path", path);
-    params.set("commit", commit);
+    params.set("hash", hash);
 
     const content = await fetch('/content?' + params).then(res => res.text());
 
