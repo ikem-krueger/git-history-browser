@@ -4,9 +4,9 @@ Download and extract Git History Viewer
 
 Open the console and type:
 
-> npm install
-
 > cd src
+
+> npm install
 
 > npm start
 
