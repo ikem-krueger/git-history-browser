@@ -33,20 +33,6 @@ function saveData(filename, data) {
     }
 }
 
-async function httpRequest(url, data, type) {
-    try {
-        const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-
-        if(type == "json") {
-            return await response.json();
-        } else {
-            return await response.text();
-        }
-    } catch(e) {
-        console.error(e);
-    }
-}
-
 function filterOptions(event) {
     const options = event.target.parentElement.querySelector("select").options
 
@@ -58,7 +44,7 @@ function filterOptions(event) {
         let text = option.textContent.toLowerCase();
         let searchTerm = event.target.value.toLowerCase();
 
-        if(!searchTerm.startsWith("/")){
+        if(!searchTerm.startsWith("/")){ // if the searchTerm is not a command...
             text.indexOf(searchTerm) == -1 ? option.classList.add("hide") : option.classList.remove("hide");
 
             continue; // skip the rest of the logic below
@@ -94,11 +80,11 @@ function filterOptions(event) {
 async function populateCommitHistory(path) {
     const branch = document.querySelector("#branch");
 
-    const searchParams = new URLSearchParams();
+    const params = new URLSearchParams();
 
-    searchParams.set("path", path);
+    params.set("path", path);
 
-    const branches = await fetch(`/branch?${searchParams}`).then(res => res.json());
+    const branches = await fetch('/branch?' + params).then(res => res.json());
 
     branch.length = branches.length;
 
@@ -116,7 +102,7 @@ async function populateCommitHistory(path) {
 
     const selectCommits = document.querySelector("#commits");
 
-    const commits = await httpRequest(host + '/commits', { path: path }, type="json");
+    const commits = await fetch('/commits?' + params).then(res => res.json());
 
     const length = commits.length;
 
@@ -196,7 +182,12 @@ function countAuthorCommits(max) {
 async function populateFilesystemTree(path, commit) {
     const selectFiles = document.querySelector("#files");
 
-    const files = await httpRequest(host + '/files', { path: path, commit: commit }, type="json");
+    const params = new URLSearchParams();
+    
+    params.set("path", path);
+    params.set("commit", commit);
+
+    const files = await fetch('/files?' + params).then(res => res.json());
 
     const length = files.length;
 
@@ -244,7 +235,12 @@ function updateCommitDetails() {
 async function populateFileContent(path, commit) {
     const divContent = document.querySelector("#content");
 
-    const content = await httpRequest(host + '/content', { path: path, commit: commit }, type="text");
+    const params = new URLSearchParams();
+
+    params.set("path", path);
+    params.set("commit", commit);
+
+    const content = await fetch('/content?' + params).then(res => res.text());
 
     divContent.textContent = content;
 

@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
-app.post('/', (req, res) => {
+app.get('/', (req, res) => {
     res.send(host + '/index.html');
 });
 
@@ -26,8 +26,8 @@ app.get('/branch', (req, res) => {
     });
 });
 
-app.post('/commits', (req, res) => {
-    const path = req.body.path;
+app.get('/commits', (req, res) => {
+    const path = req.query.path;
 
     execFile('git', ['-C', path, 'log', '--pretty=format:%H|%an <%ae>|%ad|%s'], (error, stdout, stderr) => {
         const lines = stdout.split("\n");
@@ -48,9 +48,9 @@ app.post('/commits', (req, res) => {
     });
 });
 
-app.post('/files', (req, res) => {
-    const path = req.body.path;
-    const commit = req.body.commit;
+app.get('/files', (req, res) => {
+    const path = req.query.path;
+    const commit = req.query.commit;
 
     execFile('git', ['-C', path, 'ls-tree', '-r', '-l', commit], (error, stdout, stderr) => {
         const lines = stdout.split("\n");
@@ -75,10 +75,10 @@ app.post('/files', (req, res) => {
     });
 });
 
-app.post('/content', (req, res) => {
-    const path = req.body.path;
-    const commit = req.body.commit;
-    
+app.get('/content', (req, res) => {
+    const path = req.query.path;
+    const commit = req.query.commit;
+
     execFile('git', ['-C', path, 'show', commit], (error, stdout, stderr) => {
         const content = stdout;
 
