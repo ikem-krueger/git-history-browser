@@ -126,7 +126,7 @@ async function populateCommitHistory(path) {
 
     const commit = selectCommits[0].value;
 
-    countAuthorCommits(20);
+    console.log(countAuthorCommits(20));
 
     populateFilesystemTree(path, commit);
 }
@@ -164,13 +164,17 @@ function countAuthorCommits(max) {
         }
     }
 
+    let output = "";
+
     for(let i = 0; i < v.length; i++) {
         const nr = i + 1;
         const commits = v[i];
         const author = commitsAuthor[commits];
 
-        console.log(`#${nr}: ${author} (${commits})`);
+        output += `#${nr}: ${author} (${commits})\n`;
     }
+
+    return output;
 }
 
 async function populateFilesystemTree(path, commit) {
