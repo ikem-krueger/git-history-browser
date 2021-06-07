@@ -48,7 +48,7 @@ function filterOptions(event) {
             continue; // skip the rest of the logic below
         }
 
-        const match = searchTerm.match(/\/(hash|author|date) (.*)/);
+        const match = searchTerm.match(/^\/(hash|author|date) (.*)/);
 
         if(match) {
             const command = match[1];
@@ -87,27 +87,38 @@ async function populateBranches(path) {
     selectBranch.length = branches.length;
 
     for(let i = 0; i < branches.length; i++) {
-        selectBranch[i].textContent = branches[i].trim();
+        const option = selectBranch[i];
+        const branch = branches[i].trim();
 
-        const match = branches[i].match(/\* (.*)/);
+        const matchAsterisk = branch.match(/^\* (.*)/); // active branch
 
-        if(match) {
-            selectBranch[i].textContent = match[1];
+        if(matchAsterisk) {
+            option.textContent = matchAsterisk[1];
+            option.value = matchAsterisk[1];
 
             selectBranch.selectedIndex = i;
+
+            continue;
         }
+
+        const matchHead = branch.match(/^(.*HEAD) -> .*/);
+
+        if(matchHead) {
+            option.textContent = branch;
+            option.value = matchHead[1];
+
+            continue;
+        }
+
+        option.textContent = branch;
+        option.value = branch;
     }
 }
 
-async function populateCommitHistory(path) {
+async function populateCommitHistory(path, branch) {
     const params = new URLSearchParams();
 
     params.set("path", path);
-
-    const selectBranch = document.querySelector("#branch");
-
-    const branch = selectBranch[selectBranch.selectedIndex].textContent;
-
     params.set("branch", branch);
 
     const selectCommits = document.querySelector("#commits");
@@ -303,22 +314,28 @@ function main() {
 
     const inputPath = document.querySelector("#path");
 
-    inputPath.addEventListener("keydown", (event) => {
+    inputPath.addEventListener("keydown", async (event) => {
         if(event.key == "Enter") {
             const path = inputPath.value;
 
-            populateBranches(path);
+            await populateBranches(path);
 
-            populateCommitHistory(path);
+            const selectBranch = document.querySelector("#branch");
+
+            const branch = selectBranch[selectBranch.selectedIndex].value;
+
+            populateCommitHistory(path, branch);
         }
     });
 
     const selectBranch = document.querySelector("#branch");
-    
+
     selectBranch.addEventListener("change", (event) => {
         const path = inputPath.value;
 
-        populateCommitHistory(path);
+        const branch = selectBranch[selectBranch.selectedIndex].value;
+
+        populateCommitHistory(path, branch);
     });
 
     inputPath.focus();

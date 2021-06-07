@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 app.get('/branches', (req, res) => {
     const path = req.query.path;
 
-    execFile('git', ['-C', path, 'branch'], (error, stdout, stderr) => {
+    execFile('git', ['-C', path, 'branch', '-a'], (error, stdout, stderr) => {
         const lines = stdout.split("\n");
 
         lines.pop();
