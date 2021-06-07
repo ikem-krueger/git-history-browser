@@ -75,8 +75,8 @@ function filterOptions(event) {
     }
 }
 
-async function populateCommitHistory(path) {
-    const branch = document.querySelector("#branch");
+async function populateBranches(path) {
+    const selectBranch = document.querySelector("#branch");
 
     const params = new URLSearchParams();
 
@@ -84,19 +84,31 @@ async function populateCommitHistory(path) {
 
     const branches = await fetch('/branches?' + params).then(res => res.json());
 
-    branch.length = branches.length;
+    selectBranch.length = branches.length;
 
     for(let i = 0; i < branches.length; i++) {
-        branch[i].textContent = branches[i].trim();
+        selectBranch[i].textContent = branches[i].trim();
 
         const match = branches[i].match(/\* (.*)/);
 
         if(match) {
-            branch[i].textContent = match[1];
+            selectBranch[i].textContent = match[1];
 
-            branch.selectedIndex = i;
+            selectBranch.selectedIndex = i;
         }
     }
+}
+
+async function populateCommitHistory(path) {
+    const params = new URLSearchParams();
+
+    params.set("path", path);
+
+    const selectBranch = document.querySelector("#branch");
+
+    const branch = selectBranch[selectBranch.selectedIndex].textContent;
+
+    params.set("branch", branch);
 
     const selectCommits = document.querySelector("#commits");
 
@@ -279,22 +291,34 @@ function main() {
         event.preventDefault();
     });
 
-    const linkInfo = document.querySelector("[href='#info']");
+    const spanInfo = document.querySelector("#info");
 
-    linkInfo.addEventListener("click", (event) => {
+    spanInfo.addEventListener("click", (event) => {
         const infoBox = document.querySelector("#infobox");
 
-        infoBox.classList.toggle("hide");
+        if(infoBox.textContent.length > 0) {
+            infoBox.classList.toggle("hide");
+        }
     });
 
     const inputPath = document.querySelector("#path");
 
     inputPath.addEventListener("keydown", (event) => {
         if(event.key == "Enter") {
-            const path = document.querySelector("#path").value;
+            const path = inputPath.value;
+
+            populateBranches(path);
 
             populateCommitHistory(path);
         }
+    });
+
+    const selectBranch = document.querySelector("#branch");
+    
+    selectBranch.addEventListener("change", (event) => {
+        const path = inputPath.value;
+
+        populateCommitHistory(path);
     });
 
     inputPath.focus();
@@ -302,7 +326,7 @@ function main() {
     const selectCommits = document.querySelector("#commits");
 
     selectCommits.addEventListener("change", (event) => {
-        const path = document.querySelector("#path").value;
+        const path = inputPath.value;
         const commit = selectCommits.value;
 
         populateFilesystemTree(path, commit);
@@ -319,7 +343,7 @@ function main() {
     inputSlider.addEventListener("change", (event) => {
         selectCommits.selectedIndex = (inputSlider.value - 1);
 
-        const path = document.querySelector("#path").value;
+        const path = inputPath.value;
         const commit = selectCommits.value;
 
         populateFilesystemTree(path, commit);
@@ -328,7 +352,7 @@ function main() {
     const selectFiles = document.querySelector("#files");
 
     selectFiles.addEventListener("change", (event) => {
-        const path = document.querySelector("#path").value;
+        const path = inputPath.value;
         const commit = selectFiles.value;
 
         populateFileContent(path, commit);
@@ -343,10 +367,9 @@ function main() {
     const buttonCheckout = document.querySelector("#checkout");
 
     buttonCheckout.addEventListener("click", (event) => {
-        const files = document.querySelector("#files");
         const content = document.querySelector("#content");
 
-        const filename = basename(files[files.selectedIndex].textContent);
+        const filename = basename(selectFiles[selectFiles.selectedIndex].textContent);
         const data = content.textContent;
 
         saveData(filename, data);

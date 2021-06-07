@@ -44,7 +44,7 @@ select {
     height: 380px;
 }
 
-select, label, div, textarea {
+select, label, textarea {
     font-family: Tahoma;
     font-size: 0.8em;
 }
@@ -66,11 +66,14 @@ button {
 .details {
     margin-top: 10px;
     color: grey;
+    font-family: Tahoma;
+    font-size: 0.8em;
 }
 
-[href='#info'] {
+#info {
     text-decoration: none;
     color: black;
+    cursor: pointer;
 }
 
 #infobox {
@@ -80,6 +83,8 @@ button {
     padding: 4px;
     background:white;
     white-space: pre;
+    font-family: Tahoma;
+    font-size: 0.8em;
 }
 
 #path {

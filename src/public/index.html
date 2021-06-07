@@ -15,49 +15,39 @@
         <h1>Git History Viewer</h1>
         <form>
             <fieldset>
-                <legend>Repository <a href="#info" title="Show some infos about this repository">&#9432;</a></legend>
+                <legend>Repository <span id="info" title="Show some infos about this repository">&#9432;</span></legend>
                 <input id="path" type="text" placeholder="Path">
-                <select id="branch">
-                </select>
-                <div id="infobox" class="hide">
-                </div>
+                <select id="branch"></select>
+                <div id="infobox" class="hide"></div>
             </fieldset>
             <fieldset>
                 <legend>Commit</legend>
-                <select id="commits" size="20">
-                </select>
-                <input id="filter-commits" type="text" placeholder="Filter">
-                <input id="slider" type="range">
+                <select id="commits" size="20"></select>
+                <input id="filter-commits" type="text" placeholder="Filter"><input id="slider" type="range">
                 <div class="details">
-                    <span id="commit-number"></span><br>
-                    <span id="commit-hash"></span><br>
-                    <span id="commit-author"></span><br>
-                    <span id="commit-date"></span>
+                    <div id="commit-number"></div>
+                    <div id="commit-hash"></div>
+                    <div id="commit-author"></div>
+                    <div id="commit-date"></div>
                 </div>
             </fieldset>
             <fieldset>
                 <legend>File</legend>
-                <select id="files" size="20">
-                </select>
+                <select id="files" size="20"></select>
                 <input id="filter-files" type="text" placeholder="Filter">
-                <span class="checkbox">
-                    <input type="checkbox" id="changed_files_only"><label for="changed_files_only">Show only changed files</label>
-                </span>
+                <span class="checkbox"><input type="checkbox" id="changed_files_only"><label for="changed_files_only">Show only changed files</label></span>
                 <div class="details">
-                    <span id="file-number"></span><br>
-                    <span id="file-hash"></span><br>
-                    <span id="file-mode"></span><br>
-                    <span id="file-size"></span>
+                    <div id="file-number"></div>
+                    <div id="file-hash"></div>
+                    <div id="file-mode"></div>
+                    <div id="file-size"></div>
                 </div>
             </fieldset>
             <fieldset>
                 <legend>Content</legend>
-                <textarea id="content" readonly>
-                </textarea>
+                <textarea id="content" readonly></textarea>
                 <button id="checkout" type="button">Checkout</button>
-                <span class="checkbox">
-                    <input type="checkbox" id="show_diff"><label for="show_diff">Show differences to previous commit</label>
-                </span>
+                <span class="checkbox"><input type="checkbox" id="show_diff"><label for="show_diff">Show differences to previous commit</label></span>
             </fieldset>
         </form>
     </body>

@@ -28,8 +28,9 @@ app.get('/branches', (req, res) => {
 
 app.get('/commits', (req, res) => {
     const path = req.query.path;
+    const branch = req.query.branch;
 
-    execFile('git', ['-C', path, 'log', '--pretty=format:%H|%an <%ae>|%ad|%s'], (error, stdout, stderr) => {
+    execFile('git', ['-C', path, 'log', '--pretty=format:%H|%an <%ae>|%ad|%s', branch], (error, stdout, stderr) => {
         const lines = stdout.split("\n");
 
         const length = lines.length;
