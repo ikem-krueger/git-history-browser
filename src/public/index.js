@@ -140,8 +140,8 @@ async function populateCommitHistory(path) {
 
     const infoBox = document.querySelector("#infobox");
 
-    const firstCommit = selectCommits[0].dataset.date;
-    const lastCommit = selectCommits[commits.length -1].dataset.date;
+    const firstCommit = selectCommits[commits.length -1].dataset.date;
+    const lastCommit = selectCommits[0].dataset.date;
 
     infoBox.textContent = `First commit: ${firstCommit}\n`;
     infoBox.textContent += `Last commit: ${lastCommit}\n`;
