@@ -126,7 +126,15 @@ async function populateCommitHistory(path) {
 
     const hash = selectCommits[0].value;
 
-    console.log(countAuthorCommits(20));
+    const infoBox = document.querySelector("#infobox");
+
+    const firstCommit = selectCommits[0].dataset.date;
+    const lastCommit = selectCommits[commits.length -1].dataset.date;
+
+    infoBox.textContent = `First commit: ${firstCommit}\n`;
+    infoBox.textContent += `Last commit: ${lastCommit}\n`;
+    infoBox.textContent += "\n";
+    infoBox.textContent += countAuthorCommits(20);
 
     populateFilesystemTree(path, hash);
 }
@@ -164,7 +172,7 @@ function countAuthorCommits(max) {
         }
     }
 
-    let output = "";
+    let output = `Top ${max} contributors:\n\n`;
 
     for(let i = 0; i < v.length; i++) {
         const nr = i + 1;
@@ -269,6 +277,14 @@ function main() {
 
     form.addEventListener("submit", (event) => { 
         event.preventDefault();
+    });
+
+    const linkInfo = document.querySelector("[href='#info']");
+
+    linkInfo.addEventListener("click", (event) => {
+        const infoBox = document.querySelector("#infobox");
+
+        infoBox.classList.toggle("hide");
     });
 
     const inputPath = document.querySelector("#path");

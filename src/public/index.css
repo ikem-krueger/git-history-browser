@@ -68,6 +68,20 @@ button {
     color: grey;
 }
 
+[href='#info'] {
+    text-decoration: none;
+    color: black;
+}
+
+#infobox {
+    position:absolute;
+    border: 1px solid black;
+    margin-top: 4px;
+    padding: 4px;
+    background:white;
+    white-space: pre;
+}
+
 #path {
     width: 300px;
     height: 22px;
