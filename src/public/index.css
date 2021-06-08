@@ -70,6 +70,14 @@ button {
     font-size: 0.8em;
 }
 
+#progressBar {
+    position: absolute;
+    top: 0;
+    width: 0%;
+    height:2px;
+    background-color: blue;
+}
+
 #info {
     text-decoration: none;
     color: black;
