@@ -90,7 +90,8 @@ async function populateBranches(path) {
         const option = selectBranch[i];
         const branch = branches[i].trim();
 
-        const matchAsterisk = branch.match(/^\* (.*)/); // active branch
+        // active branch
+        const matchAsterisk = branch.match(/^\* (.*)/);
 
         if(matchAsterisk) {
             option.textContent = matchAsterisk[1];
@@ -101,6 +102,7 @@ async function populateBranches(path) {
             continue;
         }
 
+        // HEAD
         const matchHead = branch.match(/^(.*HEAD) -> .*/);
 
         if(matchHead) {
@@ -110,6 +112,7 @@ async function populateBranches(path) {
             continue;
         }
 
+        // normal branch
         option.textContent = branch;
         option.value = branch;
     }
