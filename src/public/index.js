@@ -365,9 +365,9 @@ function main() {
 
     selectCommits.addEventListener("change", (event) => {
         const path = inputPath.value;
-        const commit = selectCommits.value;
+        const hash = selectCommits.value;
 
-        populateFilesystemTree(path, commit);
+        populateFilesystemTree(path, hash);
     });
 
     const inputFilterCommits = document.querySelector("#filter-commits");
