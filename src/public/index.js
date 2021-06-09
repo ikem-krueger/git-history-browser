@@ -380,18 +380,18 @@ function main() {
         selectCommits.selectedIndex = (inputSlider.value - 1);
 
         const path = inputPath.value;
-        const commit = selectCommits.value;
+        const hash = selectCommits.value;
 
-        populateFilesystemTree(path, commit);
+        populateFilesystemTree(path, hash);
     });
 
     const selectFiles = document.querySelector("#files");
 
     selectFiles.addEventListener("change", (event) => {
         const path = inputPath.value;
-        const commit = selectFiles.value;
+        const hash = selectFiles.value;
 
-        populateFileContent(path, commit);
+        populateFileContent(path, hash);
     });
 
     const inputFilterFiles = document.querySelector("#filter-files");
