@@ -96,9 +96,9 @@ async function populateBranches(path) {
 
     const branches = await fetch('/branches?' + params).then(res => res.json());
 
-    selectBranch.length = branches.length;
+    selectBranch.length = branches.length; // creates empty option elements
 
-    for(let i = 0; i < branches.length; i++) {
+    for(let i = 0; i < branches.length; i++) { // fills them with data
         updateProgressBar(calculatePercent(i, branches.length));
 
         const option = selectBranch[i];

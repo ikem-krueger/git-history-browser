@@ -20,7 +20,7 @@ app.get('/branches', (req, res) => {
     execFile('git', ['-C', path, 'branch', '-a'], (error, stdout, stderr) => {
         const lines = stdout.split("\n");
 
-        lines.pop();
+        lines.pop(); // last line is empty, so remove last element...
 
         res.json(lines);
     });
