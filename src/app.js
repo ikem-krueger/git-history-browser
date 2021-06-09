@@ -18,9 +18,7 @@ app.get('/branches', (req, res) => {
     const path = req.query.path;
 
     execFile('git', ['-C', path, 'branch', '-a'], (error, stdout, stderr) => {
-        const lines = stdout.split("\n");
-
-        lines.pop(); // last line is empty, so remove last element...
+        const lines = stdout.trim().split("\n");
 
         res.json(lines);
     });
@@ -54,9 +52,7 @@ app.get('/files', (req, res) => {
     const hash = req.query.hash;
 
     execFile('git', ['-C', path, 'ls-tree', '-r', '-l', hash], (error, stdout, stderr) => {
-        const lines = stdout.split("\n");
-
-        lines.pop(); // last line is empty, so remove last element...
+        const lines = stdout.trim().split("\n");
 
         const length = lines.length;
 
