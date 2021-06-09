@@ -321,9 +321,7 @@ function main() {
 
     const form = document.querySelector("form");
 
-    form.addEventListener("submit", (event) => { 
-        event.preventDefault();
-    });
+    form.addEventListener("submit", event => event.preventDefault());
 
     const spanInfo = document.querySelector("#info");
 
@@ -374,9 +372,7 @@ function main() {
 
     const inputFilterCommits = document.querySelector("#filter-commits");
 
-    inputFilterCommits.addEventListener("keyup", (event) => {
-        filterOptions(event);
-    });
+    inputFilterCommits.addEventListener("keyup", event => filterOptions(event));
 
     const inputSlider = document.querySelector("#slider");
 
@@ -400,9 +396,7 @@ function main() {
 
     const inputFilterFiles = document.querySelector("#filter-files");
 
-    inputFilterFiles.addEventListener("keyup", (event) => {
-        filterOptions(event);
-    });
+    inputFilterFiles.addEventListener("keyup", event => filterOptions(event));
 
     const buttonCheckout = document.querySelector("#checkout");
 
