@@ -407,7 +407,7 @@ function main() {
         const filename = basename(selectFiles[selectFiles.selectedIndex].textContent);
         const data = content.textContent;
 
-        saveData(filename, data);
+        saveData(filename, data); // <number>-<commit message>.patch: 0001-description-of-my-change.patch
     });
 }
 
