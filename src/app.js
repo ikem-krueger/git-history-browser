@@ -82,7 +82,7 @@ app.get('/changed', (req, res) => {
 
             const [status, file] = line.split(/\t/);
 
-            files.push({ status: status, file: file });
+            files.push(file);
         }
 
         res.json(files);
