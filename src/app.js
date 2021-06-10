@@ -28,7 +28,7 @@ app.get('/commits', (req, res) => {
     const path = req.query.path;
     const branch = req.query.branch;
 
-    execFile('git', ['-C', path, 'log', '--pretty=format:%H|%an <%ae>|%ad|%s', branch], (error, stdout, stderr) => {
+    execFile('git', ['-C', path, 'log', '--pretty=format:%H|%an <%ae>|%ad|%at|%s', branch], (error, stdout, stderr) => {
         const lines = stdout.split("\n");
 
         const length = lines.length;
@@ -38,9 +38,9 @@ app.get('/commits', (req, res) => {
         for(let i = 0; i < length; i++) {
             const line = lines[i];
 
-            const [ hash, author, date, message ] = line.split("|");
+            const [ hash, author, date, timestamp, message ] = line.split("|");
 
-            messages.push({ hash: hash, author: author, date: date, message: message });
+            messages.push({ hash: hash, author: author, date: date, timestamp: timestamp, message: message });
         }
 
         res.json(messages);

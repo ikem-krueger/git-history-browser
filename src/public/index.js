@@ -154,6 +154,7 @@ async function populateCommitHistory(path, branch) {
         option.value = commit.hash;
         option.dataset.author = commit.author;
         option.dataset.date = commit.date;
+        option.dataset.timestamp = commit.timestamp;
     }
 
     selectCommits.selectedIndex = 0;
