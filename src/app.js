@@ -68,11 +68,44 @@ app.get('/files', (req, res) => {
     });
 });
 
+app.get('/changed', (req, res) => {
+    const path = req.query.path;
+    const hash = req.query.hash;
+
+    execFile('git', ['-C', path, 'diff', '--name-status', hash + '~1', hash, '--diff-filter=AM'], (error, stdout, stderr) => {
+        const lines = stdout.trim().split("\n");
+
+        const files = [];
+
+        for(let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+
+            const [status, file] = line.split(/\t/);
+
+            files.push({ status: status, file: file });
+        }
+
+        res.json(files);
+    });
+});
+
 app.get('/content', (req, res) => {
     const path = req.query.path;
     const hash = req.query.hash;
 
     execFile('git', ['-C', path, 'show', hash], (error, stdout, stderr) => {
+        const content = stdout;
+
+        res.send(content);
+    });
+});
+
+app.get('/diff', (req, res) => {
+    const path = req.query.path;
+    const hash = req.query.hash;
+    const file = req.query.file;
+
+    execFile('git', ['-C', path, 'diff', hash + '~1', hash, file], (error, stdout, stderr) => {
         const content = stdout;
 
         res.send(content);
