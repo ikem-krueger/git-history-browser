@@ -31,11 +31,9 @@ app.get('/commits', (req, res) => {
     execFile('git', ['-C', path, 'log', '--pretty=format:%H|%an <%ae>|%ad|%at|%s', branch], (error, stdout, stderr) => {
         const lines = stdout.split("\n");
 
-        const length = lines.length;
-
         const messages = [];
 
-        for(let i = 0; i < length; i++) {
+        for(let i = 0; i < lines.length; i++) {
             const line = lines[i];
 
             const [ hash, author, date, timestamp, message ] = line.split("|");
@@ -54,11 +52,9 @@ app.get('/files', (req, res) => {
     execFile('git', ['-C', path, 'ls-tree', '-r', '-l', hash], (error, stdout, stderr) => {
         const lines = stdout.trim().split("\n");
 
-        const length = lines.length;
-
         const files = [];
 
-        for(let i = 0; i < length; i++) {
+        for(let i = 0; i < lines.length; i++) {
             const line = lines[i];
 
             const [ rest, file ] = line.split("\t");
