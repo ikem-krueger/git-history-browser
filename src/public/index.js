@@ -442,6 +442,12 @@ function main() {
         const path = inputPath.value;
         const hash = selectFiles.value;
 
+        const show_diff = document.querySelector("#show_diff");
+
+        const option = selectFiles[selectFiles.selectedIndex];
+
+        show_diff.disabled = (option.dataset.changed == "false");
+
         populateFileContent(path, hash);
     });
 
