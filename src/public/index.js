@@ -241,7 +241,7 @@ async function populateFilesystemTree(path, hash) {
     params.set("path", path);
     params.set("hash", hash);
 
-    const changedFiles = await fetch('/changed?' + params).then(res => res.json());
+    const changedFiles = await fetch('/changes?' + params).then(res => res.json());
 
     const files = await fetch('/files?' + params).then(res => res.json());
 

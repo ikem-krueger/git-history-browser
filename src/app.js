@@ -74,7 +74,7 @@ app.get('/files', (req, res) => {
     });
 });
 
-app.get('/changed', (req, res) => {
+app.get('/changes', (req, res) => {
     const path = req.query.path;
     const hash = req.query.hash;
 
