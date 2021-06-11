@@ -358,7 +358,7 @@ function updateFileDetails() {
         "A": "Added", 
         "C": "Copied", 
         "M": "Modified", 
-        "R": "Renamed", 
+        "R": "Renamed", // ignored on purpose...
         "T": "Type", 
         "U": "Unmerged", 
         "X": "Unknown", 
