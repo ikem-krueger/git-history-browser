@@ -20,11 +20,7 @@ const types = {
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public'));
-
-app.get('/', (req, res) => {
-    res.send(host + '/index.html');
-});
+app.use(express.static(__dirname + '/public'));
 
 app.get('/branches', (req, res) => {
     const path = req.query.path;
