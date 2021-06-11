@@ -242,6 +242,7 @@ async function populateFilesystemTree(path, hash) {
     params.set("hash", hash);
 
     const changedFiles = await fetch('/changed?' + params).then(res => res.json());
+
     const files = await fetch('/files?' + params).then(res => res.json());
 
     selectFiles.length = files.length; // creates empty option elements
@@ -257,7 +258,7 @@ async function populateFilesystemTree(path, hash) {
         option.dataset.mode = file.mode;
         option.dataset.type = file.type;
         option.dataset.size = file.size;
-        option.dataset.changed = changedFiles.includes(file.file);
+        option.dataset.change = changedFiles[file.file] || "";
 
         option.classList.remove("hide");
     }
@@ -279,7 +280,7 @@ function showChangedFiles() {
     for(let i = 0; i < options.length; i++){
         const option = options[i];
 
-        if(option.dataset.changed != "true") {
+        if(option.dataset.change == "") {
             option.classList.add("hide");
         }
     }
@@ -353,15 +354,28 @@ function updateFileDetails() {
 
     const option = selectFiles[selectFiles.selectedIndex];
 
+    const types = {
+        "A": "Added", 
+        "C": "Copied", 
+        "M": "Modified", 
+        "R": "Renamed", 
+        "T": "Type", 
+        "U": "Unmerged", 
+        "X": "Unknown", 
+        "B": "Broken"
+    }
+
     const spanFileNumber = document.querySelector("#file-number");
     const spanFileHash = document.querySelector("#file-hash");
     const spanFileMode = document.querySelector("#file-mode");
     const spanFileSize = document.querySelector("#file-size");
+    const spanFileChange = document.querySelector("#file-change");
 
     spanFileNumber.textContent = `File: #${(selectFiles.selectedIndex + 1)}/${selectFiles.length}`;
     spanFileHash.textContent = `Hash: ${option.value}`;
     spanFileMode.textContent = `Mode: ${option.dataset.mode}`;
     spanFileSize.textContent = `Size: ${option.dataset.size} Bytes`;
+    spanFileChange.textContent = `Change: ${types[option.dataset.change] || "None"}`;
 }
 
 function main() {
@@ -446,7 +460,7 @@ function main() {
 
         const option = selectFiles[selectFiles.selectedIndex];
 
-        show_diff.disabled = (option.dataset.changed == "false");
+        show_diff.disabled = (option.dataset.change == "");
 
         populateFileContent(path, hash);
     });
