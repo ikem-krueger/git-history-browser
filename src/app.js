@@ -20,6 +20,8 @@ app.get('/branches', (req, res) => {
     execFile('git', ['-C', path, 'branch', '-a'], (error, stdout, stderr) => {
         const lines = stdout.trim().split("\n");
 
+        console.error(stderr);
+
         res.json(lines);
     });
 });
@@ -40,6 +42,8 @@ app.get('/commits', (req, res) => {
 
             messages.push({ hash: hash, author: author, date: date, timestamp: timestamp, message: message });
         }
+
+        console.error(stderr);
 
         res.json(messages);
     });
@@ -64,6 +68,8 @@ app.get('/files', (req, res) => {
             files.push({ mode: mode, type: type, hash: hash, size: size, file: file });
         }
 
+        console.error(stderr);
+
         res.json(files);
     });
 });
@@ -85,6 +91,8 @@ app.get('/changed', (req, res) => {
             files[file] = status;
         }
 
+        console.error(stderr);
+
         res.json(files);
     });
 });
@@ -95,6 +103,8 @@ app.get('/content', (req, res) => {
 
     execFile('git', ['-C', path, 'show', hash], (error, stdout, stderr) => {
         const content = stdout;
+
+        console.error(stderr);
 
         res.send(content);
     });
@@ -107,6 +117,8 @@ app.get('/diff', (req, res) => {
 
     execFile('git', ['-C', path, 'diff', hash + '~1', hash, '--', file], (error, stdout, stderr) => {
         const content = stdout;
+
+        console.error(stderr);
 
         res.send(content);
     });
