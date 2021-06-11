@@ -105,7 +105,7 @@ app.get('/diff', (req, res) => {
     const hash = req.query.hash;
     const file = req.query.file;
 
-    execFile('git', ['-C', path, 'diff', hash + '~1', hash, file], (error, stdout, stderr) => {
+    execFile('git', ['-C', path, 'diff', hash + '~1', hash, '--', file], (error, stdout, stderr) => {
         const content = stdout;
 
         res.send(content);
