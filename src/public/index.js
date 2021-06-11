@@ -50,32 +50,34 @@ function filterOptions(event) {
 
         const match = searchTerm.match(/^\/(hash|author|date|change) (.*)/);
 
-        if(match) {
-            const command = match[1];
-
-            switch(command) {
-                case "hash":
-                    text = option.value;
-
-                    break;
-                case "author":
-                    text = option.dataset.author.toLowerCase();
-
-                    break;
-                case "date":
-                    text = option.dataset.date.toLowerCase();
-
-                    break;
-                case "change":
-                    text = option.dataset.change.toLowerCase();
-
-                    break;
-            }
-
-            searchTerm = match[2];
-
-            text.indexOf(searchTerm) == -1 ? option.classList.add("hide") : option.classList.remove("hide");
+        if(!match) {
+            continue;
         }
+
+        const command = match[1];
+
+        switch(command) {
+            case "hash":
+                text = option.value;
+
+                break;
+            case "author":
+                text = option.dataset.author.toLowerCase();
+
+                break;
+            case "date":
+                text = option.dataset.date.toLowerCase();
+
+                break;
+            case "change":
+                text = option.dataset.change.toLowerCase();
+
+                break;
+        }
+
+        searchTerm = match[2];
+
+        text.indexOf(searchTerm) == -1 ? option.classList.add("hide") : option.classList.remove("hide");
     }
 }
 
@@ -216,7 +218,6 @@ function countAuthorCommits(max) {
         const author = k[i];
 
         if(v.includes(count)) {
-
             commitsAuthor[count] = author;
         }
     }
@@ -246,7 +247,6 @@ async function populateFilesystemTree(path, hash) {
     params.set("hash", hash);
 
     const changedFiles = await fetch('/changes?' + params).then(res => res.json());
-
     const files = await fetch('/files?' + params).then(res => res.json());
 
     selectFiles.length = files.length; // creates empty option elements
