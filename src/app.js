@@ -49,6 +49,29 @@ app.get('/commits', (req, res) => {
     });
 });
 
+app.get('/changes', (req, res) => {
+    const path = req.query.path;
+    const hash = req.query.hash;
+
+    execFile('git', ['-C', path, 'diff', '--name-status', hash + '~1', hash, '--diff-filter=r', '--no-rename'], (error, stdout, stderr) => {
+        const lines = stdout.trim().split("\n");
+
+        const files = {};
+
+        for(let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+
+            const [status, file] = line.split(/\t/);
+
+            files[file] = status;
+        }
+
+        console.error(stderr);
+
+        res.json(files);
+    });
+});
+
 app.get('/files', (req, res) => {
     const path = req.query.path;
     const hash = req.query.hash;
@@ -66,29 +89,6 @@ app.get('/files', (req, res) => {
             const [ mode, type, hash, size ] = rest.split(/ +/);
 
             files.push({ mode: mode, type: type, hash: hash, size: size, file: file });
-        }
-
-        console.error(stderr);
-
-        res.json(files);
-    });
-});
-
-app.get('/changes', (req, res) => {
-    const path = req.query.path;
-    const hash = req.query.hash;
-
-    execFile('git', ['-C', path, 'diff', '--name-status', hash + '~1', hash, '--diff-filter=r', '--no-rename'], (error, stdout, stderr) => {
-        const lines = stdout.trim().split("\n");
-
-        const files = {};
-
-        for(let i = 0; i < lines.length; i++) {
-            const line = lines[i];
-
-            const [status, file] = line.split(/\t/);
-
-            files[file] = status;
         }
 
         console.error(stderr);
