@@ -130,7 +130,7 @@ async function populateBranches(path) {
             continue;
         }
 
-        // normal branch
+        // other branches
         option.textContent = branch;
         option.value = branch;
     }
