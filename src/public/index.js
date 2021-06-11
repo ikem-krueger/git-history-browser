@@ -48,7 +48,7 @@ function filterOptions(event) {
             continue; // skip the rest of the logic below
         }
 
-        const match = searchTerm.match(/^\/(hash|author|date) (.*)/);
+        const match = searchTerm.match(/^\/(hash|author|date|change) (.*)/);
 
         if(match) {
             const command = match[1];
@@ -64,6 +64,10 @@ function filterOptions(event) {
                     break;
                 case "date":
                     text = option.dataset.date.toLowerCase();
+
+                    break;
+                case "change":
+                    text = option.dataset.change.toLowerCase();
 
                     break;
             }
@@ -258,7 +262,7 @@ async function populateFilesystemTree(path, hash) {
         option.dataset.mode = file.mode;
         option.dataset.type = file.type;
         option.dataset.size = file.size;
-        option.dataset.change = changedFiles[file.file] || "";
+        option.dataset.change = changedFiles[file.file] || "None";
 
         option.classList.remove("hide");
     }
@@ -280,7 +284,7 @@ function showChangedFiles() {
     for(let i = 0; i < options.length; i++){
         const option = options[i];
 
-        if(option.dataset.change == "") {
+        if(option.dataset.change == "None") {
             option.classList.add("hide");
         }
     }
@@ -354,17 +358,6 @@ function updateFileDetails() {
 
     const option = selectFiles[selectFiles.selectedIndex];
 
-    const types = {
-        "A": "Added", 
-        "C": "Copied", 
-        "M": "Modified", 
-        "R": "Renamed", // ignored on purpose...
-        "T": "Type", 
-        "U": "Unmerged", 
-        "X": "Unknown", 
-        "B": "Broken"
-    }
-
     const spanFileNumber = document.querySelector("#file-number");
     const spanFileHash = document.querySelector("#file-hash");
     const spanFileMode = document.querySelector("#file-mode");
@@ -375,7 +368,7 @@ function updateFileDetails() {
     spanFileHash.textContent = `Hash: ${option.value}`;
     spanFileMode.textContent = `Mode: ${option.dataset.mode}`;
     spanFileSize.textContent = `Size: ${option.dataset.size} Bytes`;
-    spanFileChange.textContent = `Change: ${types[option.dataset.change] || "None"}`;
+    spanFileChange.textContent = `Change: ${option.dataset.change}`;
 }
 
 function main() {

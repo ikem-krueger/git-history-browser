@@ -6,6 +6,18 @@ const execFile = require('child_process').execFile;
 const port = 3000;
 const host = `http://localhost:${port}`;
 
+const types = {
+    "A": "Added", 
+    "C": "Copied", 
+    "D": "Deleted", 
+    "M": "Modified", 
+    "R": "Renamed", 
+    "T": "Type", 
+    "U": "Unmerged", 
+    "X": "Unknown", 
+    "B": "Broken"
+}
+
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
@@ -53,7 +65,7 @@ app.get('/changes', (req, res) => {
     const path = req.query.path;
     const hash = req.query.hash;
 
-    execFile('git', ['-C', path, 'diff', '--name-status', hash + '~1', hash, '--diff-filter=r', '--no-rename'], (error, stdout, stderr) => {
+    execFile('git', ['-C', path, 'diff', '--name-status', hash + '~1', hash, '--diff-filter=dr', '--no-rename'], (error, stdout, stderr) => { // filter deleted/renamed files
         const lines = stdout.trim().split("\n");
 
         const files = {};
@@ -63,7 +75,7 @@ app.get('/changes', (req, res) => {
 
             const [status, file] = line.split(/\t/);
 
-            files[file] = status;
+            files[file] = types[status];
         }
 
         console.error(stderr);
