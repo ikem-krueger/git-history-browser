@@ -1,6 +1,0 @@
- - auto refresh bei änderungen
- - url in pfad -> git clone
- - fokussiere ausgewählten commit beim arbeiten mit dem slider
- - syntax highlightening
- - vorschau für bilder
- - play/pause knopf um die commit history automatisch zu durchlaufen
