@@ -5,6 +5,8 @@ let timerId;
 
 const ms = 200;
 
+HTMLCollection.prototype.forEach = Array.prototype.forEach;
+
 function debounce(func) {
     return (...args) => {
         clearTimeout(timerId);
@@ -36,22 +38,20 @@ function saveData(filename, data) {
 function filterOptions(event) {
     const options = event.target.parentElement.querySelector("select").options
 
-    for(let i = 0; i < options.length; i++) {
-        const option = options[i];
-
+    options.forEach((option) => {
         let textContent = option.textContent.toLowerCase();
         let searchTerm = event.target.value.toLowerCase();
 
         if(!searchTerm.startsWith("/")){ // if the searchTerm is not a command...
             textContent.indexOf(searchTerm) == -1 ? option.classList.add("hide") : option.classList.remove("hide");
 
-            continue; // skip the rest of the logic below
+            return; // skip the rest of the logic below
         }
 
         const match = searchTerm.match(/^\/(hash|author|date|change) (.*)/);
 
         if(!match) {
-            continue;
+            return;
         }
 
         const command = match[1];
@@ -78,7 +78,7 @@ function filterOptions(event) {
         searchTerm = match[2];
 
         textContent.indexOf(searchTerm) == -1 ? option.classList.add("hide") : option.classList.remove("hide");
-    }
+    });
 }
 
 function calculatePercent(w, g) {
@@ -104,11 +104,12 @@ async function populateBranches(path) {
 
     selectBranch.length = branches.length; // creates empty option elements
 
-    for(let i = 0; i < branches.length; i++) { // fills them with data
+    branches.forEach((branch, i) => { // fills them with data
         updateProgressBar(calculatePercent(i, branches.length));
 
         const option = selectBranch[i];
-        const branch = branches[i].trim();
+
+        branch = branch.trim();
 
         // active branch
         const matchAsterisk = branch.match(/^\* (.*)/);
@@ -119,7 +120,7 @@ async function populateBranches(path) {
 
             selectBranch.selectedIndex = i;
 
-            continue;
+            return; // skip the rest of the logic below
         }
 
         // HEAD
@@ -129,13 +130,13 @@ async function populateBranches(path) {
             option.textContent = branch;
             option.value = matchHead[1];
 
-            continue;
+            return; // skip the rest of the logic below
         }
 
         // other branches
         option.textContent = branch;
         option.value = branch;
-    }
+    });
 }
 
 async function populateCommitHistory(path, branch) {
@@ -150,18 +151,17 @@ async function populateCommitHistory(path, branch) {
 
     selectCommits.length = commits.length; // creates empty option elements
 
-    for(let i = 0; i < commits.length; i++) { // fills them with data
+    commits.forEach((commit, i) => { // fills them with data
         updateProgressBar(calculatePercent(i, commits.length));
 
         const option = selectCommits[i];
-        const commit = commits[i];
 
         option.textContent = commit.message;
         option.value = commit.hash;
         option.dataset.author = commit.author;
         option.dataset.date = commit.date;
         option.dataset.timestamp = commit.timestamp;
-    }
+    });
 
     selectCommits.selectedIndex = 0;
 
@@ -195,17 +195,15 @@ function countAuthorCommits(max) {
 
     const authorCommits = {};
 
-    for(let i = 0; i < options.length; i++) {
+    options.forEach((option, i) => {
         updateProgressBar(calculatePercent(i, options.length));
-
-        const option = options[i];
 
         const author = option.dataset.author;
 
         const count = 1;
 
         authorCommits[author] ? authorCommits[author] += count : authorCommits[author] = count;
-    }
+    });
 
     // TODO: refactor the code below
     const v = Object.values(authorCommits).sort((a, b) => b - a).slice(0, max);
@@ -251,11 +249,10 @@ async function populateFilesystemTree(path, hash) {
 
     selectFiles.length = files.length; // creates empty option elements
 
-    for(let i = 0; i < files.length; i++) { // fills them with data
+    files.forEach((file, i) => { // fills them with data
         updateProgressBar(calculatePercent(i, files.length));
 
         const option = selectFiles[i];
-        const file = files[i];
 
         option.textContent = file.file;
         option.value = file.hash;
@@ -265,7 +262,7 @@ async function populateFilesystemTree(path, hash) {
         option.dataset.change = changedFiles[file.file] || "None";
 
         option.classList.remove("hide");
-    }
+    });
 
     selectFiles.selectedIndex = 0; // FIXME: hardcoded value
 
@@ -281,13 +278,11 @@ function showChangedFiles() {
 
     const options = files.querySelectorAll("option");
 
-    for(let i = 0; i < options.length; i++){
-        const option = options[i];
-
+    options.forEach((option) => {
         if(option.dataset.change == "None") {
             option.classList.add("hide");
         }
-    }
+    });
 }
 
 function showAllFiles() {
@@ -295,11 +290,9 @@ function showAllFiles() {
 
     const options = files.querySelectorAll("option");
 
-    for(let i = 0; i < options.length; i++){
-        const option = options[i];
-
+    options.forEach((option) => {
         option.classList.remove("hide");
-    }
+    });
 }
 
 function updateCommitDetails() {
@@ -474,7 +467,7 @@ function main() {
         const filename = basename(selectFiles[selectFiles.selectedIndex].textContent);
         const data = content.textContent;
 
-        saveData(filename, data); // <number>-<commit message>.patch: 0001-description-of-my-change.patch
+        saveData(filename, data);
     });
 
     const checkboxShowDiff = document.querySelector("#show_diff");

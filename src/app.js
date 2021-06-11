@@ -26,11 +26,7 @@ app.get('/branches', (req, res) => {
     const path = req.query.path;
 
     execFile('git', ['-C', path, 'branch', '-a'], (error, stdout, stderr) => {
-        const lines = stdout.trim().split("\n");
-
-        console.error(stderr);
-
-        res.json(lines);
+        res.json(stdout.trim().split("\n"));
     });
 });
 
@@ -43,15 +39,11 @@ app.get('/commits', (req, res) => {
 
         const messages = [];
 
-        for(let i = 0; i < lines.length; i++) {
-            const line = lines[i];
-
+        lines.forEach((line) => {
             const [ hash, author, date, timestamp, message ] = line.split("|");
 
             messages.push({ hash: hash, author: author, date: date, timestamp: timestamp, message: message });
-        }
-
-        console.error(stderr);
+        });
 
         res.json(messages);
     });
@@ -66,15 +58,11 @@ app.get('/changes', (req, res) => {
 
         const files = {};
 
-        for(let i = 0; i < lines.length; i++) {
-            const line = lines[i];
-
+        lines.forEach((line) => {
             const [status, file] = line.split(/\t/);
 
             files[file] = types[status];
-        }
-
-        console.error(stderr);
+        });
 
         res.json(files);
     });
@@ -89,17 +77,13 @@ app.get('/files', (req, res) => {
 
         const files = [];
 
-        for(let i = 0; i < lines.length; i++) {
-            const line = lines[i];
-
+        lines.forEach((line) => {
             const [ rest, file ] = line.split("\t");
 
             const [ mode, type, hash, size ] = rest.split(/ +/);
 
             files.push({ mode: mode, type: type, hash: hash, size: size, file: file });
-        }
-
-        console.error(stderr);
+        });
 
         res.json(files);
     });
@@ -110,11 +94,7 @@ app.get('/content', (req, res) => {
     const hash = req.query.hash;
 
     execFile('git', ['-C', path, 'show', hash], (error, stdout, stderr) => {
-        const content = stdout;
-
-        console.error(stderr);
-
-        res.send(content);
+        res.send(stdout);
     });
 });
 
@@ -124,11 +104,7 @@ app.get('/diff', (req, res) => {
     const file = req.query.file;
 
     execFile('git', ['-C', path, 'diff', hash + '~1', hash, '--', file], (error, stdout, stderr) => {
-        const content = stdout;
-
-        console.error(stderr);
-
-        res.send(content);
+        res.send(stdout);
     });
 });
 
