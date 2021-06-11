@@ -39,11 +39,11 @@ function filterOptions(event) {
     for(let i = 0; i < options.length; i++) {
         const option = options[i];
 
-        let text = option.textContent.toLowerCase();
+        let textContent = option.textContent.toLowerCase();
         let searchTerm = event.target.value.toLowerCase();
 
         if(!searchTerm.startsWith("/")){ // if the searchTerm is not a command...
-            text.indexOf(searchTerm) == -1 ? option.classList.add("hide") : option.classList.remove("hide");
+            textContent.indexOf(searchTerm) == -1 ? option.classList.add("hide") : option.classList.remove("hide");
 
             continue; // skip the rest of the logic below
         }
@@ -58,26 +58,26 @@ function filterOptions(event) {
 
         switch(command) {
             case "hash":
-                text = option.value;
+                textContent = option.value;
 
                 break;
             case "author":
-                text = option.dataset.author.toLowerCase();
+                textContent = option.dataset.author.toLowerCase();
 
                 break;
             case "date":
-                text = option.dataset.date.toLowerCase();
+                textContent = option.dataset.date.toLowerCase();
 
                 break;
             case "change":
-                text = option.dataset.change.toLowerCase();
+                textContent = option.dataset.change.toLowerCase();
 
                 break;
         }
 
         searchTerm = match[2];
 
-        text.indexOf(searchTerm) == -1 ? option.classList.add("hide") : option.classList.remove("hide");
+        textContent.indexOf(searchTerm) == -1 ? option.classList.add("hide") : option.classList.remove("hide");
     }
 }
 
