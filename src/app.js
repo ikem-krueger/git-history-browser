@@ -25,20 +25,24 @@ app.use(express.static(__dirname + '/public'));
 app.get('/branches', (req, res) => {
     const path = req.query.path;
 
-    let stdout = "";
+    const branches = [];
 
     const child = spawn('git', ['-C', path, 'branch', '-a']);
 
     child.stdout.setEncoding('utf8');
 
     child.stdout.on('data', (data) => {
-        stdout += data;
+        const lines = data.trim().split("\n");
+
+        lines.forEach((line) => {
+            branches.push(line);
+        });
     });
 
     child.on('close', (exitCode) => {
-        console.log("branches: ");
+        console.log("branches: " + branches.length);
 
-        res.json(stdout.trim().split("\n"));
+        res.json(branches);
     });
 });
 
