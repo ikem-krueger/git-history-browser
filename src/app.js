@@ -6,18 +6,6 @@ const spawn = require('child_process').spawn;
 const port = 3000;
 const host = `http://localhost:${port}`;
 
-const types = {
-    "A": "Added", 
-    "C": "Copied", 
-    "D": "Deleted", 
-    "M": "Modified", 
-    "R": "Renamed", 
-    "T": "Type", 
-    "U": "Unmerged", 
-    "X": "Unknown", 
-    "B": "Broken"
-}
-
 app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname + '/public'));
@@ -79,9 +67,21 @@ app.get('/changes', (req, res) => {
 
     const files = {};
 
-    const child = spawn('git', ['-C', path, 'diff', '--name-status', hash + '~1', hash, '--diff-filter=dr', '--no-rename']);
+    const child = spawn('git', ['-C', path, 'diff', '--name-status', hash + '~1', hash, '--diff-filter=dr', '--no-rename']); // ignore "delete" and "rename"
 
     child.stdout.setEncoding('utf8');
+
+    const types = {
+        "A": "Added", 
+        "C": "Copied", 
+        "D": "Deleted", // ignored
+        "M": "Modified", 
+        "R": "Renamed", // ignored
+        "T": "Type", 
+        "U": "Unmerged", 
+        "X": "Unknown", 
+        "B": "Broken"
+    }
 
     child.stdout.on('data', (data) => {
         const lines = data.trim().split("\n");
