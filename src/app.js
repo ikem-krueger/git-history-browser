@@ -1,7 +1,6 @@
 const cors = require('cors');
 const express = require('express');
 const app = express();
-const execFile = require('child_process').execFile;
 const spawn = require('child_process').spawn;
 
 const port = 3000;
@@ -101,7 +100,7 @@ app.get('/files', (req, res) => {
     const path = req.query.path;
     const hash = req.query.hash;
 
-	const files = [];
+    const files = [];
 
     const child = spawn('git', ['-C', path, 'ls-tree', '-r', '-l', hash]);
 
@@ -130,7 +129,19 @@ app.get('/content', (req, res) => {
     const path = req.query.path;
     const hash = req.query.hash;
 
-    execFile('git', ['-C', path, 'show', hash], (error, stdout, stderr) => {
+    let stdout = "";
+
+    const child = spawn('git', ['-C', path, 'show', hash]);
+
+    child.stdout.setEncoding('utf8');
+
+    child.stdout.on('data', (data) => {
+        stdout += data;
+    });
+
+    child.on('close', (exitCode) => {
+        console.log("content: " + hash);
+
         res.send(stdout);
     });
 });
@@ -140,7 +151,19 @@ app.get('/diff', (req, res) => {
     const hash = req.query.hash;
     const file = req.query.file;
 
-    execFile('git', ['-C', path, 'diff', hash + '~1', hash, '--', file], (error, stdout, stderr) => {
+    let stdout = "";
+
+    const child = spawn('git', ['-C', path, 'diff', hash + '~1', hash, '--', file]);
+
+    child.stdout.setEncoding('utf8');
+
+    child.stdout.on('data', (data) => {
+        stdout += data;
+    });
+
+    child.on('close', (exitCode) => {
+        console.log("diff: " + hash);
+
         res.send(stdout);
     });
 });
