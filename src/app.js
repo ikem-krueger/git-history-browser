@@ -20,7 +20,7 @@ app.get('/branches', (req, res) => {
     child.stdout.setEncoding('utf8');
 
     child.stdout.on('data', (data) => {
-        const lines = data.trim().split("\n");
+        const lines = data.trim().split("\n"); // TODO: remove "trim()"?
 
         lines.forEach((line) => {
             branches.push(line);
@@ -45,7 +45,7 @@ app.get('/commits', (req, res) => {
     child.stdout.setEncoding('utf8');
 
     child.stdout.on('data', (data) => {
-        const lines = data.trim().split("\n");
+        const lines = data.trim().split("\n"); // TODO: remove "trim()"?;
 
         lines.forEach((line) => {
             const [ hash, author, date, timestamp, message ] = line.split("|");
@@ -84,7 +84,7 @@ app.get('/changes', (req, res) => {
     }
 
     child.stdout.on('data', (data) => {
-        const lines = data.trim().split("\n");
+        const lines = data.trim().split("\n"); // TODO: remove "trim()"?
 
         lines.forEach((line) => {
             const [status, file] = line.split(/\t/);
@@ -111,7 +111,7 @@ app.get('/files', (req, res) => {
     child.stdout.setEncoding('utf8');
 
     child.stdout.on('data', (data) => {
-        const lines = data.trim().split("\n");
+        const lines = data.trim().split("\n"); // TODO: remove "trim()"?
 
         lines.forEach((line) => {
             const [ rest, file ] = line.split("\t");
