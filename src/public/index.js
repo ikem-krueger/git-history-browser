@@ -333,6 +333,8 @@ async function populateFileContent(path, hash) {
 
     divContent.textContent = content;
 
+    divContent.scrollTop = 0;
+
     updateFileDetails();
 }
 
