@@ -47,7 +47,7 @@ app.get('/commits', (req, res) => {
     const path = req.query.path;
     const branch = req.query.branch;
 
-    const messages = [];
+    const commits = [];
 
     const child = spawn('git', ['-C', path, 'log', '--pretty=format:%H|%an <%ae>|%ad|%at|%s', branch]);
 
@@ -59,14 +59,14 @@ app.get('/commits', (req, res) => {
         lines.forEach((line) => {
             const [ hash, author, date, timestamp, message ] = line.split("|");
 
-            messages.push({ hash: hash, author: author, date: date, timestamp: timestamp, message: message });
+            commits.push({ hash: hash, author: author, date: date, timestamp: timestamp, message: message });
         });
     });
 
     child.on('close', (exitCode) => {
-        console.log("messages: " + messages.length);
+        console.log("commits: " + commits.length);
 
-        res.json(messages);
+        res.json(commits);
     });
 });
 
