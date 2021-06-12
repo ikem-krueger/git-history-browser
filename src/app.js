@@ -2,6 +2,7 @@ const cors = require('cors');
 const express = require('express');
 const app = express();
 const spawn = require('child_process').spawn;
+const readline  = require('readline');
 
 const port = 3000;
 const host = `http://localhost:${port}`;
@@ -19,12 +20,8 @@ app.get('/branches', (req, res) => {
 
     child.stdout.setEncoding('utf8');
 
-    child.stdout.on('data', (data) => {
-        const lines = data.trim().split("\n"); // TODO: remove "trim()"?
-
-        lines.forEach((line) => {
-            branches.push(line);
-        });
+    readline.createInterface({ input: child.stdout, terminal: false }).on('line', (line) => {
+        branches.push(line);
     });
 
     child.on('close', (exitCode) => {
@@ -44,14 +41,10 @@ app.get('/commits', (req, res) => {
 
     child.stdout.setEncoding('utf8');
 
-    child.stdout.on('data', (data) => {
-        const lines = data.trim().split("\n"); // TODO: remove "trim()"?;
+    readline.createInterface({ input: child.stdout, terminal: false }).on('line', (line) => {
+        const [ hash, author, date, timestamp, message ] = line.split("|");
 
-        lines.forEach((line) => {
-            const [ hash, author, date, timestamp, message ] = line.split("|");
-
-            commits.push({ hash: hash, author: author, date: date, timestamp: timestamp, message: message });
-        });
+        commits.push({ hash: hash, author: author, date: date, timestamp: timestamp, message: message });
     });
 
     child.on('close', (exitCode) => {
@@ -71,26 +64,22 @@ app.get('/changes', (req, res) => {
 
     child.stdout.setEncoding('utf8');
 
-    const types = {
-        "A": "Added", 
-        "C": "Copied", 
-        "D": "Deleted", // ignored
-        "M": "Modified", 
-        "R": "Renamed", // ignored
-        "T": "Type", 
-        "U": "Unmerged", 
-        "X": "Unknown", 
-        "B": "Broken"
-    }
+    readline.createInterface({ input: child.stdout, terminal: false }).on('line', (line) => {
+        const types = {
+            "A": "Added", 
+            "C": "Copied", 
+            "D": "Deleted", // ignored
+            "M": "Modified", 
+            "R": "Renamed", // ignored
+            "T": "Type", 
+            "U": "Unmerged", 
+            "X": "Unknown", 
+            "B": "Broken"
+        }
 
-    child.stdout.on('data', (data) => {
-        const lines = data.trim().split("\n"); // TODO: remove "trim()"?
+        const [status, file] = line.split(/\t/);
 
-        lines.forEach((line) => {
-            const [status, file] = line.split(/\t/);
-
-            files[file] = types[status];
-        });
+        files[file] = types[status];
     });
 
     child.on('close', (exitCode) => {
@@ -110,16 +99,12 @@ app.get('/files', (req, res) => {
 
     child.stdout.setEncoding('utf8');
 
-    child.stdout.on('data', (data) => {
-        const lines = data.trim().split("\n"); // TODO: remove "trim()"?
+    readline.createInterface({ input: child.stdout, terminal: false }).on('line', (line) => {
+        const [ rest, file ] = line.split(/\t/);
 
-        lines.forEach((line) => {
-            const [ rest, file ] = line.split("\t");
+        const [ mode, type, hash, size ] = rest.split(/ +/);
 
-            const [ mode, type, hash, size ] = rest.split(/ +/);
-
-            files.push({ mode: mode, type: type, hash: hash, size: size, file: file });
-        });
+        files.push({ mode: mode, type: type, hash: hash, size: size, file: file });
     });
 
     child.on('close', (exitCode) => {
