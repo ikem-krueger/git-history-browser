@@ -16,15 +16,15 @@ app.get('/branches', (req, res) => {
 
     const branches = [];
 
-    const child = spawn('git', ['-C', path, 'branch', '-a']);
+    const proc = spawn('git', ['-C', path, 'branch', '-a']);
 
-    child.stdout.setEncoding('utf8');
+    proc.stdout.setEncoding('utf8');
 
-    readline.createInterface({ input: child.stdout, terminal: false }).on('line', (line) => {
+    readline.createInterface({ input: proc.stdout, terminal: false }).on('line', (line) => {
         branches.push(line);
     });
 
-    child.on('close', (exitCode) => {
+    proc.on('close', (exitCode) => {
         console.log("branches: " + branches.length);
 
         res.json(branches);
@@ -37,17 +37,17 @@ app.get('/commits', (req, res) => {
 
     const commits = [];
 
-    const child = spawn('git', ['-C', path, 'log', '--pretty=format:%H|%an <%ae>|%ad|%at|%s', branch]);
+    const proc = spawn('git', ['-C', path, 'log', '--pretty=format:%H|%an <%ae>|%ad|%at|%s', branch]);
 
-    child.stdout.setEncoding('utf8');
+    proc.stdout.setEncoding('utf8');
 
-    readline.createInterface({ input: child.stdout, terminal: false }).on('line', (line) => {
+    readline.createInterface({ input: proc.stdout, terminal: false }).on('line', (line) => {
         const [ hash, author, date, timestamp, message ] = line.split("|");
 
         commits.push({ hash: hash, author: author, date: date, timestamp: timestamp, message: message });
     });
 
-    child.on('close', (exitCode) => {
+    proc.on('close', (exitCode) => {
         console.log("commits: " + commits.length);
 
         res.json(commits);
@@ -60,11 +60,11 @@ app.get('/changes', (req, res) => {
 
     const files = {};
 
-    const child = spawn('git', ['-C', path, 'diff', '--name-status', hash + '~1', hash, '--diff-filter=dr', '--no-rename']); // ignore "delete" and "rename"
+    const proc = spawn('git', ['-C', path, 'diff', '--name-status', hash + '~1', hash, '--diff-filter=dr', '--no-rename']); // ignore "delete" and "rename"
 
-    child.stdout.setEncoding('utf8');
+    proc.stdout.setEncoding('utf8');
 
-    readline.createInterface({ input: child.stdout, terminal: false }).on('line', (line) => {
+    readline.createInterface({ input: proc.stdout, terminal: false }).on('line', (line) => {
         const types = {
             "A": "Added", 
             "C": "Copied", 
@@ -82,7 +82,7 @@ app.get('/changes', (req, res) => {
         files[file] = types[status];
     });
 
-    child.on('close', (exitCode) => {
+    proc.on('close', (exitCode) => {
         console.log("changes: " + Object.keys(files).length);
 
         res.json(files);
@@ -95,11 +95,11 @@ app.get('/files', (req, res) => {
 
     const files = [];
 
-    const child = spawn('git', ['-C', path, 'ls-tree', '-r', '-l', hash]);
+    const proc = spawn('git', ['-C', path, 'ls-tree', '-r', '-l', hash]);
 
-    child.stdout.setEncoding('utf8');
+    proc.stdout.setEncoding('utf8');
 
-    readline.createInterface({ input: child.stdout, terminal: false }).on('line', (line) => {
+    readline.createInterface({ input: proc.stdout, terminal: false }).on('line', (line) => {
         const [ rest, file ] = line.split(/\t/);
 
         const [ mode, type, hash, size ] = rest.split(/ +/);
@@ -107,7 +107,7 @@ app.get('/files', (req, res) => {
         files.push({ mode: mode, type: type, hash: hash, size: size, file: file });
     });
 
-    child.on('close', (exitCode) => {
+    proc.on('close', (exitCode) => {
         console.log("files: " + Object.keys(files).length);
 
         res.json(files);
@@ -120,15 +120,15 @@ app.get('/content', (req, res) => {
 
     let stdout = "";
 
-    const child = spawn('git', ['-C', path, 'show', hash]);
+    const proc = spawn('git', ['-C', path, 'show', hash]);
 
-    child.stdout.setEncoding('utf8');
+    proc.stdout.setEncoding('utf8');
 
-    child.stdout.on('data', (data) => {
+    proc.stdout.on('data', (data) => {
         stdout += data;
     });
 
-    child.on('close', (exitCode) => {
+    proc.on('close', (exitCode) => {
         console.log("content: " + hash);
 
         res.send(stdout);
@@ -142,15 +142,15 @@ app.get('/diff', (req, res) => {
 
     let stdout = "";
 
-    const child = spawn('git', ['-C', path, 'diff', hash + '~1', hash, '--', file]);
+    const proc = spawn('git', ['-C', path, 'diff', hash + '~1', hash, '--', file]);
 
-    child.stdout.setEncoding('utf8');
+    proc.stdout.setEncoding('utf8');
 
-    child.stdout.on('data', (data) => {
+    proc.stdout.on('data', (data) => {
         stdout += data;
     });
 
-    child.on('close', (exitCode) => {
+    proc.on('close', (exitCode) => {
         console.log("diff: " + hash);
 
         res.send(stdout);
