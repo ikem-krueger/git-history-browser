@@ -198,35 +198,21 @@ function countAuthorCommits(max) {
     options.forEach((option, i) => {
         const author = option.dataset.author;
 
-        const count = 1;
-
-        authorCommits[author] ? authorCommits[author] += count : authorCommits[author] = count;
+        authorCommits[author] ? authorCommits[author] += 1 : authorCommits[author] = 1;
     });
 
-    // TODO: refactor the code below
-    const v = Object.values(authorCommits).sort((a, b) => b - a).slice(0, max);
-    const k = Object.keys(authorCommits);
+    let entries = Object.entries(authorCommits);
 
-    const commitsAuthor = {};
-
-    for(let i = 0; i < k.length; i++) {
-        const count = authorCommits[k[i]];
-        const author = k[i];
-
-        if(v.includes(count)) {
-            commitsAuthor[count] = author;
-        }
-    }
+    let sorted = entries.sort((a, b) => b[1] - a[1]).slice(0, max);
 
     let output = `Top ${max} contributors:\n\n`;
 
-    for(let i = 0; i < v.length; i++) {
+    sorted.forEach((entry, i) => {
         const nr = i + 1;
-        const commits = v[i];
-        const author = commitsAuthor[commits];
+        const [author, commits] = entry;
 
         output += `#${nr}: ${author} (${commits})\n`;
-    }
+    });
 
     return output;
 }
