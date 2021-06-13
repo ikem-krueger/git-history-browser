@@ -101,10 +101,9 @@ async function populateBranches(path) {
 
         branch = branch.trim();
 
-        // active branch
         const matchAsterisk = branch.match(/^\* (.*)/);
 
-        if(matchAsterisk) {
+        if(matchAsterisk) { // active branch
             branch = matchAsterisk[1];
 
             option.textContent = branch;
@@ -114,7 +113,7 @@ async function populateBranches(path) {
 
             console.log(`Active branch: '${branch}'`);
 
-            populateCommitHistory(path, branch);
+            populateCommitHistory(path, branch); // --> load commit history
 
             return; // skip the rest of the logic below
         }
@@ -162,12 +161,12 @@ async function populateCommitHistory(path, branch) {
 
         authorCommits[author] ? authorCommits[author] += 1 : authorCommits[author] = 1;
 
-        if(i == 0) {
+        if(i == 0) { // first commit
             const hash = commit.hash;
 
             console.log(`First commit: '${commit.message}'`);
 
-            populateFilesystemTree(path, hash);
+            populateFilesystemTree(path, hash); // --> load filesystem tree
         }
     });
 
@@ -239,12 +238,12 @@ async function populateFilesystemTree(path, hash) {
 
         option.classList.remove("hide");
 
-        if(i == 0) {
+        if(i == 0) { // first file
             const hash = file.hash;
 
             console.log(`First file: '${file.file}'`);
 
-            populateFileContent(path, hash);
+            populateFileContent(path, hash); // --> load file content
         }
     });
 
