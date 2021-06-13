@@ -120,6 +120,12 @@ async function populateBranches(path) {
 
             selectBranch.selectedIndex = i;
 
+            const branch = option.value;
+
+            console.log(`Active branch found: '${branch}'`);
+
+            populateCommitHistory(path, branch);
+
             return; // skip the rest of the logic below
         }
 
@@ -161,6 +167,14 @@ async function populateCommitHistory(path, branch) {
         option.dataset.author = commit.author;
         option.dataset.date = commit.date;
         option.dataset.timestamp = commit.timestamp;
+
+        if(i == 0) {
+            const hash = option.value;
+
+            console.log(`First commit found: '${option.textContent}'`);
+
+            populateFilesystemTree(path, hash);
+        }
     });
 
     selectCommits.selectedIndex = 0;
@@ -184,8 +198,6 @@ async function populateCommitHistory(path, branch) {
     infoBox.textContent += `Last commit: ${lastCommit}\n`;
     infoBox.textContent += "\n";
     infoBox.textContent += countAuthorCommits(20);
-
-    populateFilesystemTree(path, hash);
 }
 
 function countAuthorCommits(max) {
@@ -262,13 +274,19 @@ async function populateFilesystemTree(path, hash) {
         option.dataset.change = changedFiles[file.file] || "None";
 
         option.classList.remove("hide");
+
+        if(i == 0) {
+            const hash = option.value;
+
+            console.log(`First file found: '${option.textContent}'`);
+
+            populateFileContent(path, hash);
+        }
     });
 
     selectFiles.selectedIndex = 0; // FIXME: hardcoded value
 
     hash = selectFiles[0].value;
-
-    populateFileContent(path, hash);
 
     updateCommitDetails();
 }
@@ -390,13 +408,7 @@ function main() {
         if(event.key == "Enter") {
             const path = inputPath.value;
 
-            await populateBranches(path);
-
-            const selectBranch = document.querySelector("#branch");
-
-            const branch = selectBranch[selectBranch.selectedIndex].value;
-
-            populateCommitHistory(path, branch);
+            populateBranches(path);
         }
     });
 
