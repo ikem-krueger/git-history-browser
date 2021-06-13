@@ -14,6 +14,8 @@ app.use(express.static(__dirname + '/public'));
 app.get('/branches', (req, res) => {
     const path = req.query.path;
 
+    console.log(`path: '${path}'`);
+
     const branches = [];
 
     const proc = spawn('git', ['-C', path, 'branch', '-a']);
@@ -34,6 +36,8 @@ app.get('/branches', (req, res) => {
 app.get('/commits', (req, res) => {
     const path = req.query.path;
     const branch = req.query.branch;
+
+    console.log(`branch: '${branch}'`);
 
     const commits = [];
 
@@ -57,6 +61,8 @@ app.get('/commits', (req, res) => {
 app.get('/changes', (req, res) => {
     const path = req.query.path;
     const hash = req.query.hash;
+
+    console.log(`commit: ${hash}`);
 
     const files = {};
 
@@ -151,7 +157,7 @@ app.get('/diff', (req, res) => {
     });
 
     proc.on('close', (exitCode) => {
-        console.log("diff: " + hash);
+        console.log(`diff: '${file}'`);
 
         res.send(stdout);
     });
