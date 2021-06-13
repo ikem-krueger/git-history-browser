@@ -242,7 +242,7 @@ async function populateFilesystemTree(path, hash) {
         if(i == 0) {
             const hash = file.hash;
 
-            console.log(`First file: '${option.textContent}'`);
+            console.log(`First file: '${file.file}'`);
 
             populateFileContent(path, hash);
         }
