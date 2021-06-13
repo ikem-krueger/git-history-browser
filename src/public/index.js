@@ -126,7 +126,7 @@ async function populateBranches(path) {
 
             const branch = option.value;
 
-            console.log(`Active branch found: '${branch}'`);
+            console.log(`Active branch: '${branch}'`);
 
             populateCommitHistory(path, branch);
 
@@ -175,7 +175,7 @@ async function populateCommitHistory(path, branch) {
         if(i == 0) {
             const hash = option.value;
 
-            console.log(`First commit found: '${option.textContent}'`);
+            console.log(`First commit: '${option.textContent}'`);
 
             populateFilesystemTree(path, hash);
         }
@@ -282,7 +282,7 @@ async function populateFilesystemTree(path, hash) {
         if(i == 0) {
             const hash = option.value;
 
-            console.log(`First file found: '${option.textContent}'`);
+            console.log(`First file: '${option.textContent}'`);
 
             populateFileContent(path, hash);
         }
