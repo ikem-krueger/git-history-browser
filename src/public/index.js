@@ -19,6 +19,10 @@ function basename(path) {
     return path.substr(path.lastIndexOf('/') + 1);
 }
 
+function capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 function saveData(filename, data) {
     // IE11 support
     if (window.navigator && window.navigator.msSaveOrOpenBlob) {
@@ -269,7 +273,7 @@ async function populateFilesystemTree(path, hash) {
         option.textContent = file.file;
         option.value = file.hash;
         option.dataset.mode = file.mode;
-        option.dataset.type = file.type;
+        option.dataset.type = capitalize(file.type);
         option.dataset.size = file.size;
         option.dataset.change = changedFiles[file.file] || "None";
 
@@ -347,6 +351,8 @@ async function populateFileContent(path, hash) {
 
     divContent.textContent = content;
 
+    divContent.scrollTop = 0;
+
     updateFileDetails();
 }
 
@@ -372,12 +378,14 @@ function updateFileDetails() {
     const spanFileNumber = document.querySelector("#file-number");
     const spanFileHash = document.querySelector("#file-hash");
     const spanFileMode = document.querySelector("#file-mode");
+    const spanFileType = document.querySelector("#file-type");
     const spanFileSize = document.querySelector("#file-size");
     const spanFileChange = document.querySelector("#file-change");
 
     spanFileNumber.textContent = `File: #${(selectFiles.selectedIndex + 1)}/${selectFiles.length}`;
     spanFileHash.textContent = `Hash: ${option.value}`;
     spanFileMode.textContent = `Mode: ${option.dataset.mode}`;
+    spanFileType.textContent = `Type: ${option.dataset.type}`;
     spanFileSize.textContent = `Size: ${option.dataset.size} Bytes`;
     spanFileChange.textContent = `Change: ${option.dataset.change}`;
 }
