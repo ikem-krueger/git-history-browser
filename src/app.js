@@ -124,8 +124,8 @@ app.get('/content', (req, res) => {
 
     proc.stdout.setEncoding('utf8');
 
-    proc.stdout.on('data', (data) => {
-        stdout += data;
+    proc.stdout.on('data', (chunk) => {
+        stdout += chunk;
     });
 
     proc.on('close', (exitCode) => {
@@ -146,8 +146,8 @@ app.get('/diff', (req, res) => {
 
     proc.stdout.setEncoding('utf8');
 
-    proc.stdout.on('data', (data) => {
-        stdout += data;
+    proc.stdout.on('data', (chunk) => {
+        stdout += chunk;
     });
 
     proc.on('close', (exitCode) => {
