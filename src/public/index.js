@@ -85,18 +85,6 @@ function filterOptions(event) {
     });
 }
 
-function calculatePercent(w, g) {
-    const percent = Math.round(((w + 1)/g) * 100);
-
-    return percent;
-}
-
-function updateProgressBar(percent) {
-    const progressBar = document.querySelector("#progressBar");
-
-    progressBar.style.width = `${percent}%`;
-}
-
 async function populateBranches(path) {
     const selectBranch = document.querySelector("#branch");
 
@@ -109,8 +97,6 @@ async function populateBranches(path) {
     selectBranch.length = branches.length; // creates empty option elements
 
     branches.forEach((branch, i) => { // fills them with data
-        updateProgressBar(calculatePercent(i, branches.length));
-
         const option = selectBranch[i];
 
         branch = branch.trim();
@@ -162,8 +148,6 @@ async function populateCommitHistory(path, branch) {
     selectCommits.length = commits.length; // creates empty option elements
 
     commits.forEach((commit, i) => { // fills them with data
-        updateProgressBar(calculatePercent(i, commits.length));
-
         const option = selectCommits[i];
 
         option.textContent = commit.message;
@@ -212,8 +196,6 @@ function countAuthorCommits(max) {
     const authorCommits = {};
 
     options.forEach((option, i) => {
-        updateProgressBar(calculatePercent(i, options.length));
-
         const author = option.dataset.author;
 
         const count = 1;
@@ -266,8 +248,6 @@ async function populateFilesystemTree(path, hash) {
     selectFiles.length = files.length; // creates empty option elements
 
     files.forEach((file, i) => { // fills them with data
-        updateProgressBar(calculatePercent(i, files.length));
-
         const option = selectFiles[i];
 
         option.textContent = file.file;
