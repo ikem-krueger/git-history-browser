@@ -111,8 +111,6 @@ async function populateBranches(path) {
 
             selectBranch.selectedIndex = i;
 
-            console.log(`Active branch: '${branch}'`);
-
             populateCommitHistory(path, branch); // --> load commit history
 
             return; // skip the rest of the logic below
@@ -163,8 +161,6 @@ async function populateCommitHistory(path, branch) {
 
         if(i == 0) { // first commit
             const hash = commit.hash;
-
-            console.log(`First commit: '${commit.message}'`);
 
             populateFilesystemTree(path, hash); // --> load filesystem tree
         }
@@ -240,8 +236,6 @@ async function populateFilesystemTree(path, hash) {
 
         if(i == 0) { // first file
             const hash = file.hash;
-
-            console.log(`First file: '${file.file}'`);
 
             populateFileContent(path, hash); // --> load file content
         }
