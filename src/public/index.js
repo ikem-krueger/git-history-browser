@@ -147,6 +147,8 @@ async function populateCommitHistory(path, branch) {
 
     selectCommits.length = commits.length; // creates empty option elements
 
+    const authorCommits = {};
+
     commits.forEach((commit, i) => { // fills them with data
         const option = selectCommits[i];
 
@@ -155,6 +157,10 @@ async function populateCommitHistory(path, branch) {
         option.dataset.author = commit.author;
         option.dataset.date = commit.date;
         option.dataset.timestamp = commit.timestamp;
+
+        const author = commit.author;
+
+        authorCommits[author] ? authorCommits[author] += 1 : authorCommits[author] = 1;
 
         if(i == 0) {
             const hash = option.value;
@@ -185,22 +191,10 @@ async function populateCommitHistory(path, branch) {
     infoBox.textContent = `First commit: ${firstCommit}\n`;
     infoBox.textContent += `Last commit: ${lastCommit}\n`;
     infoBox.textContent += "\n";
-    infoBox.textContent += countAuthorCommits(20);
+    infoBox.textContent += countAuthorCommits(authorCommits, 20);
 }
 
-function countAuthorCommits(max) {
-    const commits = document.querySelector("#commits");
-
-    const options = commits.options;
-
-    const authorCommits = {};
-
-    options.forEach((option, i) => {
-        const author = option.dataset.author;
-
-        authorCommits[author] ? authorCommits[author] += 1 : authorCommits[author] = 1;
-    });
-
+function countAuthorCommits(authorCommits, max) {
     let entries = Object.entries(authorCommits);
 
     let sorted = entries.sort((a, b) => b[1] - a[1]).slice(0, max);
