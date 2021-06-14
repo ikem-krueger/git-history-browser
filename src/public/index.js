@@ -96,6 +96,8 @@ async function populateBranches(path) {
 
     selectBranch.length = 0; // reset option elements
 
+    let selectedIndex = 0;
+
     branches.forEach((branch, i) => { // fills them with data
         const option = document.createElement("option");
 
@@ -112,7 +114,7 @@ async function populateBranches(path) {
             option.textContent = branch;
             option.value = branch;
 
-            selectBranch.selectedIndex = i;
+            selectedIndex = i;
 
             populateCommitHistory(path, branch); // --> load commit history
         }
@@ -126,6 +128,8 @@ async function populateBranches(path) {
 
         selectBranch.appendChild(option);
     });
+
+    selectBranch.selectedIndex = selectedIndex;
 }
 
 async function populateCommitHistory(path, branch) {
