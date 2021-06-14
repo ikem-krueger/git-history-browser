@@ -94,12 +94,15 @@ async function populateBranches(path) {
 
     const branches = await fetch('/branches?' + params).then(res => res.json());
 
-    selectBranch.length = branches.length; // creates empty option elements
+    selectBranch.length = 0; // reset option elements
 
     branches.forEach((branch, i) => { // fills them with data
-        const option = selectBranch[i];
+        const option = document.createElement("option");
 
         branch = branch.trim();
+
+        option.textContent = branch;
+        option.value = branch;
 
         const matchAsterisk = branch.match(/^\* (.*)/);
 
@@ -112,23 +115,16 @@ async function populateBranches(path) {
             selectBranch.selectedIndex = i;
 
             populateCommitHistory(path, branch); // --> load commit history
-
-            return; // skip the rest of the logic below
         }
 
         // HEAD
         const matchHead = branch.match(/^(.*HEAD) -> .*/);
 
         if(matchHead) {
-            option.textContent = branch;
             option.value = matchHead[1];
-
-            return; // skip the rest of the logic below
         }
 
-        // other branches
-        option.textContent = branch;
-        option.value = branch;
+        selectBranch.appendChild(option);
     });
 }
 
@@ -142,12 +138,12 @@ async function populateCommitHistory(path, branch) {
 
     const commits = await fetch('/commits?' + params).then(res => res.json());
 
-    selectCommits.length = commits.length; // creates empty option elements
-
     const authorCommits = {};
 
-    commits.forEach((commit, i) => { // fills them with data
-        const option = selectCommits[i];
+    selectCommits.length = 0; // reset option elements
+
+    commits.forEach((commit, i) => {
+        const option = document.createElement("option");
 
         option.textContent = commit.message;
         option.value = commit.hash;
@@ -165,6 +161,8 @@ async function populateCommitHistory(path, branch) {
 
             populateFilesystemTree(path, hash); // --> load filesystem tree
         }
+
+        selectCommits.appendChild(option);
     });
 
     selectCommits.selectedIndex = 0;
@@ -221,10 +219,10 @@ async function populateFilesystemTree(path, hash) {
     const changedFiles = await fetch('/changes?' + params).then(res => res.json());
     const files = await fetch('/files?' + params).then(res => res.json());
 
-    selectFiles.length = files.length; // creates empty option elements
+    selectFiles.length = 0; // reset option elements
 
-    files.forEach((file, i) => { // fills them with data
-        const option = selectFiles[i];
+    files.forEach((file, i) => {
+        const option = document.createElement("option");
 
         option.textContent = file.name;
         option.value = file.hash;
@@ -241,6 +239,8 @@ async function populateFilesystemTree(path, hash) {
 
             populateFileContent(path, hash); // --> load file content
         }
+
+        selectFiles.appendChild(option);
     });
 
     selectFiles.selectedIndex = 0; // FIXME: hardcoded value
