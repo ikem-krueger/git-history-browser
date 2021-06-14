@@ -98,6 +98,8 @@ async function populateBranches(path) {
 
     let selectedIndex = 0;
 
+    const fragment = new DocumentFragment();
+
     branches.forEach((branch, i) => { // fills them with data
         const option = document.createElement("option");
 
@@ -126,8 +128,10 @@ async function populateBranches(path) {
             option.value = matchHead[1];
         }
 
-        selectBranch.appendChild(option);
+        fragment.appendChild(option);
     });
+
+    selectBranch.appendChild(fragment);
 
     selectBranch.selectedIndex = selectedIndex;
 }
