@@ -140,14 +140,19 @@ async function populateCommitHistory(path, branch) {
 
     const authorCommits = {};
 
-    const options = [];
+    selectCommits.length = 0; // reset option elements
 
-    selectCommits.length = 0;
+    const fragment = new DocumentFragment();
 
     commits.forEach((commit, i) => {
-        const option = `<option value="${commit.hash}" data-author="${commit.author}" data-date="${commit.date}" data-timestamp="${commit.timestamp}" title="${commit.message}">${commit.message}</option>`;
+        const option = document.createElement("option");
 
-        selectCommits.insertAdjacentHTML('beforeend', option);
+        option.textContent = commit.message;
+        option.value = commit.hash;
+        option.dataset.author = commit.author;
+        option.dataset.date = commit.date;
+        option.dataset.timestamp = commit.timestamp;
+        option.title = commit.message;
 
         const author = commit.author;
 
@@ -158,7 +163,11 @@ async function populateCommitHistory(path, branch) {
 
             populateFilesystemTree(path, hash); // --> load filesystem tree
         }
-    });
+
+        fragment.appendChild(option);
+    })
+
+    selectCommits.appendChild(fragment);
 
     selectCommits.selectedIndex = 0;
 
@@ -214,19 +223,33 @@ async function populateFilesystemTree(path, hash) {
     const changedFiles = await fetch('/changes?' + params).then(res => res.json());
     const files = await fetch('/files?' + params).then(res => res.json());
 
-    selectFiles.length = 0;
+    selectFiles.length = 0; // reset option elements
+
+    const fragment = new DocumentFragment();
 
     files.forEach((file, i) => {
-        const option = `<option value="${file.hash}" data-mode="${file.mode}" data-type="${capitalize(file.type)}" data-size="${file.size}" data-change="${changedFiles[file.name] || 'None'}" title="${file.name}">${file.name}</option>`;
+        const option = document.createElement("option");
 
-        selectFiles.insertAdjacentHTML('beforeend', option);
+        option.textContent = file.name;
+        option.value = file.hash;
+        option.dataset.mode = file.mode;
+        option.dataset.type = capitalize(file.type);
+        option.dataset.size = file.size;
+        option.dataset.change = changedFiles[file.name] || "None";
+        option.title = file.name;
 
-        if(i == 0) { // first commit
+        option.classList.remove("hide");
+
+        if(i == 0) { // first file
             const hash = file.hash;
 
-            populateFileContent(path, hash); // --> load filesystem tree
+            populateFileContent(path, hash); // --> load file content
         }
+
+        fragment.appendChild(option);
     });
+
+    selectFiles.appendChild(fragment);
 
     selectFiles.selectedIndex = 0; // FIXME: hardcoded value
 
