@@ -134,13 +134,17 @@ async function populateCommitHistory(path, branch) {
     params.set("path", path);
     params.set("branch", branch);
 
-    const selectCommits = document.querySelector("#commits");
+    let selectCommits = document.querySelector("#commits");
 
     const commits = await fetch('/commits?' + params).then(res => res.json());
 
     const authorCommits = {};
 
-    selectCommits.length = 0; // reset option elements
+    selectCommits.parentNode.replaceChild(selectCommits.cloneNode(false), selectCommits); // reset option elements
+
+    selectCommits = document.querySelector("#commits");
+
+    selectCommits.addEventListener("change", eventHandlerCommits);
 
     const fragment = new DocumentFragment();
 
@@ -210,11 +214,6 @@ function countAuthorCommits(authorCommits, max) {
 }
 
 async function populateFilesystemTree(path, hash) {
-    const selectFiles = document.querySelector("#files");
-    const checkboxChangedFilesOnly = document.querySelector("#changed_files_only");
-
-    checkboxChangedFilesOnly.checked = false;
-
     const params = new URLSearchParams();
 
     params.set("path", path);
@@ -223,7 +222,20 @@ async function populateFilesystemTree(path, hash) {
     const changedFiles = await fetch('/changes?' + params).then(res => res.json());
     const files = await fetch('/files?' + params).then(res => res.json());
 
-    selectFiles.length = 0; // reset option elements
+    let selectFiles = document.querySelector("#files");
+    const checkboxChangedFilesOnly = document.querySelector("#changed_files_only");
+
+    checkboxChangedFilesOnly.checked = false;
+
+    selectFiles.parentNode.replaceChild(selectFiles.cloneNode(false), selectFiles); // reset option elements
+
+    selectFiles = document.querySelector("#files");
+
+    selectFiles.addEventListener("change", eventHandlerFiles);
+
+    const checkboxShowDiff = document.querySelector("#show_diff");
+
+    checkboxShowDiff.addEventListener("change", eventHandlerDiff);
 
     const fragment = new DocumentFragment();
 
@@ -237,8 +249,6 @@ async function populateFilesystemTree(path, hash) {
         option.dataset.size = file.size;
         option.dataset.change = changedFiles[file.name] || "None";
         option.title = file.name;
-
-        option.classList.remove("hide");
 
         if(i == 0) { // first file
             const hash = file.hash;
@@ -353,6 +363,53 @@ function updateFileDetails() {
     spanFileChange.textContent = `Change: ${option.dataset.change}`;
 }
 
+function eventHandlerCommits(event) {
+    const inputPath = document.querySelector("#path");
+    const selectCommits = document.querySelector("#commits");
+
+    const path = inputPath.value;
+    const hash = selectCommits.value;
+
+    populateFilesystemTree(path, hash);
+}
+
+function eventHandlerFiles(event) {
+    const inputPath = document.querySelector("#path");
+    const selectFiles = document.querySelector("#files");
+
+    const path = inputPath.value;
+    const hash = selectFiles.value;
+
+    const show_diff = document.querySelector("#show_diff");
+
+    const option = selectFiles[selectFiles.selectedIndex];
+
+    show_diff.disabled = (option.dataset.change == "");
+
+    populateFileContent(path, hash);
+}
+
+async function eventHandlerDiff(event) {
+    const inputPath = document.querySelector("#path");
+    const selectCommits = document.querySelector("#commits");
+    const selectFiles = document.querySelector("#files");
+    const divContent = document.querySelector("#content");
+    const checkboxShowDiff = document.querySelector("#show_diff");
+
+    const path = inputPath.value;
+
+    if(checkboxShowDiff.checked) {
+        const hash = selectCommits.value;
+        const file = selectFiles[selectFiles.selectedIndex].textContent;
+
+        showDiff(path, hash, file);
+    } else {
+        const hash = selectFiles[selectFiles.selectedIndex].value;
+
+        populateFileContent(path, hash);
+    }
+}
+
 function main() {
     populateCommitHistory = debounce(populateCommitHistory);
     populateFilesystemTree = debounce(populateFilesystemTree);
@@ -397,12 +454,7 @@ function main() {
 
     const selectCommits = document.querySelector("#commits");
 
-    selectCommits.addEventListener("change", (event) => {
-        const path = inputPath.value;
-        const hash = selectCommits.value;
-
-        populateFilesystemTree(path, hash);
-    });
+    selectCommits.addEventListener("change", eventHandlerCommits);
 
     const inputFilterCommits = document.querySelector("#filter-commits");
 
@@ -421,18 +473,7 @@ function main() {
 
     const selectFiles = document.querySelector("#files");
 
-    selectFiles.addEventListener("change", (event) => {
-        const path = inputPath.value;
-        const hash = selectFiles.value;
-
-        const show_diff = document.querySelector("#show_diff");
-
-        const option = selectFiles[selectFiles.selectedIndex];
-
-        show_diff.disabled = (option.dataset.change == "");
-
-        populateFileContent(path, hash);
-    });
+    selectFiles.addEventListener("change", eventHandlerFiles);
 
     const inputFilterFiles = document.querySelector("#filter-files");
 
@@ -455,23 +496,7 @@ function main() {
 
     const checkboxShowDiff = document.querySelector("#show_diff");
 
-    checkboxShowDiff.addEventListener("change", async (event) => {
-        const selectFiles = document.querySelector("#files");
-        const divContent = document.querySelector("#content");
-
-        const path = inputPath.value;
-
-        if(checkboxShowDiff.checked) {
-            const hash = selectCommits.value;
-            const file = selectFiles[selectFiles.selectedIndex].textContent;
-
-            showDiff(path, hash, file);
-        } else {
-            const hash = selectFiles[selectFiles.selectedIndex].value;
-
-            populateFileContent(path, hash);
-        }
-    });
+    checkboxShowDiff.addEventListener("change", eventHandlerDiff);
 }
 
 main();
