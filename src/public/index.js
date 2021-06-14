@@ -140,17 +140,12 @@ async function populateCommitHistory(path, branch) {
 
     const authorCommits = {};
 
-    selectCommits.length = 0; // reset option elements
+    const options = [];
 
     commits.forEach((commit, i) => {
-        const option = document.createElement("option");
+        const option = `<option value="${commit.hash}" data-author="${commit.author}" data-date="${commit.date}" data-timestamp="${commit.timestamp}" title="${commit.message}">${commit.message}</option>`;
 
-        option.textContent = commit.message;
-        option.value = commit.hash;
-        option.dataset.author = commit.author;
-        option.dataset.date = commit.date;
-        option.dataset.timestamp = commit.timestamp;
-        option.title = commit.message;
+        options.push(option);
 
         const author = commit.author;
 
@@ -161,9 +156,9 @@ async function populateCommitHistory(path, branch) {
 
             populateFilesystemTree(path, hash); // --> load filesystem tree
         }
-
-        selectCommits.appendChild(option);
     });
+
+    selectCommits.innerHTML = options.join('');
 
     selectCommits.selectedIndex = 0;
 
@@ -219,29 +214,21 @@ async function populateFilesystemTree(path, hash) {
     const changedFiles = await fetch('/changes?' + params).then(res => res.json());
     const files = await fetch('/files?' + params).then(res => res.json());
 
-    selectFiles.length = 0; // reset option elements
+    const options = [];
 
     files.forEach((file, i) => {
-        const option = document.createElement("option");
+        const option = `<option value="${file.hash}" data-mode="${file.mode}" data-type="${capitalize(file.type)}" data-size="${file.size}" data-change="${changedFiles[file.name] || 'None'}" title="${file.name}">${file.name}</option>`;
 
-        option.textContent = file.name;
-        option.value = file.hash;
-        option.dataset.mode = file.mode;
-        option.dataset.type = capitalize(file.type);
-        option.dataset.size = file.size;
-        option.dataset.change = changedFiles[file.name] || "None";
-        option.title = file.name;
+        options.push(option);
 
-        option.classList.remove("hide");
-
-        if(i == 0) { // first file
+        if(i == 0) { // first commit
             const hash = file.hash;
 
-            populateFileContent(path, hash); // --> load file content
+            populateFileContent(path, hash); // --> load filesystem tree
         }
-
-        selectFiles.appendChild(option);
     });
+
+    selectFiles.innerHTML = options.join('');
 
     selectFiles.selectedIndex = 0; // FIXME: hardcoded value
 
