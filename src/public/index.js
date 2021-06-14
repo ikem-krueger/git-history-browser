@@ -142,10 +142,12 @@ async function populateCommitHistory(path, branch) {
 
     const options = [];
 
+    selectCommits.length = 0;
+
     commits.forEach((commit, i) => {
         const option = `<option value="${commit.hash}" data-author="${commit.author}" data-date="${commit.date}" data-timestamp="${commit.timestamp}" title="${commit.message}">${commit.message}</option>`;
 
-        options.push(option);
+        selectCommits.insertAdjacentHTML('beforeend', option);
 
         const author = commit.author;
 
@@ -157,8 +159,6 @@ async function populateCommitHistory(path, branch) {
             populateFilesystemTree(path, hash); // --> load filesystem tree
         }
     });
-
-    selectCommits.innerHTML = options.join('');
 
     selectCommits.selectedIndex = 0;
 
@@ -214,12 +214,12 @@ async function populateFilesystemTree(path, hash) {
     const changedFiles = await fetch('/changes?' + params).then(res => res.json());
     const files = await fetch('/files?' + params).then(res => res.json());
 
-    const options = [];
+    selectFiles.length = 0;
 
     files.forEach((file, i) => {
         const option = `<option value="${file.hash}" data-mode="${file.mode}" data-type="${capitalize(file.type)}" data-size="${file.size}" data-change="${changedFiles[file.name] || 'None'}" title="${file.name}">${file.name}</option>`;
 
-        options.push(option);
+        selectFiles.insertAdjacentHTML('beforeend', option);
 
         if(i == 0) { // first commit
             const hash = file.hash;
@@ -227,8 +227,6 @@ async function populateFilesystemTree(path, hash) {
             populateFileContent(path, hash); // --> load filesystem tree
         }
     });
-
-    selectFiles.innerHTML = options.join('');
 
     selectFiles.selectedIndex = 0; // FIXME: hardcoded value
 
