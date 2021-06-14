@@ -226,13 +226,13 @@ async function populateFilesystemTree(path, hash) {
     files.forEach((file, i) => { // fills them with data
         const option = selectFiles[i];
 
-        option.textContent = file.file;
+        option.textContent = file.name;
         option.value = file.hash;
         option.dataset.mode = file.mode;
         option.dataset.type = capitalize(file.type);
         option.dataset.size = file.size;
-        option.dataset.change = changedFiles[file.file] || "None";
-        option.title = file.file;
+        option.dataset.change = changedFiles[file.name] || "None";
+        option.title = file.name;
 
         option.classList.remove("hide");
 

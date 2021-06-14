@@ -106,11 +106,11 @@ app.get('/files', (req, res) => {
     proc.stdout.setEncoding('utf8');
 
     readline.createInterface({ input: proc.stdout, terminal: false }).on('line', (line) => {
-        const [ rest, file ] = line.split(/\t/);
+        const [ rest, name ] = line.split(/\t/);
 
         const [ mode, type, hash, size ] = rest.split(/ +/);
 
-        files.push({ mode: mode, type: type, hash: hash, size: size, file: file });
+        files.push({ mode: mode, type: type, hash: hash, size: size, name: name });
     });
 
     proc.on('close', (exitCode) => {
