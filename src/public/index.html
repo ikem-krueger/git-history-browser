@@ -35,7 +35,7 @@
             <fieldset>
                 <legend>File</legend>
                 <select id="files" size="20"></select>
-                <input id="filter-files" type="text" placeholder="Filter"><span class="checkbox"><input type="checkbox" id="changed_files_only"><label for="changed_files_only">Show only changed files</label></span>
+                <input id="filter-files" type="text" placeholder="Filter"><span class="checkbox"><input type="checkbox" id="show_all_files"><label for="show_all_files">Show all files</label></span>
                 <div class="details">
                     <div id="file-number"></div>
                     <div id="file-hash"></div>
@@ -48,7 +48,7 @@
             <fieldset>
                 <legend>Content</legend>
                 <textarea id="content" readonly></textarea>
-                <button id="checkout" type="button">Checkout</button><span class="checkbox"><input type="checkbox" id="show_diff"><label for="show_diff">Show differences to previous commit</label></span>
+                <button id="checkout" type="button">Checkout</button><span class="checkbox"><input type="checkbox" id="show_full_file"><label for="show_full_file">Show full file</label></span>
             </fieldset>
         </form>
     </body>
