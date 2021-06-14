@@ -23,14 +23,14 @@ function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-function saveData(filename, data) {
+function saveData(name, data) {
     // IE11 support
     if (window.navigator && window.navigator.msSaveOrOpenBlob) {
         const blob = new Blob([data], {type: "octet/stream"});
 
-        window.navigator.msSaveOrOpenBlob(blob, filename);
+        window.navigator.msSaveOrOpenBlob(blob, name);
     } else { // other browsers
-        const file = new File([data], filename, {type: "octet/stream"});
+        const file = new File([data], name, {type: "octet/stream"});
         const exportUrl = URL.createObjectURL(file);
 
         window.location.assign(exportUrl);
@@ -327,14 +327,14 @@ async function populateFileContent(path, hash) {
     updateFileDetails();
 }
 
-async function showDiff(path, hash, file) {
+async function showDiff(path, hash, name) {
     const divContent = document.querySelector("#content");
 
     const params = new URLSearchParams();
 
     params.set("path", path);
     params.set("hash", hash);
-    params.set("file", file);
+    params.set("name", name);
 
     const diff = await fetch('/diff?' + params).then(res => res.text());
 
@@ -448,17 +448,17 @@ function main() {
 
     const checkboxChangedFilesOnly = document.querySelector("#changed_files_only");
 
-    checkboxChangedFilesOnly.addEventListener("change", event => { checkboxChangedFilesOnly.checked ? showChangedFiles() : showAllFiles() });
+    checkboxChangedFilesOnly.addEventListener("change", event => { checkboxChangedFilesOnly.checked ? showAllFiles() : showChangedFiles() });
 
     const buttonCheckout = document.querySelector("#checkout");
 
     buttonCheckout.addEventListener("click", (event) => {
         const content = document.querySelector("#content");
 
-        const filename = basename(selectFiles[selectFiles.selectedIndex].textContent);
+        const name = basename(selectFiles[selectFiles.selectedIndex].textContent);
         const data = content.textContent;
 
-        saveData(filename, data);
+        saveData(name, data);
     });
 
     const checkboxShowDiff = document.querySelector("#show_diff");

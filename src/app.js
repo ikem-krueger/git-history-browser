@@ -83,9 +83,9 @@ app.get('/changes', (req, res) => {
             "B": "Broken"
         }
 
-        const [status, file] = line.split(/\t/);
+        const [status, name] = line.split(/\t/);
 
-        files[file] = types[status];
+        files[name] = types[status];
     });
 
     proc.on('close', (exitCode) => {
@@ -144,11 +144,11 @@ app.get('/content', (req, res) => {
 app.get('/diff', (req, res) => {
     const path = req.query.path;
     const hash = req.query.hash;
-    const file = req.query.file;
+    const name = req.query.name;
 
     let stdout = "";
 
-    const proc = spawn('git', ['-C', path, 'diff', hash + '~1', hash, '--', file]);
+    const proc = spawn('git', ['-C', path, 'diff', hash + '~1', hash, '--', name]);
 
     proc.stdout.setEncoding('utf8');
 
@@ -157,7 +157,7 @@ app.get('/diff', (req, res) => {
     });
 
     proc.on('close', (exitCode) => {
-        console.log(`diff: '${file}'`);
+        console.log(`diff: '${name}'`);
 
         res.send(stdout);
     });
