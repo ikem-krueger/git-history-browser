@@ -154,6 +154,7 @@ async function populateCommitHistory(path, branch) {
         option.dataset.author = commit.author;
         option.dataset.date = commit.date;
         option.dataset.timestamp = commit.timestamp;
+        option.title = commit.message;
 
         const author = commit.author;
 
@@ -231,6 +232,7 @@ async function populateFilesystemTree(path, hash) {
         option.dataset.type = capitalize(file.type);
         option.dataset.size = file.size;
         option.dataset.change = changedFiles[file.file] || "None";
+        option.title = file.file;
 
         option.classList.remove("hide");
 
