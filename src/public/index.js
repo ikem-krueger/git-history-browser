@@ -366,6 +366,7 @@ function main() {
     populateCommitHistory = debounce(populateCommitHistory);
     populateFilesystemTree = debounce(populateFilesystemTree);
     populateFileContent = debounce(populateFileContent);
+    showDiff = debounce(showDiff);
     filterOptions = debounce(filterOptions);
 
     const form = document.querySelector("form");
