@@ -146,6 +146,8 @@ async function populateCommitHistory(path, branch) {
 
     selectCommits.length = 0; // reset option elements
 
+    const fragment = new DocumentFragment();
+
     commits.forEach((commit, i) => {
         const option = document.createElement("option");
 
@@ -166,8 +168,10 @@ async function populateCommitHistory(path, branch) {
             populateFilesystemTree(path, hash); // --> load filesystem tree
         }
 
-        selectCommits.appendChild(option);
-    });
+        fragment.appendChild(option);
+    })
+
+    selectCommits.appendChild(fragment);
 
     selectCommits.selectedIndex = 0;
 
@@ -225,6 +229,8 @@ async function populateFilesystemTree(path, hash) {
 
     selectFiles.length = 0; // reset option elements
 
+    const fragment = new DocumentFragment();
+
     files.forEach((file, i) => {
         const option = document.createElement("option");
 
@@ -244,8 +250,10 @@ async function populateFilesystemTree(path, hash) {
             populateFileContent(path, hash); // --> load file content
         }
 
-        selectFiles.appendChild(option);
+        fragment.appendChild(option);
     });
+
+    selectFiles.appendChild(fragment);
 
     selectFiles.selectedIndex = 0; // FIXME: hardcoded value
 
