@@ -23,6 +23,23 @@ function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+function countAuthorCommits(authorCommits, max) {
+    let entries = Object.entries(authorCommits);
+
+    let sorted = entries.sort((a, b) => b[1] - a[1]).slice(0, max);
+
+    let output = `Top ${max} contributors:\n\n`;
+
+    sorted.forEach((entry, i) => {
+        const nr = i + 1;
+        const [author, commits] = entry;
+
+        output += `#${nr}: ${author} (${commits})\n`;
+    });
+
+    return output;
+}
+
 function saveData(name, data) {
     // IE11 support
     if (window.navigator && window.navigator.msSaveOrOpenBlob) {
@@ -39,54 +56,8 @@ function saveData(name, data) {
     }
 }
 
-function filterOptions(event) {
-    const options = event.target.parentElement.querySelector("select").options
-
-    options.forEach((option) => {
-        let textContent = option.textContent.toLowerCase();
-        let searchTerm = event.target.value.toLowerCase();
-
-        if(!searchTerm.startsWith("/")){ // if the searchTerm is not a command...
-            textContent.indexOf(searchTerm) == -1 ? option.classList.add("hide") : option.classList.remove("hide");
-
-            return; // skip the rest of the logic below
-        }
-
-        const match = searchTerm.match(/^\/(hash|author|date|change) (.*)/);
-
-        if(!match) {
-            return;
-        }
-
-        const command = match[1];
-
-        switch(command) {
-            case "hash":
-                textContent = option.value;
-
-                break;
-            case "author":
-                textContent = option.dataset.author.toLowerCase();
-
-                break;
-            case "date":
-                textContent = option.dataset.date.toLowerCase();
-
-                break;
-            case "change":
-                textContent = option.dataset.change.toLowerCase();
-
-                break;
-        }
-
-        searchTerm = match[2];
-
-        textContent.indexOf(searchTerm) == -1 ? option.classList.add("hide") : option.classList.remove("hide");
-    });
-}
-
 async function populateBranches(path) {
-    const selectBranch = document.querySelector("#branch");
+    const selectBranch = document.getElementById("branch");
 
     const params = new URLSearchParams();
 
@@ -137,12 +108,12 @@ async function populateBranches(path) {
 }
 
 async function populateCommitHistory(path, branch) {
+    const selectCommits = document.getElementById("commits");
+
     const params = new URLSearchParams();
 
     params.set("path", path);
     params.set("branch", branch);
-
-    const selectCommits = document.querySelector("#commits");
 
     const commits = await fetch('/commits?' + params).then(res => res.json());
 
@@ -181,15 +152,39 @@ async function populateCommitHistory(path, branch) {
 
     selectCommits.focus();
 
-    const inputSlider = document.querySelector("#slider");
+    const inputSlider = document.getElementById("slider");
 
     inputSlider.min = 1;
     inputSlider.value = selectCommits.selectedIndex + 1;
     inputSlider.max = selectCommits.length;
 
-    const hash = selectCommits[0].value;
+    updateInfoBox(authorCommits);
 
-    const infoBox = document.querySelector("#infobox");
+    updateCommitDetails();
+}
+
+function updateCommitDetails() {
+    const selectCommits = document.getElementById("commits");
+    const inputSlider = document.getElementById("slider");
+
+    inputSlider.value = (selectCommits.selectedIndex + 1);
+
+    const option = selectCommits[selectCommits.selectedIndex];
+
+    const spanCommitNumber = document.getElementById("commit-number");
+    const spanCommitHash = document.getElementById("commit-hash");
+    const spanCommitAuthor = document.getElementById("commit-author");
+    const spanCommitDate = document.getElementById("commit-date");
+
+    spanCommitNumber.textContent = `Commit: #${(selectCommits.length - selectCommits.selectedIndex)}/${selectCommits.length}`;
+    spanCommitHash.textContent = `Hash: ${option.value}`;
+    spanCommitAuthor.textContent = `Author: ${option.dataset.author}`;
+    spanCommitDate.textContent = `Date: ${option.dataset.date}`;
+}
+
+function updateInfoBox(authorCommits) {
+    const selectCommits = document.getElementById("commits");
+    const infoBox = document.getElementById("infobox");
 
     const firstCommit = selectCommits[commits.length -1].dataset.date;
     const lastCommit = selectCommits[0].dataset.date;
@@ -198,33 +193,12 @@ async function populateCommitHistory(path, branch) {
     infoBox.textContent += `Last commit: ${lastCommit}\n`;
     infoBox.textContent += "\n";
     infoBox.textContent += countAuthorCommits(authorCommits, 20);
-
-    updateCommitDetails();
-}
-
-function countAuthorCommits(authorCommits, max) {
-    let entries = Object.entries(authorCommits);
-
-    let sorted = entries.sort((a, b) => b[1] - a[1]).slice(0, max);
-
-    let output = `Top ${max} contributors:\n\n`;
-
-    sorted.forEach((entry, i) => {
-        const nr = i + 1;
-        const [author, commits] = entry;
-
-        output += `#${nr}: ${author} (${commits})\n`;
-    });
-
-    return output;
 }
 
 async function populateFilesystemTree(path, hash) {
-    const selectCommits = document.querySelector("#commits");
-    const selectFiles = document.querySelector("#files");
-    const checkboxShowAllFiles = document.querySelector("#show_all_files");
-
-    checkboxShowAllFiles.checked = false;
+    const selectCommits = document.getElementById("commits");
+    const selectFiles = document.getElementById("files");
+    const checkboxShowAllFiles = document.getElementById("show_all_files");
 
     const params = new URLSearchParams();
 
@@ -249,7 +223,7 @@ async function populateFilesystemTree(path, hash) {
         option.dataset.change = changedFiles[file.name] || "None";
         option.title = file.name;
 
-        if(!changedFiles[file.name]) {
+        if(!(checkboxShowAllFiles.checked || changedFiles[file.name])) {
             option.classList.add("hide");
         }
 
@@ -260,17 +234,42 @@ async function populateFilesystemTree(path, hash) {
 
     selectFiles.selectedIndex = selectFiles.querySelector("option:not([data-change='None'])").index;
 
-    hash = selectCommits.value;
-
-    const name = selectFiles[selectFiles.selectedIndex].textContent;
-
-    showDiff(path, hash, name);
+    foo(path);
 
     updateFileDetails();
 }
 
+function foo(path) {
+    const selectFiles = document.getElementById("files");
+    const selectCommits = document.getElementById("commits");
+    const checkboxShowFullFile = document.getElementById("show_full_file");
+
+    if(checkboxShowFullFile.checked) {
+        const hash = selectFiles[selectFiles.selectedIndex].value;
+
+        showFullFile(path, hash);
+    } else {
+        const hash = selectCommits.value;
+        const name = selectFiles[selectFiles.selectedIndex].textContent;
+
+        showDiff(path, hash, name);
+    }
+}
+
+function showAllFiles() {
+    const selectFiles = document.getElementById("files");
+
+    const options = files.querySelectorAll("option");
+
+    options.forEach((option) => {
+        option.classList.remove("hide");
+    });
+
+    selectFiles.selectedIndex = 0;
+}
+
 function showChangedFiles() {
-    const selectFiles = document.querySelector("#files");
+    const selectFiles = document.getElementById("files");
 
     const options = selectFiles.querySelectorAll("option");
 
@@ -279,40 +278,13 @@ function showChangedFiles() {
             option.classList.add("hide");
         }
     });
+
+    selectFiles.selectedIndex = selectFiles.querySelector("option:not([data-change='None'])").index;
 }
 
-function showAllFiles() {
-    const files = document.querySelector("#files");
-
-    const options = files.querySelectorAll("option");
-
-    options.forEach((option) => {
-        option.classList.remove("hide");
-    });
-}
-
-function updateCommitDetails() {
-    const selectCommits = document.querySelector("#commits");
-    const inputSlider = document.querySelector("#slider");
-
-    inputSlider.value = (selectCommits.selectedIndex + 1);
-
-    const option = selectCommits[selectCommits.selectedIndex];
-
-    const spanCommitNumber = document.querySelector("#commit-number");
-    const spanCommitHash = document.querySelector("#commit-hash");
-    const spanCommitAuthor = document.querySelector("#commit-author");
-    const spanCommitDate = document.querySelector("#commit-date");
-
-    spanCommitNumber.textContent = `Commit: #${(selectCommits.length - selectCommits.selectedIndex)}/${selectCommits.length}`;
-    spanCommitHash.textContent = `Hash: ${option.value}`;
-    spanCommitAuthor.textContent = `Author: ${option.dataset.author}`;
-    spanCommitDate.textContent = `Date: ${option.dataset.date}`;
-}
-
-async function populateFileContent(path, hash) {
-    const divContent = document.querySelector("#content");
-    const checkboxShowFullFile = document.querySelector("#show_full_file");
+async function showFullFile(path, hash) {
+    const divContent = document.getElementById("content");
+    const checkboxShowFullFile = document.getElementById("show_full_file");
 
     const params = new URLSearchParams();
 
@@ -329,7 +301,7 @@ async function populateFileContent(path, hash) {
 }
 
 async function showDiff(path, hash, name) {
-    const divContent = document.querySelector("#content");
+    const divContent = document.getElementById("content");
 
     const params = new URLSearchParams();
 
@@ -343,16 +315,16 @@ async function showDiff(path, hash, name) {
 }
 
 function updateFileDetails() {
-    const selectFiles = document.querySelector("#files");
+    const selectFiles = document.getElementById("files");
 
     const option = selectFiles[selectFiles.selectedIndex];
 
-    const spanFileNumber = document.querySelector("#file-number");
-    const spanFileHash = document.querySelector("#file-hash");
-    const spanFileMode = document.querySelector("#file-mode");
-    const spanFileType = document.querySelector("#file-type");
-    const spanFileSize = document.querySelector("#file-size");
-    const spanFileChange = document.querySelector("#file-change");
+    const spanFileNumber = document.getElementById("file-number");
+    const spanFileHash = document.getElementById("file-hash");
+    const spanFileMode = document.getElementById("file-mode");
+    const spanFileType = document.getElementById("file-type");
+    const spanFileSize = document.getElementById("file-size");
+    const spanFileChange = document.getElementById("file-change");
 
     spanFileNumber.textContent = `File: #${(selectFiles.selectedIndex + 1)}/${selectFiles.length}`;
     spanFileHash.textContent = `Hash: ${option.value}`;
@@ -362,10 +334,56 @@ function updateFileDetails() {
     spanFileChange.textContent = `Change: ${option.dataset.change}`;
 }
 
+function filterOptions(event) {
+    const options = event.target.parentElement.querySelector("select").options
+
+    options.forEach((option) => {
+        let textContent = option.textContent.toLowerCase();
+        let searchTerm = event.target.value.toLowerCase();
+
+        if(!searchTerm.startsWith("/")){ // if the searchTerm is not a command...
+            textContent.indexOf(searchTerm) == -1 ? option.classList.add("hide") : option.classList.remove("hide");
+
+            return; // skip the rest of the logic below
+        }
+
+        const match = searchTerm.match(/^\/(hash|author|date|change) (.*)/);
+
+        if(!match) {
+            return;
+        }
+
+        const command = match[1];
+
+        switch(command) {
+            case "hash":
+                textContent = option.value;
+
+                break;
+            case "author":
+                textContent = option.dataset.author.toLowerCase();
+
+                break;
+            case "date":
+                textContent = option.dataset.date.toLowerCase();
+
+                break;
+            case "change":
+                textContent = option.dataset.change.toLowerCase();
+
+                break;
+        }
+
+        searchTerm = match[2];
+
+        textContent.indexOf(searchTerm) == -1 ? option.classList.add("hide") : option.classList.remove("hide");
+    });
+}
+
 function main() {
     populateCommitHistory = debounce(populateCommitHistory);
     populateFilesystemTree = debounce(populateFilesystemTree);
-    populateFileContent = debounce(populateFileContent);
+    showFullFile = debounce(showFullFile);
     showDiff = debounce(showDiff);
     filterOptions = debounce(filterOptions);
 
@@ -373,17 +391,17 @@ function main() {
 
     form.addEventListener("submit", event => event.preventDefault());
 
-    const spanInfo = document.querySelector("#info");
+    const spanInfo = document.getElementById("info");
 
     spanInfo.addEventListener("click", (event) => {
-        const infoBox = document.querySelector("#infobox");
+        const infoBox = document.getElementById("infobox");
 
         if(infoBox.textContent.length > 0) {
             infoBox.classList.toggle("hide");
         }
     });
 
-    const inputPath = document.querySelector("#path");
+    const inputPath = document.getElementById("path");
 
     inputPath.addEventListener("keydown", async (event) => {
         if(event.key == "Enter") {
@@ -393,7 +411,7 @@ function main() {
         }
     });
 
-    const selectBranch = document.querySelector("#branch");
+    const selectBranch = document.getElementById("branch");
 
     selectBranch.addEventListener("change", (event) => {
         const path = inputPath.value;
@@ -405,7 +423,7 @@ function main() {
 
     inputPath.focus();
 
-    const selectCommits = document.querySelector("#commits");
+    const selectCommits = document.getElementById("commits");
 
     selectCommits.addEventListener("change", (event) => {
         const path = inputPath.value;
@@ -416,11 +434,11 @@ function main() {
         updateCommitDetails();
     });
 
-    const inputFilterCommits = document.querySelector("#filter-commits");
+    const inputFilterCommits = document.getElementById("filter-commits");
 
     inputFilterCommits.addEventListener("keyup", event => filterOptions(event));
 
-    const inputSlider = document.querySelector("#slider");
+    const inputSlider = document.getElementById("slider");
 
     inputSlider.addEventListener("change", (event) => {
         selectCommits.selectedIndex = (inputSlider.value - 1);
@@ -431,41 +449,28 @@ function main() {
         populateFilesystemTree(path, hash);
     });
 
-    const selectFiles = document.querySelector("#files");
+    const selectFiles = document.getElementById("files");
 
     selectFiles.addEventListener("change", (event) => {
-        const selectFiles = document.querySelector("#files");
-        const divContent = document.querySelector("#content");
-        const checkboxShowFullFile = document.querySelector("#show_full_file");
-
         const path = inputPath.value;
 
-        if(checkboxShowFullFile.checked) {
-            const hash = selectFiles[selectFiles.selectedIndex].value;
-
-            populateFileContent(path, hash);
-        } else {
-            const hash = selectCommits.value;
-            const name = selectFiles[selectFiles.selectedIndex].textContent;
-
-            showDiff(path, hash, name);
-        }
+        foo(path);
 
         updateFileDetails();
     });
 
-    const inputFilterFiles = document.querySelector("#filter-files");
+    const inputFilterFiles = document.getElementById("filter-files");
 
     inputFilterFiles.addEventListener("keyup", event => filterOptions(event));
 
-    const checkboxShowAllFiles = document.querySelector("#show_all_files");
+    const checkboxShowAllFiles = document.getElementById("show_all_files");
 
     checkboxShowAllFiles.addEventListener("change", event => { checkboxShowAllFiles.checked ? showAllFiles() : showChangedFiles() });
 
-    const buttonCheckout = document.querySelector("#checkout");
+    const buttonCheckout = document.getElementById("checkout");
 
     buttonCheckout.addEventListener("click", (event) => {
-        const content = document.querySelector("#content");
+        const content = document.getElementById("content");
 
         const name = basename(selectFiles[selectFiles.selectedIndex].textContent);
         const data = content.textContent;
@@ -473,24 +478,12 @@ function main() {
         saveData(name, data);
     });
 
-    const checkboxShowFullFile = document.querySelector("#show_full_file");
+    const checkboxShowFullFile = document.getElementById("show_full_file");
 
     checkboxShowFullFile.addEventListener("change", async (event) => {
-        const selectFiles = document.querySelector("#files");
-        const divContent = document.querySelector("#content");
-
         const path = inputPath.value;
 
-        if(checkboxShowFullFile.checked) {
-            const hash = selectFiles[selectFiles.selectedIndex].value;
-
-            populateFileContent(path, hash);
-        } else {
-            const hash = selectCommits.value;
-            const name = selectFiles[selectFiles.selectedIndex].textContent;
-
-            showDiff(path, hash, name);
-        }
+        foo(path);
     });
 }
 
