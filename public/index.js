@@ -180,9 +180,9 @@ function updateInfoBox(authorCommits) {
     firstCommit.textContent = selectCommits[commits.length -1].dataset.date;
     lastCommit.textContent = selectCommits[0].dataset.date;
 
-	contributors.innerHTML = ""; // remove li elements
+    contributors.innerHTML = ""; // remove li elements
 
-	const fragment = new DocumentFragment();
+    const fragment = new DocumentFragment();
 
     const sorted = countAuthorCommits(authorCommits, 20);
 
@@ -190,14 +190,14 @@ function updateInfoBox(authorCommits) {
         const nr = i + 1;
         const [author, commits] = entry;
 
-		const li = document.createElement("li");
+        const li = document.createElement("li");
 
-		li.textContent = `${author} (${commits})`;
+        li.textContent = `${author} (${commits})`;
 
-		fragment.appendChild(li);
+        fragment.appendChild(li);
     });
 
-	contributors.appendChild(fragment);
+    contributors.appendChild(fragment);
 }
 
 async function populateFilesystemTree(path, hash) {
@@ -340,7 +340,7 @@ function updateFileDetails() {
 }
 
 function filterOptions(event) {
-    const options = event.target.parentElement.querySelector("select").options
+    const options = event.target.parentElement.parentElement.querySelector("select").options
 
     options.forEach((option) => {
         let textContent = option.textContent.toLowerCase();
