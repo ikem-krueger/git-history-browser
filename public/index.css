@@ -68,15 +68,15 @@ label {
 
 #infobox ul, ol {
   margin: 0px;
+  padding-left: 0px;
 }
 
 #infobox ul {
-  padding-left: 0px;
   list-style-type: none;
 }
 
 #infobox ol {
-  padding-left: 16px;
+  list-style-position: inside;
 }
 
 #range {
