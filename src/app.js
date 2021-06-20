@@ -9,7 +9,7 @@ const host = `http://localhost:${port}`;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(process.cwd() + '/public'));
 
 app.get('/branches', (req, res) => {
     const path = req.query.path;

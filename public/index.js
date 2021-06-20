@@ -26,18 +26,7 @@ function capitalize(string) {
 function countAuthorCommits(authorCommits, max) {
     let entries = Object.entries(authorCommits);
 
-    let sorted = entries.sort((a, b) => b[1] - a[1]).slice(0, max);
-
-    let output = `Top ${max} contributors:\n\n`;
-
-    sorted.forEach((entry, i) => {
-        const nr = i + 1;
-        const [author, commits] = entry;
-
-        output += `#${nr}: ${author} (${commits})\n`;
-    });
-
-    return output;
+    return entries.sort((a, b) => b[1] - a[1]).slice(0, max);
 }
 
 function saveData(name, data) {
@@ -65,13 +54,13 @@ async function populateBranches(path) {
 
     const branches = await fetch('/branches?' + params).then(res => res.json());
 
-    selectBranch.length = 0; // reset option elements
+    selectBranch.length = 0; // remove option elements
 
     let selectedIndex = 0;
 
     const fragment = new DocumentFragment();
 
-    branches.forEach((branch, i) => { // fills them with data
+    branches.forEach((branch, i) => { // fill them with data
         const option = document.createElement("option");
 
         branch = branch.trim();
@@ -110,18 +99,18 @@ async function populateBranches(path) {
 async function populateCommitHistory(path, branch) {
     const selectCommits = document.getElementById("commits");
 
+    selectCommits.length = 0; // remove option elements
+
+    const fragment = new DocumentFragment();
+
+    const authorCommits = {};
+
     const params = new URLSearchParams();
 
     params.set("path", path);
     params.set("branch", branch);
 
     const commits = await fetch('/commits?' + params).then(res => res.json());
-
-    const authorCommits = {};
-
-    selectCommits.length = 0; // reset option elements
-
-    const fragment = new DocumentFragment();
 
     commits.forEach((commit, i) => {
         const option = document.createElement("option");
@@ -152,11 +141,11 @@ async function populateCommitHistory(path, branch) {
 
     selectCommits.focus();
 
-    const inputSlider = document.getElementById("slider");
+    const inputRange = document.getElementById("range");
 
-    inputSlider.min = 1;
-    inputSlider.value = selectCommits.selectedIndex + 1;
-    inputSlider.max = selectCommits.length;
+    inputRange.min = 1;
+    inputRange.value = selectCommits.selectedIndex + 1;
+    inputRange.max = selectCommits.length;
 
     updateInfoBox(authorCommits);
 
@@ -165,9 +154,9 @@ async function populateCommitHistory(path, branch) {
 
 function updateCommitDetails() {
     const selectCommits = document.getElementById("commits");
-    const inputSlider = document.getElementById("slider");
+    const inputRange = document.getElementById("range");
 
-    inputSlider.value = (selectCommits.selectedIndex + 1);
+    inputRange.value = (selectCommits.selectedIndex + 1);
 
     const option = selectCommits[selectCommits.selectedIndex];
 
@@ -176,23 +165,39 @@ function updateCommitDetails() {
     const spanCommitAuthor = document.getElementById("commit-author");
     const spanCommitDate = document.getElementById("commit-date");
 
-    spanCommitNumber.textContent = `Commit: #${(selectCommits.length - selectCommits.selectedIndex)}/${selectCommits.length}`;
-    spanCommitHash.textContent = `Hash: ${option.value}`;
-    spanCommitAuthor.textContent = `Author: ${option.dataset.author}`;
-    spanCommitDate.textContent = `Date: ${option.dataset.date}`;
+    spanCommitNumber.textContent = `${(selectCommits.length - selectCommits.selectedIndex)}/${selectCommits.length}`;
+    spanCommitHash.textContent = `${option.value}`;
+    spanCommitAuthor.textContent = `${option.dataset.author}`;
+    spanCommitDate.textContent = `${option.dataset.date}`;
 }
 
 function updateInfoBox(authorCommits) {
     const selectCommits = document.getElementById("commits");
-    const infoBox = document.getElementById("infobox");
+    const firstCommit = document.getElementById("firstCommit");
+    const lastCommit = document.getElementById("lastCommit");
+    const contributors = document.getElementById("contributors");
 
-    const firstCommit = selectCommits[commits.length -1].dataset.date;
-    const lastCommit = selectCommits[0].dataset.date;
+    firstCommit.textContent = selectCommits[commits.length -1].dataset.date;
+    lastCommit.textContent = selectCommits[0].dataset.date;
 
-    infoBox.textContent = `First commit: ${firstCommit}\n`;
-    infoBox.textContent += `Last commit: ${lastCommit}\n`;
-    infoBox.textContent += "\n";
-    infoBox.textContent += countAuthorCommits(authorCommits, 20);
+	contributors.innerHTML = ""; // remove li elements
+
+	const fragment = new DocumentFragment();
+
+    const sorted = countAuthorCommits(authorCommits, 20);
+
+    sorted.forEach((entry, i) => {
+        const nr = i + 1;
+        const [author, commits] = entry;
+
+		const li = document.createElement("li");
+
+		li.textContent = `${author} (${commits})`;
+
+		fragment.appendChild(li);
+    });
+
+	contributors.appendChild(fragment);
 }
 
 async function populateFilesystemTree(path, hash) {
@@ -208,7 +213,7 @@ async function populateFilesystemTree(path, hash) {
     const changedFiles = await fetch('/changes?' + params).then(res => res.json());
     const files = await fetch('/files?' + params).then(res => res.json());
 
-    selectFiles.length = 0; // reset option elements
+    selectFiles.length = 0; // remove option elements
 
     const fragment = new DocumentFragment();
 
@@ -326,12 +331,12 @@ function updateFileDetails() {
     const spanFileSize = document.getElementById("file-size");
     const spanFileChange = document.getElementById("file-change");
 
-    spanFileNumber.textContent = `File: #${(selectFiles.selectedIndex + 1)}/${selectFiles.length}`;
-    spanFileHash.textContent = `Hash: ${option.value}`;
-    spanFileMode.textContent = `Mode: ${option.dataset.mode}`;
-    spanFileType.textContent = `Type: ${option.dataset.type}`;
-    spanFileSize.textContent = `Size: ${option.dataset.size} Bytes`;
-    spanFileChange.textContent = `Change: ${option.dataset.change}`;
+    spanFileNumber.textContent = `${(selectFiles.selectedIndex + 1)}/${selectFiles.length}`;
+    spanFileHash.textContent = `${option.value}`;
+    spanFileMode.textContent = `${option.dataset.mode}`;
+    spanFileType.textContent = `${option.dataset.type}`;
+    spanFileSize.textContent = `${option.dataset.size}`;
+    spanFileChange.textContent = `${option.dataset.change}`;
 }
 
 function filterOptions(event) {
@@ -387,10 +392,6 @@ function main() {
     showDiff = debounce(showDiff);
     filterOptions = debounce(filterOptions);
 
-    const form = document.querySelector("form");
-
-    form.addEventListener("submit", event => event.preventDefault());
-
     const spanInfo = document.getElementById("info");
 
     spanInfo.addEventListener("click", (event) => {
@@ -438,10 +439,10 @@ function main() {
 
     inputFilterCommits.addEventListener("keyup", event => filterOptions(event));
 
-    const inputSlider = document.getElementById("slider");
+    const inputRange = document.getElementById("range");
 
-    inputSlider.addEventListener("change", (event) => {
-        selectCommits.selectedIndex = (inputSlider.value - 1);
+    inputRange.addEventListener("change", (event) => {
+        selectCommits.selectedIndex = (inputRange.value - 1);
 
         const path = inputPath.value;
         const hash = selectCommits.value;
