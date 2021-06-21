@@ -51,7 +51,7 @@ label {
 
 .flex-box {
   flex: 0 0 33.3333%;
-  padding: 4px;
+  padding: 8px;
 }
 
 .flex-box select, textarea {
