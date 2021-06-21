@@ -1,6 +1,6 @@
 {
-  "name": "GitLogTreeViewer",
-  "version": "0.0.1",
+  "name": "GitHistoryViewer",
+  "version": "0.8.0",
   "description": "",
   "main": "app.js",
   "scripts": {

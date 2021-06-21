@@ -5,18 +5,23 @@
 }
 
 h1, h2, h3, h4, h5, h6 {
+  margin-top: 0px;
   font-family: Verdana;
   font-weight: bold;
 }
 
 h1 {
-  font-size: 2.0rem;
+  font-size: 2.4rem;
+  margin-bottom: 8px;
 }
 
 h2 {
-  font-size: 1.6rem;
-  margin-bottom: 8px;
-  padding-bottom: 
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+}
+
+h3 {
+  margin: 8px 0px;
 }
 
 input {
@@ -37,23 +42,39 @@ label {
 
 .flex-container {
   display: flex;
+  margin-top: 8px;
 }
 
 .flex-box {
   flex: 0 0 33.3333%;
-  padding: 8px;
+  padding: 4px;
 }
 
 .flex-box select, textarea {
   width: 100%;
-  height: 380px;
+  height: 420px;
   margin-bottom: 8px;
 }
 
 .details {
   color: grey;
+  margin-top: 8px;
   padding-left: 0px;
   list-style-type: none;
+}
+
+#repo {
+  margin: 0px 4px;
+  width: 33.3333%;
+}
+
+#path {
+  width: 65%;
+}
+
+#branch {
+  width: 32%;
+  padding: 4px 0px;
 }
 
 #info {

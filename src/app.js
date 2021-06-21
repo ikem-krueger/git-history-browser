@@ -4,7 +4,7 @@ const app = express();
 const spawn = require('child_process').spawn;
 const readline  = require('readline');
 
-const port = 3000;
+const port = 3003;
 const host = `http://localhost:${port}`;
 
 app.use(cors());
