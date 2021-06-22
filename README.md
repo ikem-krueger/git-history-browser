@@ -49,7 +49,8 @@ Start the server
 
 Open a browser on:
 
-    localhost:3000
+    localhost:3003
+
 ## FAQ
 
 #### How do I filter commits by message?
