@@ -54,7 +54,7 @@ async function populateBranches(path) {
 
     const branches = await fetch('/branches?' + params).then(res => res.json());
 
-    selectBranch.length = 0; // remove option elements
+    selectBranch.innerHTML = ""; // remove option elements
 
     let selectedIndex = 0;
 
@@ -99,7 +99,7 @@ async function populateBranches(path) {
 async function populateCommitHistory(path, branch) {
     const selectCommits = document.getElementById("commits");
 
-    selectCommits.length = 0; // remove option elements
+    selectCommits.innerHTML = ""; // remove option elements
 
     const fragment = new DocumentFragment();
 
@@ -213,7 +213,7 @@ async function populateFilesystemTree(path, hash) {
     const changedFiles = await fetch('/changes?' + params).then(res => res.json());
     const files = await fetch('/files?' + params).then(res => res.json());
 
-    selectFiles.length = 0; // remove option elements
+    selectFiles.innerHTML = ""; // remove option elements
 
     const fragment = new DocumentFragment();
 
