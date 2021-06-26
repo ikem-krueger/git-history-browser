@@ -104,7 +104,7 @@ Examples:
 
 ## Tech Stack
 
-**Client:** Vanilla Javascript
+**Client:** VanillaJS
 
 **Server:** Node, Express
 
