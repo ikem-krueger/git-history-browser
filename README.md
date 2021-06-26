@@ -12,11 +12,10 @@ Helps developers to get an overview of the changes in a git repository.
 - Inspect filesystem tree for a certain commit
 - Checkout a file from the filesystem tree
 
-## Demo
+## Screenshots
 
-Insert gif or link to demo
+![App Screenshot](https://github.com/ikem-krueger/git-history-viewer/raw/master/Screenshot.png)
 
-  
 ## Dependencies
 
 [Git](https://git-scm.com/downloads) and [Node.js](https://nodejs.org/en/download/) need to be installed.
@@ -108,4 +107,6 @@ Examples:
 
 **Server:** Node, Express
 
-  
+## Acknowledgements
+
+This README.md is created with [readme.so](https://readme.so/).
