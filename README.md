@@ -5,11 +5,12 @@ Helps developers to get an overview of the changes in a git repository.
 
 ## Features
 
-- See the 20 most active contributers
+- See the last made changes at first glance
+- Find the 20 most active contributers of your project
 - Inspect branches without checking them out
 - Filter commits by message/hash/author/date
 - Filter files by name/hash/change
-- Inspect filesystem tree for a certain commit
+- Inspect the filesystem tree for a certain commit
 - Checkout a file from the filesystem tree
 
 ## Screenshots

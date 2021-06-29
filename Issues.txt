@@ -9,6 +9,7 @@
  - feat: apply filter on change
  - feat: focus last selected filename on change
  - todo: responsive design?
+ - feat: statistic module
  - feat: auto reload repository on changes 
  - feat: url in path -> git clone
  - feat: syntax highlighting
