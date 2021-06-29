@@ -27,7 +27,7 @@ app.get('/branches', (req, res) => {
     });
 
     proc.on('close', (exitCode) => {
-        console.log("branches: " + branches.length);
+        console.log(`branches: ${branches.length}`);
 
         res.json(branches);
     });
@@ -52,7 +52,7 @@ app.get('/commits', (req, res) => {
     });
 
     proc.on('close', (exitCode) => {
-        console.log("commits: " + commits.length);
+        console.log(`commits: ${commits.length}`);
 
         res.json(commits);
     });
@@ -89,7 +89,7 @@ app.get('/changes', (req, res) => {
     });
 
     proc.on('close', (exitCode) => {
-        console.log("changes: " + Object.keys(files).length);
+        console.log(`changes: ${Object.keys(files).length}`);
 
         res.json(files);
     });
@@ -114,7 +114,7 @@ app.get('/files', (req, res) => {
     });
 
     proc.on('close', (exitCode) => {
-        console.log("files: " + Object.keys(files).length);
+        console.log(`files: ${Object.keys(files).length}`);
 
         res.json(files);
     });
@@ -135,7 +135,7 @@ app.get('/content', (req, res) => {
     });
 
     proc.on('close', (exitCode) => {
-        console.log("content: " + hash);
+        console.log(`content: ${hash}`);
 
         res.send(stdout);
     });

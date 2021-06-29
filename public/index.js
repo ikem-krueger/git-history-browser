@@ -166,9 +166,9 @@ function updateCommitDetails() {
     const spanCommitDate = document.getElementById("commit-date");
 
     spanCommitNumber.textContent = `${(selectCommits.length - selectCommits.selectedIndex)}/${selectCommits.length}`;
-    spanCommitHash.textContent = `${option.value}`;
-    spanCommitAuthor.textContent = `${option.dataset.author}`;
-    spanCommitDate.textContent = `${option.dataset.date}`;
+    spanCommitHash.textContent = option.value;
+    spanCommitAuthor.textContent = option.dataset.author;
+    spanCommitDate.textContent = option.dataset.date;
 }
 
 function updateInfoBox(authorCommits) {
@@ -332,11 +332,11 @@ function updateFileDetails() {
     const spanFileChange = document.getElementById("file-change");
 
     spanFileNumber.textContent = `${(selectFiles.selectedIndex + 1)}/${selectFiles.length}`;
-    spanFileHash.textContent = `${option.value}`;
-    spanFileMode.textContent = `${option.dataset.mode}`;
-    spanFileType.textContent = `${option.dataset.type}`;
-    spanFileSize.textContent = `${option.dataset.size}`;
-    spanFileChange.textContent = `${option.dataset.change}`;
+    spanFileHash.textContent = option.value;
+    spanFileMode.textContent = option.dataset.mode;
+    spanFileType.textContent = option.dataset.type;
+    spanFileSize.textContent = option.dataset.size;
+    spanFileChange.textContent = option.dataset.change;
 }
 
 function filterOptions(event) {
