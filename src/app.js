@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const spawn = require('child_process').spawn;
 const readline  = require('readline');
+const open = require('open');
 
 const port = 3003;
 const host = `http://localhost:${port}`;
@@ -165,4 +166,6 @@ app.get('/diff', (req, res) => {
 
 app.listen(port, () => {
     console.log(`App listening at ${host}`);
+
+    open(host); // opens the url in the default browser
 });

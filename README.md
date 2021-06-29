@@ -40,15 +40,11 @@ Install dependencies
   npm install
 ```
 
-Start the server
+Start the app
 
 ```bash
   npm start
 ```
-
-Open a browser on:
-
-    localhost:3003
 
 ## FAQ
 
