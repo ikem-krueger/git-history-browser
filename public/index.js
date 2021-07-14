@@ -5,8 +5,6 @@ let timerId;
 
 const ms = 200;
 
-HTMLCollection.prototype.forEach = Array.prototype.forEach;
-
 function debounce(func) {
     return (...args) => {
         clearTimeout(timerId);
@@ -60,7 +58,7 @@ async function populateBranches(path) {
 
     const fragment = new DocumentFragment();
 
-    branches.forEach((branch, i) => { // fill them with data
+    branches.map((branch, i) => { // fill them with data
         const option = document.createElement("option");
 
         branch = branch.trim();
@@ -112,7 +110,7 @@ async function populateCommitHistory(path, branch) {
 
     const commits = await fetch('/commits?' + params).then(res => res.json());
 
-    commits.forEach((commit, i) => {
+    commits.map((commit, i) => {
         const option = document.createElement("option");
 
         option.textContent = commit.message;
@@ -186,7 +184,7 @@ function updateInfoBox(authorCommits) {
 
     const sorted = countAuthorCommits(authorCommits, 20);
 
-    sorted.forEach((entry, i) => {
+    sorted.map((entry, i) => {
         const nr = i + 1;
         const [author, commits] = entry;
 
@@ -217,7 +215,7 @@ async function populateFilesystemTree(path, hash) {
 
     const fragment = new DocumentFragment();
 
-    files.forEach((file, i) => {
+    files.map((file, i) => {
         const option = document.createElement("option");
 
         option.textContent = file.name;
@@ -266,7 +264,7 @@ function showAllFiles() {
 
     const options = files.querySelectorAll("option");
 
-    options.forEach((option) => {
+    Array.prototype.map.call(options, option => {
         option.classList.remove("hide");
     });
 
@@ -278,7 +276,7 @@ function showChangedFiles() {
 
     const options = selectFiles.querySelectorAll("option");
 
-    options.forEach((option) => {
+    Array.prototype.map.call(options, option => {
         if(option.dataset.change == "None") {
             option.classList.add("hide");
         }
@@ -342,7 +340,7 @@ function updateFileDetails() {
 function filterOptions(event) {
     const options = event.target.parentElement.parentElement.querySelector("select").options
 
-    options.forEach((option) => {
+    Array.prototype.map.call(options, option => {
         let textContent = option.textContent.toLowerCase();
         let searchTerm = event.target.value.toLowerCase();
 
