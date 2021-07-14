@@ -338,7 +338,7 @@ function updateFileDetails() {
 }
 
 function filterOptions(event) {
-    const options = event.target.parentElement.parentElement.querySelector("select").options
+    const options = event.target.parentElement.parentElement.querySelector("select").options;
 
     Array.prototype.map.call(options, option => {
         let textContent = option.textContent.toLowerCase();
