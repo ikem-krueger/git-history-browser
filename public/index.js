@@ -50,7 +50,7 @@ async function populateBranches(path) {
 
     params.set("path", path);
 
-    const branches = await fetch('/branches?' + params).then(res => res.json());
+    const branches = await (await fetch('/branches?' + params)).json();
 
     selectBranch.innerHTML = ""; // remove option elements
 
@@ -108,7 +108,7 @@ async function populateCommitHistory(path, branch) {
     params.set("path", path);
     params.set("branch", branch);
 
-    const commits = await fetch('/commits?' + params).then(res => res.json());
+    const commits = await (await fetch('/commits?' + params)).json();
 
     commits.map((commit, i) => {
         const option = document.createElement("option");
@@ -208,8 +208,8 @@ async function populateFilesystemTree(path, hash) {
     params.set("path", path);
     params.set("hash", hash);
 
-    const changedFiles = await fetch('/changes?' + params).then(res => res.json());
-    const files = await fetch('/files?' + params).then(res => res.json());
+    const changedFiles = await (await fetch('/changes?' + params)).json();
+    const files = await (await fetch('/files?' + params)).json();
 
     selectFiles.innerHTML = ""; // remove option elements
 
@@ -294,7 +294,7 @@ async function showFullFile(path, hash) {
     params.set("path", path);
     params.set("hash", hash);
 
-    const content = await fetch('/content?' + params).then(res => res.text());
+    const content = await (await fetch('/content?' + params)).text();
 
     divContent.textContent = content;
 
@@ -312,7 +312,7 @@ async function showDiff(path, hash, name) {
     params.set("hash", hash);
     params.set("name", name);
 
-    const diff = await fetch('/diff?' + params).then(res => res.text());
+    const diff = await (await fetch('/diff?' + params)).text();
 
     divContent.textContent = diff;
 }
