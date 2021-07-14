@@ -1,5 +1,5 @@
 
-# Git Log Viewer
+# Git History Viewer
 
 Helps developers to get an overview of the changes in a git repository.
 
