@@ -10,6 +10,8 @@
         <link rel="stylesheet" href="index.css">
 
         <script src="index.js" defer></script>
+
+        <script src="https://cdn.plot.ly/plotly-2.2.0.min.js"></script>
     </head>
     <body>
         <div id="progressBar"></div>
@@ -34,13 +36,10 @@
                         <li>Last commit: <span id="lastCommit">-</span></li>
                     </ul>
 
-                    <h3>Top 20 contributors:</h3>
+                    <h3>Top 10 contributors:</h3>
 
-                    <ol id="contributors">
-
-                    </ol>
+                    <div id="plot"></div>
                 </div>
-
 
                 <select id="commits" size="20"></select>
 

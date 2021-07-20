@@ -173,29 +173,52 @@ function updateInfoBox(authorCommits) {
     const selectCommits = document.getElementById("commits");
     const firstCommit = document.getElementById("firstCommit");
     const lastCommit = document.getElementById("lastCommit");
-    const contributors = document.getElementById("contributors");
 
-    firstCommit.textContent = selectCommits[commits.length -1].dataset.date;
-    lastCommit.textContent = selectCommits[0].dataset.date;
+    firstCommit.textContent = selectCommits[commits.length -1].dataset.date + ", Author: " + selectCommits[commits.length -1].dataset.author;
+    lastCommit.textContent = selectCommits[0].dataset.date + ", Author: " + selectCommits[0].dataset.author;
 
-    contributors.innerHTML = ""; // remove li elements
+    const sorted = countAuthorCommits(authorCommits, 10);
 
-    const fragment = new DocumentFragment();
-
-    const sorted = countAuthorCommits(authorCommits, 20);
+    const labels = [];
+    const values = [];
 
     sorted.map((entry, i) => {
         const nr = i + 1;
         const [author, commits] = entry;
 
-        const li = document.createElement("li");
-
-        li.textContent = `${author} (${commits})`;
-
-        fragment.appendChild(li);
+        labels.push(author);
+        values.push(commits);
     });
 
-    contributors.appendChild(fragment);
+    const data = [{
+        values: values,
+        labels: labels,
+        type: 'pie'
+    }];
+
+    const layout = {
+        width: 500,
+        height: 250,
+        margin: {
+            l: 0,
+            r: 0,
+            b: 0,
+            t: 0
+        },
+        font: {
+            family: "Tahoma",
+            size: "13"
+        },
+        legend: {
+            "bgcolor": "ffffffaa",
+            "x": 0,
+            "xanchor": "left",
+            "itemclick": false,
+            "itemdoubleclick": false
+        }
+    };
+
+    Plotly.newPlot("plot", data, layout, { displayModeBar: false });
 }
 
 async function populateFilesystemTree(path, hash) {
