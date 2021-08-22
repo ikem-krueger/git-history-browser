@@ -3,14 +3,16 @@ const host = `http://localhost:${port}`;
 
 let timerId;
 
-const ms = 200;
+const timeout = 200;
 
-function debounce(func) {
+function debounce(func){
+    let timer;
+
     return (...args) => {
-        clearTimeout(timerId);
+        clearTimeout(timer);
 
-        timerId = setTimeout(func, ms, ...args);
-    }
+        timer = setTimeout(() => { func.apply(this, args); }, timeout);
+  };
 }
 
 function basename(path) {
