@@ -102,7 +102,7 @@ Examples:
 
 **Client:** VanillaJS
 
-**Server:** Node, Express
+**Server:** Node.js, Express
 
 ## Acknowledgements
 
