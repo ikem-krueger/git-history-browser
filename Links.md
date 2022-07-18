@@ -1,0 +1,6 @@
+* [React List Virtualization](https://www.patterns.dev/posts/virtual-lists/)
+* [Lehrbuch Web-Development - Daten absenden](https://web-development.github.io/formulare/action/)
+* [AJAX - als Präsentation](https://web-development.github.io/applied-js-and-css/ajax/slide.html#slide-11)
+* [AJAX and JSON - Happy Coding](https://happycoding.io/tutorials/javascript/ajax)
+* [Phil Nash | How to start a Node.js project](https://philna.sh/blog/2019/01/10/how-to-start-a-node-js-project/)
+* [Execute and get the output of a shell command in node.js - Stack Overflow](https://stackoverflow.com/questions/12941083/execute-and-get-the-output-of-a-shell-command-in-node-js)

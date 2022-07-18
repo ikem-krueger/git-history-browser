@@ -1,5 +1,0 @@
-https://web-development.github.io/formulare/action/ | Lehrbuch Web-Development - Daten absenden
-https://web-development.github.io/applied-js-and-css/ajax/slide.html#slide-11 | AJAX - als Präsentation
-https://happycoding.io/tutorials/javascript/ajax | AJAX and JSON - Happy Coding
-https://philna.sh/blog/2019/01/10/how-to-start-a-node-js-project/ | How to start a Node.js project | Phil Nash
-https://stackoverflow.com/questions/12941083/execute-and-get-the-output-of-a-shell-command-in-node-js | Execute and get the output of a shell command in node.js - Stack Overflow
