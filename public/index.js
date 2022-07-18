@@ -262,12 +262,12 @@ async function populateFilesystemTree(path, hash) {
 
     selectFiles.selectedIndex = selectFiles.querySelector("option:not([data-change='None'])").index;
 
-    foo(path);
+    toggleFileDiff(path);
 
     updateFileDetails();
 }
 
-function foo(path) {
+function toggleFileDiff(path) {
     const selectFiles = document.getElementById("files");
     const selectCommits = document.getElementById("commits");
     const checkboxShowFullFile = document.getElementById("show_full_file");
@@ -478,7 +478,7 @@ function main() {
     selectFiles.addEventListener("change", (event) => {
         const path = inputPath.value;
 
-        foo(path);
+        toggleFileDiff(path);
 
         updateFileDetails();
     });
@@ -507,7 +507,7 @@ function main() {
     checkboxShowFullFile.addEventListener("change", async (event) => {
         const path = inputPath.value;
 
-        foo(path);
+        toggleFileDiff(path);
     });
 }
 
