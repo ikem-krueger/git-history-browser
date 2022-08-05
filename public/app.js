@@ -326,27 +326,32 @@ function saveData(name, data) {
   }
 }
 
+async function showFullFile2(path, name, hash) {
+  const params = new URLSearchParams();
+
+  params.set("path", path);
+  params.set("hash", hash);
+
+  loadData('/content?' + params, name);
+}
+
 async function showFullFile(path, hash) {
-    const divContent = document.getElementById("content");
-    const checkboxShowFullFile = document.getElementById("show_full_file");
+  const divContent = document.getElementById("content");
+  const checkboxShowFullFile = document.getElementById("show_full_file");
 
-    const params = new URLSearchParams();
+  const params = new URLSearchParams();
 
-    params.set("path", path);
-    params.set("hash", hash);
+  params.set("path", path);
+  params.set("hash", hash);
 
-    console.debug(path, basename(path))
+  const myPromise = await fetch('/content?' + params);
+  const content = await myPromise.text();
 
-    const myPromise = await fetch('/content?' + params);
-    const content = await myPromise.text();
+  divContent.textContent = content;
 
-    loadData('/content?' + params, "Screenshot.png");
+  divContent.scrollTop = 0;
 
-    divContent.textContent = content;
-
-    divContent.scrollTop = 0;
-
-    updateFileDetails();
+  updateFileDetails();
 }
 
 async function showDiff(path, hash, name) {
@@ -514,14 +519,15 @@ function main() {
 
     const buttonCheckout = document.getElementById("checkout");
 
-    buttonCheckout.addEventListener("click", (event) => {
-        const content = document.getElementById("content");
+    buttonCheckout.addEventListener("click", async (event) => {
+      const option = selectFiles[selectFiles.selectedIndex];
 
-        const name = basename(selectFiles[selectFiles.selectedIndex].textContent);
-        const data = content.textContent;
+      const path = inputPath.value;
+      const name = basename(option.textContent);
+      const hash = option.value;
 
-        saveData(name, data);
-    });
+      showFullFile2(path, name, hash);
+  });
 
     const checkboxShowFullFile = document.getElementById("show_full_file");
 
