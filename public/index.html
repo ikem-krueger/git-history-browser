@@ -1,89 +1,92 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
 
-        <title>Git History Viewer</title>
+<head>
+  <meta charset="utf-8">
 
-        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <title>Git History Viewer</title>
 
-        <link rel="stylesheet" href="styles.css">
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 
-        <script src="app.js" defer></script>
+  <link rel="stylesheet" href="style.css">
 
-        <script src="https://cdn.plot.ly/plotly-2.2.0.min.js" defer></script>
-    </head>
-    <body>
-        <div id="progressBar"></div>
+  <script src="app.js" defer></script>
 
-        <h1>Git History Viewer</h1>
+  <script src="https://cdn.plot.ly/plotly-2.2.0.min.js" defer></script>
+</head>
 
-        <div id="repo">
-            <h2>Repository</h2>
+<body>
+  <div id="progressBar"></div>
 
-            <input id="path" type="text" placeholder="Path">
+  <h1>Git History Viewer</h1>
 
-            <select id="branch"></select>
-        </div>
+  <div id="repo">
+    <h2>Repository</h2>
 
-        <div class="flex-container">
-            <div class="flex-box">
-                <h2>Commit <span id="info" title="Show some infos about this repository">&#9432;</span></h2>
+    <input id="path" type="text" placeholder="Path">
 
-                <div id="infobox" class="hide">
-                    <ul>
-                        <li>First commit: <span id="firstCommit">-</span></li>
-                        <li>Last commit: <span id="lastCommit">-</span></li>
-                    </ul>
+    <select id="branch"></select>
+  </div>
 
-                    <h3>Top 10 contributors:</h3>
+  <div class="flex-container">
+    <div class="flex-box">
+      <h2>Commit <span id="info" title="Show some infos about this repository">&#9432;</span></h2>
 
-                    <div id="plot"></div>
-                </div>
+      <div id="infobox" class="hide">
+        <ul>
+          <li>First commit: <span id="firstCommit">-</span></li>
+          <li>Last commit: <span id="lastCommit">-</span></li>
+        </ul>
 
-                <select id="commits" size="20"></select>
+        <h3>Top 10 contributors:</h3>
 
-                <div>
-                    <input id="filter-commits" type="text" placeholder="Filter">
-                    <input id="range" type="range">
-                </div>
+        <div id="plot"></div>
+      </div>
 
-                <ul class="details">
-                    <li>Commit: #<span id="commit-number">-/-</span></li>
-                    <li>Hash: <span id="commit-hash">-</span></li>
-                    <li>Author: <span id="commit-author">-</span></li>
-                    <li>Date: <span id="commit-date">-</span></li>
-                </ul>
-            </div>
-            <div class="flex-box">
-                <h2>File</h2>
+      <select id="commits" size="20"></select>
 
-                <select id="files" size="20"></select>
+      <div>
+        <input id="filter-commits" type="text" placeholder="Filter">
+        <input id="range" type="range">
+      </div>
 
-                <div>
-                    <input id="filter-files" type="text" placeholder="Filter">
-                    <label for="show_all_files"><input type="checkbox" id="show_all_files">Show all files</label>
-                </div>
+      <ul class="details">
+        <li>Commit: #<span id="commit-number">-/-</span></li>
+        <li>Hash: <span id="commit-hash">-</span></li>
+        <li>Author: <span id="commit-author">-</span></li>
+        <li>Date: <span id="commit-date">-</span></li>
+      </ul>
+    </div>
+    <div class="flex-box">
+      <h2>File</h2>
 
-                <ul class="details">
-                    <li>File: #<span id="file-number">-/-</span></li>
-                    <li>Hash: <span id="file-hash">-</span></li>
-                    <li>Mode: <span id="file-mode">-</span></li>
-                    <li>Type: <span id="file-type">-</span></li>
-                    <li>Size: <span id="file-size">-</span> Bytes</li>
-                    <li>Change: <span id="file-change">-</span></li>
-                </ul>
-            </div>
-            <div class="flex-box">
-                <h2>Content</h2>
+      <select id="files" size="20"></select>
 
-                <textarea id="content" readonly></textarea>
+      <div>
+        <input id="filter-files" type="text" placeholder="Filter">
+        <label for="show_all_files"><input type="checkbox" id="show_all_files">Show all files</label>
+      </div>
 
-                <div>
-                    <button id="checkout" type="button">Checkout</button>
-                    <label for="show_full_file"><input type="checkbox" id="show_full_file">Show full file</label>
-                </div>
-            </div>
-        </div>
-    </body>
+      <ul class="details">
+        <li>File: #<span id="file-number">-/-</span></li>
+        <li>Hash: <span id="file-hash">-</span></li>
+        <li>Mode: <span id="file-mode">-</span></li>
+        <li>Type: <span id="file-type">-</span></li>
+        <li>Size: <span id="file-size">-</span> Bytes</li>
+        <li>Change: <span id="file-change">-</span></li>
+      </ul>
+    </div>
+    <div class="flex-box">
+      <h2>Content</h2>
+
+      <textarea id="content" readonly></textarea>
+
+      <div>
+        <button id="checkout" type="button">Checkout</button>
+        <label for="show_full_file"><input type="checkbox" id="show_full_file">Show full file</label>
+      </div>
+    </div>
+  </div>
+</body>
+
 </html>

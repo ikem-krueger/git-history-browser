@@ -8,7 +8,12 @@ body {
   padding: 8px;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin-top: 0px;
   font-family: Verdana;
   font-weight: bold;
@@ -54,7 +59,8 @@ label {
   padding: 8px;
 }
 
-.flex-box select, textarea {
+.flex-box select,
+textarea {
   width: 100%;
   height: 420px;
   margin-bottom: 8px;
@@ -86,12 +92,13 @@ label {
 }
 
 #infobox {
-  position:absolute;
+  position: absolute;
   border: 1px solid black;
-  background:white;
+  background: white;
 }
 
-#infobox ul, ol {
+#infobox ul,
+ol {
   margin: 0px;
   padding-left: 0px;
 }
