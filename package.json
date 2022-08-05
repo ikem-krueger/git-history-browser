@@ -2,9 +2,9 @@
   "name": "GitHistoryViewer",
   "version": "0.8.0",
   "description": "",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node src/app.js",
+    "start": "node src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

@@ -125,20 +125,12 @@ app.get('/content', (req, res) => {
     const path = req.query.path;
     const hash = req.query.hash;
 
-    let stdout = "";
-
     const proc = spawn('git', ['-C', path, 'show', hash]);
 
-    proc.stdout.setEncoding('utf8');
-
-    proc.stdout.on('data', (chunk) => {
-        stdout += chunk;
-    });
+    proc.stdout.pipe(res);
 
     proc.on('close', (exitCode) => {
         console.log(`content: ${hash}`);
-
-        res.send(stdout);
     });
 });
 
@@ -147,20 +139,12 @@ app.get('/diff', (req, res) => {
     const hash = req.query.hash;
     const name = req.query.name;
 
-    let stdout = "";
-
     const proc = spawn('git', ['-C', path, 'diff', hash + '~1', hash, '--', name]);
 
-    proc.stdout.setEncoding('utf8');
-
-    proc.stdout.on('data', (chunk) => {
-        stdout += chunk;
-    });
+    proc.stdout.pipe(res);
 
     proc.on('close', (exitCode) => {
         console.log(`diff: '${name}'`);
-
-        res.send(stdout);
     });
 });
 

@@ -310,6 +310,22 @@ function showChangedFiles() {
     selectFiles.selectedIndex = selectFiles.querySelector("option:not([data-change='None'])").index;
 }
 
+function loadData(url) {
+  fetch(url)
+    .then(response => checkStatus(response) && response.arrayBuffer())
+    .then(buffer => {
+       saveData("Screenshot.png", buffer);
+    })
+    .catch(err => console.error(err)); // Never forget the final catch!
+}
+
+function checkStatus(response) {
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status} - ${response.statusText}`);
+  }
+  return response;
+}
+
 async function showFullFile(path, hash) {
     const divContent = document.getElementById("content");
     const checkboxShowFullFile = document.getElementById("show_full_file");
@@ -319,7 +335,10 @@ async function showFullFile(path, hash) {
     params.set("path", path);
     params.set("hash", hash);
 
-    const content = await (await fetch('/content?' + params)).text();
+    const myPromise = await fetch('/content?' + params);
+    const content = await myPromise.text();
+
+    loadData('/content?' + params);
 
     divContent.textContent = content;
 
