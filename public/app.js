@@ -5,14 +5,14 @@ let timerId;
 
 const timeout = 200;
 
-function debounce(func){
+function debounce(func) {
     let timer;
 
     return (...args) => {
         clearTimeout(timer);
 
         timer = setTimeout(() => { func.apply(this, args); }, timeout);
-  };
+    };
 }
 
 function basename(path) {
@@ -27,22 +27,6 @@ function countAuthorCommits(authorCommits, max) {
     let entries = Object.entries(authorCommits);
 
     return entries.sort((a, b) => b[1] - a[1]).slice(0, max);
-}
-
-function saveData(name, data) {
-    // IE11 support
-    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-        const blob = new Blob([data], {type: "octet/stream"});
-
-        window.navigator.msSaveOrOpenBlob(blob, name);
-    } else { // other browsers
-        const file = new File([data], name, {type: "octet/stream"});
-        const exportUrl = URL.createObjectURL(file);
-
-        window.location.assign(exportUrl);
-
-        URL.revokeObjectURL(exportUrl);
-    }
 }
 
 async function populateBranches(path) {
@@ -70,7 +54,7 @@ async function populateBranches(path) {
 
         const matchAsterisk = branch.match(/^\* (.*)/);
 
-        if(matchAsterisk) { // active branch
+        if (matchAsterisk) { // active branch
             branch = matchAsterisk[1];
 
             option.textContent = branch;
@@ -84,7 +68,7 @@ async function populateBranches(path) {
         // HEAD
         const matchHead = branch.match(/^(.*HEAD) -> .*/);
 
-        if(matchHead) {
+        if (matchHead) {
             option.value = matchHead[1];
         }
 
@@ -126,7 +110,7 @@ async function populateCommitHistory(path, branch) {
 
         authorCommits[author] ? authorCommits[author] += 1 : authorCommits[author] = 1;
 
-        if(i == 0) { // first commit
+        if (i == 0) { // first commit
             const hash = commit.hash;
 
             populateFilesystemTree(path, hash); // --> load filesystem tree
@@ -176,7 +160,7 @@ function updateInfoBox(authorCommits) {
     const firstCommit = document.getElementById("firstCommit");
     const lastCommit = document.getElementById("lastCommit");
 
-    firstCommit.textContent = selectCommits[commits.length -1].dataset.date + ", Author: " + selectCommits[commits.length -1].dataset.author;
+    firstCommit.textContent = selectCommits[commits.length - 1].dataset.date + ", Author: " + selectCommits[commits.length - 1].dataset.author;
     lastCommit.textContent = selectCommits[0].dataset.date + ", Author: " + selectCommits[0].dataset.author;
 
     const sorted = countAuthorCommits(authorCommits, 10);
@@ -251,7 +235,7 @@ async function populateFilesystemTree(path, hash) {
         option.dataset.change = changedFiles[file.name] || "None";
         option.title = file.name;
 
-        if(!(checkboxShowAllFiles.checked || changedFiles[file.name])) {
+        if (!(checkboxShowAllFiles.checked || changedFiles[file.name])) {
             option.classList.add("hide");
         }
 
@@ -272,7 +256,7 @@ function toggleFileDiff(path) {
     const selectCommits = document.getElementById("commits");
     const checkboxShowFullFile = document.getElementById("show_full_file");
 
-    if(checkboxShowFullFile.checked) {
+    if (checkboxShowFullFile.checked) {
         const hash = selectFiles[selectFiles.selectedIndex].value;
 
         showFullFile(path, hash);
@@ -302,12 +286,47 @@ function showChangedFiles() {
     const options = selectFiles.querySelectorAll("option");
 
     Array.prototype.map.call(options, option => {
-        if(option.dataset.change == "None") {
+        if (option.dataset.change == "None") {
             option.classList.add("hide");
         }
     });
 
     selectFiles.selectedIndex = selectFiles.querySelector("option:not([data-change='None'])").index;
+}
+
+function checkStatus(response) {
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status} - ${response.statusText}`);
+    }
+    return response;
+}
+
+function downloadFile(path, name, hash) {
+    const params = new URLSearchParams();
+
+    params.set("path", path);
+    params.set("hash", hash);
+
+    const url = '/content?' + params;
+
+    fetch(url)
+        .then(response => checkStatus(response) && response.arrayBuffer())
+        .then(buffer => {
+            // IE11 support
+            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                const blob = new Blob([buffer], { type: "octet/stream" });
+
+                window.navigator.msSaveOrOpenBlob(blob, name);
+            } else { // other browsers
+                const file = new File([buffer], name, { type: "octet/stream" });
+                const exportUrl = URL.createObjectURL(file);
+
+                window.location.assign(exportUrl);
+
+                URL.revokeObjectURL(exportUrl);
+            }
+        })
+        .catch(err => console.error(err)); // Never forget the final catch!
 }
 
 async function showFullFile(path, hash) {
@@ -319,7 +338,8 @@ async function showFullFile(path, hash) {
     params.set("path", path);
     params.set("hash", hash);
 
-    const content = await (await fetch('/content?' + params)).text();
+    const myPromise = await fetch('/content?' + params);
+    const content = await myPromise.text();
 
     divContent.textContent = content;
 
@@ -369,7 +389,7 @@ function filterOptions(event) {
         let textContent = option.textContent.toLowerCase();
         let searchTerm = event.target.value.toLowerCase();
 
-        if(!searchTerm.startsWith("/")){ // if the searchTerm is not a command...
+        if (!searchTerm.startsWith("/")) { // if the searchTerm is not a command...
             textContent.indexOf(searchTerm) == -1 ? option.classList.add("hide") : option.classList.remove("hide");
 
             return; // skip the rest of the logic below
@@ -377,13 +397,13 @@ function filterOptions(event) {
 
         const match = searchTerm.match(/^\/(hash|author|date|change) (.*)/);
 
-        if(!match) {
+        if (!match) {
             return;
         }
 
         const command = match[1];
 
-        switch(command) {
+        switch (command) {
             case "hash":
                 textContent = option.value;
 
@@ -420,7 +440,7 @@ function main() {
     spanInfo.addEventListener("click", (event) => {
         const infoBox = document.getElementById("infobox");
 
-        if(infoBox.textContent.length > 0) {
+        if (infoBox.textContent.length > 0) {
             infoBox.classList.toggle("hide");
         }
     });
@@ -428,7 +448,7 @@ function main() {
     const inputPath = document.getElementById("path");
 
     inputPath.addEventListener("keydown", async (event) => {
-        if(event.key == "Enter") {
+        if (event.key == "Enter") {
             const path = inputPath.value;
 
             populateBranches(path);
@@ -493,13 +513,14 @@ function main() {
 
     const buttonCheckout = document.getElementById("checkout");
 
-    buttonCheckout.addEventListener("click", (event) => {
-        const content = document.getElementById("content");
+    buttonCheckout.addEventListener("click", async (event) => {
+        const option = selectFiles[selectFiles.selectedIndex];
 
-        const name = basename(selectFiles[selectFiles.selectedIndex].textContent);
-        const data = content.textContent;
+        const path = inputPath.value;
+        const name = basename(option.textContent);
+        const hash = option.value;
 
-        saveData(name, data);
+        downloadFile(path, name, hash);
     });
 
     const checkboxShowFullFile = document.getElementById("show_full_file");
