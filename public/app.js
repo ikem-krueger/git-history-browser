@@ -29,22 +29,6 @@ function countAuthorCommits(authorCommits, max) {
     return entries.sort((a, b) => b[1] - a[1]).slice(0, max);
 }
 
-function saveData(name, data) {
-    // IE11 support
-    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-        const blob = new Blob([data], {type: "octet/stream"});
-
-        window.navigator.msSaveOrOpenBlob(blob, name);
-    } else { // other browsers
-        const file = new File([data], name, {type: "octet/stream"});
-        const exportUrl = URL.createObjectURL(file);
-
-        window.location.assign(exportUrl);
-
-        URL.revokeObjectURL(exportUrl);
-    }
-}
-
 async function populateBranches(path) {
     const selectBranch = document.getElementById("branch");
 
@@ -310,20 +294,36 @@ function showChangedFiles() {
     selectFiles.selectedIndex = selectFiles.querySelector("option:not([data-change='None'])").index;
 }
 
-function loadData(url) {
-  fetch(url)
-    .then(response => checkStatus(response) && response.arrayBuffer())
-    .then(buffer => {
-       saveData("Screenshot.png", buffer);
-    })
-    .catch(err => console.error(err)); // Never forget the final catch!
-}
-
 function checkStatus(response) {
   if (!response.ok) {
     throw new Error(`HTTP ${response.status} - ${response.statusText}`);
   }
   return response;
+}
+
+function loadData(url, name) {
+  fetch(url)
+    .then(response => checkStatus(response) && response.arrayBuffer())
+    .then(buffer => {
+       saveData(name, buffer);
+    })
+    .catch(err => console.error(err)); // Never forget the final catch!
+}
+
+function saveData(name, data) {
+  // IE11 support
+  if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+      const blob = new Blob([data], {type: "octet/stream"});
+
+      window.navigator.msSaveOrOpenBlob(blob, name);
+  } else { // other browsers
+      const file = new File([data], name, {type: "octet/stream"});
+      const exportUrl = URL.createObjectURL(file);
+
+      window.location.assign(exportUrl);
+
+      URL.revokeObjectURL(exportUrl);
+  }
 }
 
 async function showFullFile(path, hash) {
@@ -335,10 +335,12 @@ async function showFullFile(path, hash) {
     params.set("path", path);
     params.set("hash", hash);
 
+    console.debug(path, basename(path))
+
     const myPromise = await fetch('/content?' + params);
     const content = await myPromise.text();
 
-    loadData('/content?' + params);
+    loadData('/content?' + params, "Screenshot.png");
 
     divContent.textContent = content;
 
