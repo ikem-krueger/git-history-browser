@@ -1,5 +1,5 @@
 
-# Git History Viewer
+# Git History Browser
 
 Helps developers to get an overview of the changes in a git repository.
 
