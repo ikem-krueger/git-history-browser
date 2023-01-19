@@ -15,7 +15,7 @@ Helps developers to get an overview of the changes in a git repository.
 
 ## Screenshots
 
-![App Screenshot](https://github.com/ikem-krueger/git-history-viewer/raw/master/Screenshot.png)
+![App Screenshot](https://github.com/ikem-krueger/git-history-browser/raw/master/Screenshot.png)
 
 ## Dependencies
 
@@ -26,13 +26,13 @@ Helps developers to get an overview of the changes in a git repository.
 Clone the project
 
 ```bash
-  git clone https://github.com/ikem-krueger/git-history-viewer
+  git clone https://github.com/ikem-krueger/git-history-browser
 ```
 
 Go to the project directory
 
 ```bash
-  cd git-history-viewer
+  cd git-history-browser
 ```
 
 Install dependencies
